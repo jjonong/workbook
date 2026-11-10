@@ -164,10 +164,7 @@
 
   // ---------- JAVA: Claude 채점 (sample capability) ----------
   var jSampleP = null, jGradeCtl = {};
-  function jGetSample() {
-    if (!jSampleP) jSampleP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('sample').catch(function () { return null; }) : Promise.resolve(null);
-    return jSampleP;
-  }
+  function jGetSample() { return WB.getSample(); } // claude.ai의 Claude, 또는 내가 넣은 API 키
   function jAiGrade(p, btn) {
     var mine = $('#jans-' + p.n).value;
     JS.a[p.n] = mine; jsave();
@@ -196,7 +193,7 @@
       'STUDENT CODE:\n<<<\n' + mine + '\n>>>'
     ].filter(Boolean).join('\n');
     jGetSample().then(function (sample) {
-      if (!sample) { jVerdict(p.n, 'info', '여기서는 Claude 채점을 쓸 수 없어요', 'claude.ai에서 이 페이지를 열었을 때만 쓸 수 있어요. 대신 ‘정답 확인’으로 모범 답안과 비교해 보세요.'); return; }
+      if (!sample) { jVerdict(p.n, 'info', '여기서는 Claude 채점을 쓸 수 없어요', WB.NO_CLAUDE + ' 지금은 ‘정답 확인’으로 모범 답안과 비교해 보세요.'); return; }
       return sample(task, { signal: my.signal, modelTier: 'default', cache: false }).then(function (res) {
         if (my !== jGradeCtl[p.n]) return;
         var t = res.text || '', m = /VERDICT:\s*(PASS|PARTIAL|FAIL)/.exec(t), v = m ? m[1] : 'PARTIAL';
@@ -209,7 +206,7 @@
     }).catch(function (e) {
       if (my !== jGradeCtl[p.n] || (e && e.code === 'cancelled')) return;
       var c = e && e.code;
-      jVerdict(p.n, 'bad', '채점하지 못했어요', c === 'not_granted' ? '권한을 허용하지 않아서 Claude를 쓸 수 없어요. ‘정답 확인’으로 비교해 보세요.' : c === 'rate_limited' ? '요청이 많아서 잠시 쉬어야 해요. 조금 뒤에 다시 눌러 주세요.' : '잠시 뒤 다시 시도해 주세요.');
+      jVerdict(p.n, 'bad', '채점하지 못했어요', c === 'not_granted' ? '권한을 허용하지 않아서 Claude를 쓸 수 없어요. ‘정답 확인’으로 비교해 보세요.' : (WB.claudeErrText(e) || '잠시 뒤 다시 시도해 주세요.'));
     }).then(function () { if (my === jGradeCtl[p.n]) btn.disabled = false; });
   }
 
@@ -367,7 +364,6 @@
     return '출력 결과 맞히기 · ' + (lines && lines.length ? lines[0].slice(0, 56) : '코드 실행 결과');
   }
   // 틀린 문제 → Claude가 만든 새 객관식 문제로 다시 연습 (claude.ai에서만)
-  var JGEN = {}, jgenSeq = 0;
   function jGenPrompt(n) {
     var p = jbyN[n], c = JCH.filter(function (x) { return x.no === p.ch; })[0], mine = JS.a[n];
     var model = p.t === 'mc' ? '정답 보기: ' + jText(p.choices[p.ans]) : p.t === 'out' ? 'Correct output:\n' + p.ans : jText(p.answer || '');
@@ -390,50 +386,8 @@
       studentSaid
     ].filter(Boolean).join('\n');
   }
-  function jGenCheck(g) {
-    if (!g || typeof g !== 'object' || typeof g.question !== 'string' || !g.question.trim()) return { err: 'question must be a non-empty string.' };
-    if (!Array.isArray(g.choices) || g.choices.length !== 4 || g.choices.some(function (x) { return typeof x !== 'string' || !x.trim(); })) return { err: 'choices must be an array of exactly 4 non-empty strings.' };
-    var uniq = {}; g.choices.forEach(function (x) { uniq[x.trim()] = 1; }); if (Object.keys(uniq).length !== 4) return { err: 'the 4 choices must all be different.' };
-    if (g.answer !== +g.answer || g.answer < 0 || g.answer > 3) return { err: 'answer must be the 0-based index (0-3) of the correct choice.' };
-    return { ok: true, g: { question: g.question.trim(), code: typeof g.code === 'string' ? g.code.replace(/^```\w*\n?|```$/g, '').replace(/\s+$/, '') : '', choices: g.choices.map(function (x) { return x.trim(); }), answer: +g.answer, explain: String(g.explain || '').trim() } };
-  }
-  function jGenCardHtml(id, g) {
-    return '<div class="gen-card" data-gid="' + id + '">' +
-      '<div class="gen-q"><span class="gen-tag">새 문제</span>' + esc(g.question) + '</div>' +
-      (g.code ? '<pre class="code gen-code"><code>' + esc(g.code) + '</code></pre>' : '') +
-      '<div class="choices" role="radiogroup" aria-label="새 문제 보기">' + g.choices.map(function (c, i) {
-        return '<label class="choice"><input type="radio" name="jg-' + id + '" value="' + i + '"><span><b class="cno">' + '①②③④'[i] + '</b> ' + esc(c) + '</span></label>';
-      }).join('') + '</div>' +
-      '<div class="actions"><button class="btn primary" type="button" data-gact="grade">채점하기</button><button class="btn ghost" type="button" data-gact="answer">정답·해설</button><button class="btn ghost" type="button" data-gact="again">다른 새 문제</button></div>' +
-      '<div class="out gen-out" aria-live="polite"></div></div>';
-  }
-  function jMakeGen(n, body) {
-    WB.genBusy(body, 'Claude가 방금 틀린 개념으로 객관식 문제를 만들고 있어요.');
-    WB.getSample().then(function (sample) {
-      if (!sample) throw { code: 'not_granted' };
-      var prompt = jGenPrompt(n), opt = { modelTier: 'quick', cache: false };
-      return sample.json(prompt, opt).then(function (g) {
-        var v = jGenCheck(g); if (v.ok) return v.g;
-        return sample.json(prompt + '\n\nYOUR PREVIOUS REPLY WAS REJECTED: ' + v.err + '\nFix it and reply with the corrected JSON only.', opt).then(function (g2) {
-          var v2 = jGenCheck(g2); if (v2.ok) return v2.g; throw { code: 'bad_gen' };
-        });
-      });
-    }).then(function (g) {
-      var id = 'jg' + (++jgenSeq); JGEN[id] = g;
-      body.innerHTML = jGenCardHtml(id, g);
-    }).catch(function (e) { WB.genFail(body, e); });
-  }
-  function jGenAct(body, gc, act) {
-    var g = JGEN[gc.dataset.gid], out = gc.querySelector('.gen-out'), picked = gc.querySelector('input[type="radio"]:checked');
-    var mark = function () { $$('.choice', gc).forEach(function (l, i) { l.classList.toggle('right', i === g.answer); l.classList.toggle('wrong', !!picked && i === +picked.value && i !== g.answer); }); };
-    var exp = g.explain ? '<div class="exp" style="margin-top:6px">' + esc(g.explain) + '</div>' : '';
-    if (act === 'grade') {
-      if (!picked) { out.innerHTML = '<div class="verdict info"><b>보기를 골라 주세요</b><span>답이라고 생각하는 보기를 먼저 고른 뒤 채점해요.</span></div>'; return; }
-      mark();
-      out.innerHTML = (+picked.value === g.answer ? '<div class="verdict ok"><b>정답이에요</b><span>이번에는 맞혔어요. 원래 문제도 다시 풀어 보세요.</span></div>' : '<div class="verdict bad"><b>아직이에요</b><span>정답은 ' + '①②③④'[g.answer] + '이에요.</span></div>') + exp;
-    }
-    if (act === 'answer') { mark(); out.innerHTML = '<div class="verdict info"><b>정답 ' + '①②③④'[g.answer] + '</b><span>' + esc(g.choices[g.answer]) + '</span></div>' + exp; }
-  }
+  function jMakeGen(n, body) { WB.mcMake(body, jGenPrompt(n), 'Claude가 방금 틀린 개념으로 객관식 문제를 만들고 있어요.'); }
+  function jGenAct(body, gc, act) { WB.mcAct(body, gc, act); }
   WB.genHandlers.java = { make: jMakeGen, act: jGenAct };
   function jShowRec(n, on) {
     var card = $('#jq-' + n); if (!card) return;
@@ -603,7 +557,6 @@
     var fab = $('#jfab'), box = $('#jscratch'), ta = $('#jscratch-code'), out = $('#jscratch-out'), runBtn = $('#jscratch-run');
     if (!fab) return;
     var FKEY = 'javawb:fab', DKEY = 'javawb:scratch', SZ = 56, M = 12, pos = null, ctl = null;
-    var sampleP = jGetSample();
     try { pos = JSON.parse(localStorage.getItem(FKEY) || 'null'); } catch (e) {}
     try { ta.value = localStorage.getItem(DKEY) || ''; } catch (e) {}
     function vw() { return document.documentElement.clientWidth; }
@@ -736,9 +689,9 @@
       if (ctl) ctl.abort();
       var my = ctl = new AbortController();
       runBtn.disabled = true; msg('Claude에 연결하는 중…');
-      sampleP.then(function (sample) {
+      jGetSample().then(function (sample) {
         if (!sample) {
-          msg('이 연습장은 claude.ai에서 이 페이지를 열었을 때만 실행할 수 있어요. 여기서는 브라우저 안에 Java를 실행할 환경이 없어요.\n실습 문제의 출력 정답은 미리 Java 21로 실제 실행해서 확인해 두었어요.', true);
+          msg('이 연습장은 ' + WB.NO_CLAUDE + '\n브라우저 안에는 Java를 실행할 환경이 없어서 Claude가 결과를 예측해 줘요. 실습 문제의 출력 정답은 미리 Java 21로 실제 실행해서 확인해 두었어요.', true);
           return;
         }
         render({ st: 'OK', out: '', note: '' }, true);
@@ -755,7 +708,7 @@
         var c = e && e.code;
         if (c === 'not_granted') msg('권한을 허용하지 않아서 실행할 수 없어요. 페이지의 권한 메뉴에서 허용하면 다시 쓸 수 있어요.', true);
         else if (c === 'rate_limited') msg('요청이 많아서 잠시 쉬어야 해요. 조금 뒤에 다시 실행해 주세요.', true);
-        else msg('실행 결과를 받지 못했어요. 잠시 뒤 다시 시도해 주세요.' + (e && e.message ? '\n(' + esc(e.message) + ')' : ''), true);
+        else msg((WB.claudeErrText(e) || '실행 결과를 받지 못했어요. 잠시 뒤 다시 시도해 주세요.') + (e && e.message ? '\n(' + esc(e.message) + ')' : ''), true);
       }).then(function () { if (my === ctl) runBtn.disabled = false; });
     });
     place();

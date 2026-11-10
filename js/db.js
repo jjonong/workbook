@@ -42,13 +42,43 @@
     out.sort(function (a, b) { return b.sc - a.sc || a.n - b.n; });
     return out.slice(0, k || 3);
   }
+  // 틀린 문제 → Claude가 만든 새 객관식 문제로 다시 연습
+  function dGenPrompt(n) {
+    var p = dbyN[n], c = DCH.filter(function (x) { return x.no === p.ch; })[0], mine = DS.a[n];
+    var model = p.t === 'mc' ? 'Correct choice: ' + dText(p.choices[p.ans]) : dText(p.answer || '');
+    var said = p.t === 'mc' ? (typeof mine === 'number' && p.choices[mine] != null ? 'Student picked: ' + dText(p.choices[mine]) : '') : (typeof mine === 'string' && mine.trim() ? 'Student wrote:\n' + mine.slice(0, 1500) : '');
+    return [
+      'You write ONE new short multiple-choice practice question on DATA MODELING for a Korean beginner who just got a question wrong. The course covers: 데이터 모델링 이론, 개념 모델링(엔티티, 속성, 관계, 식별자, 카디널리티, 선택성), 논리 모델링(정규화, 반정규화, PK/FK, 관계 해소, 이력, 코드 등).',
+      'Goal: practice the same concept the student missed, in a DIFFERENT situation than the original (a different business example such as a library, hospital, shopping mall, school or gym). Same level or a little easier.',
+      'Rules:',
+      '- Exactly 4 choices, exactly one clearly correct by standard data-modeling theory. Wrong choices should be mistakes a beginner would really make.',
+      '- If you show a small table/entity layout, put it in "code" as plain text like 주문(주문번호 | 주문일자, 고객번호 FK), not in "question".',
+      '- Use the same Korean terms as the original question. Korean, polite 해요체.',
+      'Reply with ONLY this JSON:',
+      '{"question": "...", "code": "", "choices": ["...", "...", "...", "..."], "answer": 0, "explain": "왜 그 보기가 답인지 1-3문장(해요체)"}',
+      '',
+      'CHAPTER: ' + p.ch + '장 ' + (c ? c.title : ''),
+      'ORIGINAL QUESTION: ' + dText(p.q).slice(0, 800),
+      p.code ? 'MATERIAL:\n' + String(p.code).slice(0, 1200) : '',
+      p.t === 'mc' ? 'ORIGINAL CHOICES: ' + p.choices.map(function (x, i) { return (i + 1) + ') ' + dText(x); }).join(' / ') : '',
+      'MODEL ANSWER: ' + model.slice(0, 1500),
+      p.exp ? 'EXPLANATION: ' + dText(p.exp).slice(0, 600) : '',
+      said
+    ].filter(Boolean).join('\n');
+  }
+  WB.genHandlers.db = {
+    make: function (n, body) { WB.mcMake(body, dGenPrompt(n), 'Claude가 방금 틀린 개념으로 객관식 문제를 만들고 있어요.'); },
+    act: function (body, gc, act) { WB.mcAct(body, gc, act); }
+  };
   function dShowRec(n, on) {
     var card = $('#dq-' + n); if (!card) return;
     var box = card.querySelector('.rec');
     if (!on) { if (box) box.remove(); return; }
-    var list = dRelated(n, 3); if (!list.length) return;
-    if (!box) { box = document.createElement('div'); box.className = 'rec'; card.appendChild(box); }
-    box.innerHTML = WB.recHtml(list.map(function (r) { var p = dbyN[r.n]; return { n: r.n, lv: p.lv, lvName: DLV[p.lv], text: (p.ch !== dbyN[n].ch ? p.ch + '장 · ' : '') + WB.snippet(p.q, 64), why: r.why, sub: false }; }), 'data-drecgo');
+    if (box) return;
+    var list = dRelated(n, 3);
+    box = document.createElement('div'); box.className = 'rec'; card.appendChild(box);
+    var sim = list.length ? WB.recHtml(list.map(function (r) { var p = dbyN[r.n]; return { n: r.n, lv: p.lv, lvName: DLV[p.lv], text: (p.ch !== dbyN[n].ch ? p.ch + '장 · ' : '') + WB.snippet(p.q, 64), why: r.why, sub: false }; }), 'data-drecgo').replace(/^<div class="rec-h">[^<]*<\/div>/, '') : '';
+    box.innerHTML = WB.genBoxHtml('db', n, sim);
   }
   document.addEventListener('click', function (e) { var b = e.target.closest('[data-drecgo]'); if (b) dGoto(+b.dataset.drecgo); });
 
@@ -177,10 +207,7 @@
 
   // ---------- Claude 채점 (sample capability) ----------
   var dSampleP = null, dGradeCtl = {};
-  function dGetSample() {
-    if (!dSampleP) dSampleP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('sample').catch(function () { return null; }) : Promise.resolve(null);
-    return dSampleP;
-  }
+  function dGetSample() { return WB.getSample(); } // claude.ai의 Claude, 또는 내가 넣은 API 키
   function dAiGrade(p, btn) {
     var mine = $('#dans-' + p.n).value;
     DS.a[p.n] = mine; dsave();
@@ -207,7 +234,7 @@
       'STUDENT ANSWER:\n<<<\n' + mine + '\n>>>'
     ].filter(Boolean).join('\n');
     dGetSample().then(function (sample) {
-      if (!sample) { dVerdict(p.n, 'info', '여기서는 Claude 채점을 쓸 수 없어요', 'claude.ai에서 이 페이지를 열었을 때만 쓸 수 있어요. 대신 ‘정답 확인’으로 모범 답안과 비교해 보세요.'); return; }
+      if (!sample) { dVerdict(p.n, 'info', '여기서는 Claude 채점을 쓸 수 없어요', WB.NO_CLAUDE + ' 지금은 ‘정답 확인’으로 모범 답안과 비교해 보세요.'); return; }
       return sample(task, { signal: my.signal, modelTier: 'default', cache: false }).then(function (res) {
         if (my !== dGradeCtl[p.n]) return;
         var t = res.text || '', m = /VERDICT:\s*(PASS|PARTIAL|FAIL)/.exec(t), v = m ? m[1] : 'PARTIAL';
@@ -220,7 +247,7 @@
     }).catch(function (e) {
       if (my !== dGradeCtl[p.n] || (e && e.code === 'cancelled')) return;
       var c = e && e.code;
-      dVerdict(p.n, 'bad', '채점하지 못했어요', c === 'not_granted' ? '권한을 허용하지 않아서 Claude를 쓸 수 없어요. ‘정답 확인’으로 비교해 보세요.' : c === 'rate_limited' ? '요청이 많아서 잠시 쉬어야 해요. 조금 뒤에 다시 눌러 주세요.' : '잠시 뒤 다시 시도해 주세요.');
+      dVerdict(p.n, 'bad', '채점하지 못했어요', c === 'not_granted' ? '권한을 허용하지 않아서 Claude를 쓸 수 없어요. ‘정답 확인’으로 비교해 보세요.' : (WB.claudeErrText(e) || '잠시 뒤 다시 시도해 주세요.'));
     }).then(function () { if (my === dGradeCtl[p.n]) btn.disabled = false; });
   }
 

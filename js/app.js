@@ -154,6 +154,44 @@
     });
     place();
   }
+  // ---------- Claude 연결: claude.ai 밖에서 쓸 내 API 키 ----------
+  function initKey() {
+    var btn = $('#key-btn'), box = $('#keybox'), inp = $('#key-in'), st = $('#key-st');
+    if (!btn || !box) return;
+    if (inClaude()) return; // claude.ai 안에서는 필요 없어요
+    btn.hidden = false;
+    function mark() { var on = !!apiKey(); btn.classList.toggle('on', on); btn.title = on ? 'Claude 연결됨 (API 키)' : 'Claude 연결 (API 키)'; }
+    function say(t, cls) { st.textContent = t; st.className = 'keybox-st' + (cls ? ' ' + cls : ''); }
+    function open(on) {
+      box.hidden = !on; btn.setAttribute('aria-expanded', String(on));
+      if (on) { var k = apiKey(); inp.value = k; say(k ? '저장된 키가 있어요. 새 문제 만들기와 Claude 채점을 쓸 수 있어요.' : '', k ? 'ok' : ''); var r = btn.getBoundingClientRect(); box.style.top = (r.bottom + 8) + 'px'; setTimeout(function () { inp.focus(); }, 0); }
+    }
+    btn.addEventListener('click', function () { open(box.hidden); });
+    $('#key-close').addEventListener('click', function () { open(false); btn.focus(); });
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-open-key]')) { open(true); return; }
+      if (!box.hidden && !box.contains(e.target) && !btn.contains(e.target)) open(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) { open(false); btn.focus(); } });
+    $('#key-show').addEventListener('click', function () { var sh = inp.type === 'password'; inp.type = sh ? 'text' : 'password'; this.textContent = sh ? '숨기기' : '보기'; this.setAttribute('aria-pressed', String(sh)); });
+    inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('#key-save').click(); } });
+    $('#key-save').addEventListener('click', function () {
+      var k = inp.value.trim(), b = this;
+      if (!k) { say('API 키를 붙여 넣어 주세요.', 'bad'); return; }
+      if (!/^sk-ant-/.test(k)) { say('Anthropic API 키는 보통 sk-ant- 로 시작해요. 다시 확인해 주세요.', 'bad'); return; }
+      b.disabled = true; say('키를 확인하는 중…');
+      apiCall('Reply with just: OK', { modelTier: 'quick', maxTokens: 5 }, k).then(function () {
+        try { localStorage.setItem(AKEY, k); } catch (e) {}
+        mark(); say('연결됐어요. 이제 이 브라우저에서 새 문제 만들기, Claude 채점, Java 연습장을 쓸 수 있어요.', 'ok');
+        $$('.gen-body').forEach(function (body) { if (body.querySelector('[data-open-key]')) body.innerHTML = '<div class="gen-start"><span>방금 틀린 개념으로 Claude가 짧은 새 문제를 만들어 줘요.</span><button type="button" class="btn small primary" data-gact="make">새 문제 만들기</button></div>'; });
+      }, function (e) {
+        say((claudeErrText(e) || '확인하지 못했어요.') + (e && e.message ? ' (' + e.message + ')' : ''), 'bad');
+      }).then(function () { b.disabled = false; });
+    });
+    $('#key-del').addEventListener('click', function () { try { localStorage.removeItem(AKEY); } catch (e) {} inp.value = ''; mark(); say('이 브라우저에서 키를 지웠어요.'); });
+    mark();
+  }
+
   // ---------- light / dark toggle (follows the system until the viewer picks one) ----------
   function initTheme() {
     var root = document.documentElement, btn = $('#theme-btn'), mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
@@ -654,18 +692,71 @@
   // ---------- 틀린 문제 → Claude가 만든 새 문제로 다시 연습 ----------
   // claude.ai에서 열었을 때만(sample capability) 새 문제를 만들어요. 그 밖에서는 비슷한 기존 문제를 접어서 보여줘요.
   var sampleP = null, WB_GEN = {};
+  function inClaude() { return !!(window.claude && typeof window.claude.use === 'function'); }
+  // claude.ai 안에서는 sample capability, 밖(GitHub 등)에서는 내가 넣은 Anthropic API 키로 같은 모양의 함수를 만들어요
   function getSample() {
-    if (!sampleP) sampleP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('sample').catch(function () { return null; }) : Promise.resolve(null);
-    return sampleP;
+    if (inClaude() && !sampleP) sampleP = window.claude.use('sample').catch(function () { return null; });
+    return (sampleP || Promise.resolve(null)).then(function (s) { return s || (apiKey() ? apiSample() : null); });
   }
-  function canSample() { return !!(window.claude && typeof window.claude.use === 'function'); }
-  function genErrText(e) {
+  function canSample() { return inClaude() || !!apiKey(); }
+  var AKEY = 'wb:anthropic-key';
+  function apiKey() { try { return localStorage.getItem(AKEY) || ''; } catch (e) { return ''; } }
+  var API_MODEL = { quick: 'claude-haiku-5-5', 'default': 'claude-sonnet-5-5', complex: 'claude-opus-5-5' };
+  function looseJson(t) {
+    t = String(t || '').trim();
+    try { return JSON.parse(t); } catch (e) {}
+    var f = /```(?:json)?\s*([\s\S]*?)```/.exec(t); if (f) { try { return JSON.parse(f[1]); } catch (e) {} }
+    var a = t.search(/[\[{]/), b = Math.max(t.lastIndexOf('}'), t.lastIndexOf(']'));
+    if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (e) {} }
+    return undefined;
+  }
+  function apiCall(input, opt, key) {
+    opt = opt || {};
+    var messages = typeof input === 'string' ? [{ role: 'user', content: input }] : input;
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', signal: opt.signal,
+      headers: { 'content-type': 'application/json', 'x-api-key': key || apiKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: API_MODEL[opt.modelTier || 'default'] || API_MODEL['default'], max_tokens: opt.maxTokens || 4096, messages: messages })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) {
+          var m = (j && j.error && j.error.message) || ('HTTP ' + r.status);
+          var code = (r.status === 401 || r.status === 403) ? 'bad_key' : r.status === 429 ? 'rate_limited' : /credit|billing|balance/i.test(m) ? 'no_credit' : r.status === 404 ? 'bad_model' : 'upstream_error';
+          throw { code: code, message: m };
+        }
+        var text = (j.content || []).filter(function (c) { return c.type === 'text'; }).map(function (c) { return c.text; }).join('');
+        return { text: text, truncated: j.stop_reason === 'max_tokens' };
+      });
+    }, function (e) { if (e && e.name === 'AbortError') throw { code: 'cancelled' }; throw { code: 'network', message: String((e && e.message) || e) }; });
+  }
+  function apiSample() {
+    var f = function (input, opt) {
+      return apiCall(input, opt).then(function (res) { if (opt && opt.onText) { try { opt.onText({ text: res.text, delta: res.text }); } catch (e) {} } return res; });
+    };
+    f.json = function (input, opt) {
+      var inp = typeof input === 'string' ? input + '\n\nReply with only the JSON value and nothing else.' : input;
+      return apiCall(inp, opt).then(function (res) { var v = looseJson(res.text); if (v === undefined) throw { code: 'invalid_json', text: res.text }; return v; });
+    };
+    return f;
+  }
+  // Claude를 못 쓸 때 공통 안내 (claude.ai의 sample 오류 + API 키 오류)
+  function claudeErrText(e) {
     var c = e && e.code;
-    if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled' || c === 'capability_removed') return 'Claude를 쓸 수 있게 허용되지 않았어요. 아래의 비슷한 기존 문제로 연습해 보세요.';
+    if (c === 'bad_key') return 'API 키가 올바르지 않거나 막혀 있어요. 오른쪽 위 ‘Claude 연결’에서 키를 확인해 주세요.';
+    if (c === 'no_credit') return 'API 키 계정의 크레딧이 부족해요. Anthropic 콘솔에서 결제 정보를 확인해 주세요.';
+    if (c === 'network') return 'Claude API에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.';
+    if (c === 'bad_model') return 'API 키로 쓸 수 없는 모델이에요. 잠시 뒤 다시 시도해 주세요.';
+    if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled' || c === 'capability_removed') return 'Claude를 쓸 수 있게 허용되지 않았어요.';
     if (c === 'rate_limited') return '요청이 많아서 잠시 쉬어야 해요. 조금 뒤에 다시 눌러 주세요.';
     if (c === 'session_expired') return 'claude.ai 로그인이 끊겼어요. 다시 로그인한 뒤 눌러 주세요.';
-    if (c === 'bad_gen') return '채점할 수 있는 문제를 만들지 못했어요. 한 번 더 눌러 주세요.';
-    return '잠시 뒤 다시 눌러 주세요.';
+    return '';
+  }
+  var NO_CLAUDE = 'claude.ai에서 이 페이지를 열거나, 오른쪽 위 ‘Claude 연결’에 내 API 키를 넣으면 쓸 수 있어요.';
+  function genErrText(e) {
+    var c = e && e.code;
+    if (c === 'no_claude') return NO_CLAUDE;
+    if (c === 'bad_gen' || c === 'invalid_json') return '채점할 수 있는 문제를 만들지 못했어요. 한 번 더 눌러 주세요.';
+    return claudeErrText(e) || '잠시 뒤 다시 눌러 주세요.';
   }
   // 새 문제 상자: 처음에는 버튼 하나, 기존 비슷한 문제 목록은 접어서 아래에
   function genBoxHtml(kind, n, simHtml) {
@@ -673,7 +764,7 @@
     return '<div class="rec-h">틀린 부분을 새 문제로 연습해 보세요</div>' +
       '<div class="gen-body" data-gkind="' + kind + '" data-gn="' + n + '">' +
       (on ? '<div class="gen-start"><span>방금 틀린 개념으로 Claude가 짧은 새 문제를 만들어 줘요.</span><button type="button" class="btn small primary" data-gact="make">새 문제 만들기</button></div>'
-          : '<div class="gen-start"><span>새 문제 만들기는 claude.ai에서 이 페이지를 열었을 때 쓸 수 있어요.</span></div>') +
+          : '<div class="gen-start"><span>새 문제 만들기는 ' + NO_CLAUDE + '</span><button type="button" class="btn small" data-open-key>API 키 넣기</button></div>') +
       '</div>' + (simHtml ? '<details class="gen-sim"' + (on ? '' : ' open') + '><summary>비슷한 기존 문제 보기</summary>' + simHtml + '</details>' : '');
   }
   function genBusy(body, what) {
@@ -760,7 +851,7 @@
   function sqlMakeGen(n, body) {
     genBusy(body, 'Claude가 문제를 만들고, 정답 SQL을 실제로 실행해서 확인하고 있어요.');
     Promise.all([getSample(), engineReady()]).then(function (x) {
-      var sample = x[0]; if (!sample) throw { code: 'not_granted' };
+      var sample = x[0]; if (!sample) throw { code: 'no_claude' };
       return askGen(sample, sqlGenPrompt(n), sqlGenCheck);
     }).then(function (g) {
       var id = 'g' + (++genSeq); GEN[id] = g;
@@ -790,6 +881,47 @@
       sol.hidden = false;
     }
   }
+  // 4지선다 새 문제 (JAVA·DB가 함께 써요)
+  var MCG = {}, mcSeq = 0;
+  function mcCheck(g) {
+    if (!g || typeof g !== 'object' || typeof g.question !== 'string' || !g.question.trim()) return { err: 'question must be a non-empty string.' };
+    if (!Array.isArray(g.choices) || g.choices.length !== 4 || g.choices.some(function (x) { return typeof x !== 'string' || !x.trim(); })) return { err: 'choices must be an array of exactly 4 non-empty strings.' };
+    var uniq = {}; g.choices.forEach(function (x) { uniq[x.trim()] = 1; }); if (Object.keys(uniq).length !== 4) return { err: 'the 4 choices must all be different.' };
+    if (g.answer !== +g.answer || g.answer < 0 || g.answer > 3) return { err: 'answer must be the 0-based index (0-3) of the correct choice.' };
+    return { ok: true, g: { question: g.question.trim(), code: typeof g.code === 'string' ? g.code.replace(/^```\w*\n?|```\s*$/g, '').replace(/\s+$/, '') : '', choices: g.choices.map(function (x) { return x.trim(); }), answer: +g.answer, explain: String(g.explain || '').trim() } };
+  }
+  function mcCardHtml(id, g) {
+    return '<div class="gen-card" data-gid="' + id + '">' +
+      '<div class="gen-q"><span class="gen-tag">새 문제</span>' + esc(g.question) + '</div>' +
+      (g.code ? '<pre class="code gen-code"><code>' + esc(g.code) + '</code></pre>' : '') +
+      '<div class="choices" role="radiogroup" aria-label="새 문제 보기">' + g.choices.map(function (c, i) {
+        return '<label class="choice"><input type="radio" name="mcg-' + id + '" value="' + i + '"><span><b class="cno">' + '①②③④'[i] + '</b> ' + esc(c) + '</span></label>';
+      }).join('') + '</div>' +
+      '<div class="actions"><button class="btn primary" type="button" data-gact="grade">채점하기</button><button class="btn ghost" type="button" data-gact="answer">정답·해설</button><button class="btn ghost" type="button" data-gact="again">다른 새 문제</button></div>' +
+      '<div class="out gen-out" aria-live="polite"></div></div>';
+  }
+  function mcMake(body, prompt, what) {
+    genBusy(body, what);
+    getSample().then(function (sample) {
+      if (!sample) throw { code: 'no_claude' };
+      return askGen(sample, prompt, mcCheck);
+    }).then(function (g) {
+      var id = 'm' + (++mcSeq); MCG[id] = g;
+      body.innerHTML = mcCardHtml(id, g);
+    }).catch(function (e) { genFail(body, e); });
+  }
+  function mcAct(body, gc, act) {
+    var g = MCG[gc.dataset.gid], out = gc.querySelector('.gen-out'), picked = gc.querySelector('input[type="radio"]:checked');
+    var paint = function () { $$('.choice', gc).forEach(function (l, i) { l.classList.toggle('right', i === g.answer); l.classList.toggle('wrong', !!picked && i === +picked.value && i !== g.answer); }); };
+    var exp = g.explain ? '<div class="exp" style="margin-top:6px">' + esc(g.explain) + '</div>' : '';
+    if (act === 'grade') {
+      if (!picked) { out.innerHTML = '<div class="verdict info"><b>보기를 골라 주세요</b><span>답이라고 생각하는 보기를 먼저 고른 뒤 채점해요.</span></div>'; return; }
+      paint();
+      out.innerHTML = (+picked.value === g.answer ? '<div class="verdict ok"><b>정답이에요</b><span>이번에는 맞혔어요. 원래 문제도 다시 풀어 보세요.</span></div>' : '<div class="verdict bad"><b>아직이에요</b><span>정답은 ' + '①②③④'[g.answer] + '이에요.</span></div>') + exp;
+    }
+    if (act === 'answer') { paint(); out.innerHTML = '<div class="verdict info"><b>정답 ' + '①②③④'[g.answer] + '</b><span>' + esc(g.choices[g.answer]) + '</span></div>' + exp; }
+  }
+
   function showRec(n, on) {
     var card = $('#p-' + n); if (!card) return;
     var box = card.querySelector('.rec');
@@ -917,10 +1049,11 @@
   WB.downloads = function () { return downloadsP; };
   WB.recHtml = recHtml; WB.snippet = snippet; WB.shortDate = shortDate;
   WB.getSample = getSample; WB.genBoxHtml = genBoxHtml; WB.genBusy = genBusy; WB.genFail = genFail; WB.genHandlers = WB_GEN; WB.genErrText = genErrText;
+  WB.mcMake = mcMake; WB.mcAct = mcAct; WB.claudeErrText = claudeErrText; WB.NO_CLAUDE = NO_CLAUDE; WB.canSample = canSample;
   // 모든 스크립트를 읽은 뒤 js/main.js가 부른다
   WB.boot = function () {
     if (WB.initJava) WB.initJava();
     if (WB.initDb) WB.initDb();
-    buildRail(); showStage(S.stage); refreshStats(); buildDocs(); route(); initScratch(); initTheme(); bootEngine();
+    buildRail(); showStage(S.stage); refreshStats(); buildDocs(); route(); initScratch(); initTheme(); initKey(); bootEngine();
   };
 })();

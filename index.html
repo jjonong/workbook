@@ -33,6 +33,9 @@
     </nav>
     <div class="spacer"></div>
     <div class="engine-pill" id="engine-pill" title="브라우저 안에서 SQL을 실행하는 실행기 상태"><i></i><span id="engine-text">실행기 불러오는 중…</span></div>
+    <button type="button" class="theme-btn key-btn" id="key-btn" hidden aria-expanded="false" aria-controls="keybox" aria-label="Claude 연결 (API 키)" title="Claude 연결 (API 키)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg><i class="key-dot" aria-hidden="true"></i>
+    </button>
     <button type="button" class="theme-btn" id="theme-btn" aria-label="다크 모드로 바꾸기" title="다크 모드로 바꾸기">
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
@@ -281,6 +284,19 @@
   </section>
 </main>
 
+<section class="keybox" id="keybox" role="dialog" aria-label="Claude 연결" hidden>
+  <div class="keybox-h"><b>Claude 연결</b><button type="button" class="x" id="key-close" aria-label="닫기"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <p>claude.ai 밖(GitHub 페이지 등)에서 <b>새 문제 만들기, Claude 채점, Java 연습장</b>을 쓰려면 내 Anthropic API 키가 필요해요. 쓴 만큼 이 키의 계정에 요금이 나가요.</p>
+  <label class="keybox-l" for="key-in">API 키</label>
+  <div class="keybox-row"><input id="key-in" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"><button type="button" class="btn small" id="key-show" aria-pressed="false">보기</button></div>
+  <div class="keybox-row"><button type="button" class="btn small primary" id="key-save">저장하고 확인</button><button type="button" class="btn small ghost" id="key-del">키 지우기</button></div>
+  <p class="keybox-st" id="key-st" role="status"></p>
+  <ul class="keybox-note">
+    <li>키는 <b>이 브라우저에만</b> 저장되고, Anthropic API로만 보내요. 다른 사람과 같이 쓰는 컴퓨터에서는 넣지 마세요.</li>
+    <li>키는 <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">Anthropic 콘솔</a>에서 만들 수 있어요. 콘솔에서 월 사용 한도를 정해 두면 안심이에요.</li>
+    <li>새 문제는 Claude Haiku, 채점과 연습장은 Claude Sonnet을 써요. 쓴 금액은 콘솔의 사용량(Usage) 화면에서 볼 수 있어요.</li>
+  </ul>
+</section>
 <button type="button" class="fab jfab" id="jfab" aria-expanded="false" aria-controls="jscratch" aria-label="Java 연습장" title="Java 연습장 열기 (끌어서 옮길 수 있어요)">
   <span class="fab-t" aria-hidden="true">{ }</span>
   <svg class="fab-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
