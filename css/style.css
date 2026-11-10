@@ -364,4 +364,20 @@ mark { background: var(--marker-soft); color: inherit; border-radius: 2px; }
 .rec-why:empty { display: none; }
 .rec-why code { font-family: var(--f-mono); font-size: 11px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 4px; padding: 0 5px; }
 .rec-why em { font-style: normal; }
+.gen-start { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13.5px; color: var(--muted); }
+.gen-start span { flex: 1 1 220px; }
+.gen-body > .verdict { margin-bottom: 10px; }
+.gen-card { border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--accent-soft) 35%, var(--surface)); overflow: hidden; }
+.gen-q { padding: 12px 14px 4px; font-size: 15px; line-height: 1.6; }
+.gen-tag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent-ink); background: var(--accent); border-radius: 999px; padding: 1px 8px; margin-right: 8px; vertical-align: 2px; }
+.gen-card .editor { margin: 8px 14px 0; background: var(--code-bg); }
+.gen-card .actions { padding: 10px 14px 12px; }
+.gen-card .out { padding: 10px 14px 12px; }
+.gen-card .sol { padding: 4px 14px 14px; border-top: 1px solid var(--line-2); }
+.gen-card .gen-code { margin: 8px 14px 0; }
+.gen-card .choices { padding: 8px 14px 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.gen-sim { margin-top: 10px; font-size: 13px; }
+.gen-sim > summary { cursor: pointer; color: var(--muted); padding: 4px 0; width: max-content; }
+.gen-sim > summary:hover { color: var(--accent); }
+.gen-sim .rec-list { margin-top: 6px; }
 @media (max-width: 560px) { .rec { margin: 0 14px; } .rec-t { white-space: normal; } .wn-sort { margin-left: 0; } }

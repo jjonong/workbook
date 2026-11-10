@@ -74,5 +74,6 @@ node tools/verify-java.js 421      # 421번 문제만 (14 이상은 문제 번�
 - **SQL 실행기**: 실행할 때 jsDelivr에서 sql.js를 불러오므로 인터넷 연결이 필요해요.
 - **Java 연습장과 Claude 채점**(DB 모델링 서술·설계 문제의 Claude 채점 포함): claude.ai에 올린 페이지에서만 동작해요. 브라우저에서 진짜 JVM을 돌릴 수 없어서 Claude가 코드를 읽고 결과를 예측하는 방식이에요. GitHub에서 열면 사용할 수 없다는 안내가 나와요.
 - **풀이 기록**: 브라우저 localStorage에 저장돼요. SQL은 `sqlwb:v3`, JAVA는 `javawb:v1`, DB 모델링은 `dbwb:v1` 키를 써요.
-- **오답노트·연관 문제 추천**: 틀린 문제는 풀이 기록 안의 `wrong`(틀린 횟수, 마지막으로 틀린 시각)에 쌓이고, 기록 저장·불러오기에도 함께 들어가요. 추천은 SQL은 정답 SQL에 쓰인 키워드·함수와 같은 소단원, JAVA는 코드에 쓰인 식별자·키워드와 같은 장을 기준으로 아직 맞히지 않은 문제를 골라요(`app.js`의 `related`, `java.js`의 `jRelated`).
+- **오답노트**: 틀린 문제는 풀이 기록 안의 `wrong`(틀린 횟수, 마지막으로 틀린 시각)에 쌓이고, 기록 저장·불러오기에도 함께 들어가요.
+- **틀린 문제 → 새 문제**: SQL·JAVA에서 틀리면 카드 아래에 ‘새 문제 만들기’가 나와요. 누르면 Claude(sample capability)가 틀린 개념으로 짧은 새 문제를 만들어요. SQL은 Claude가 준 정답 SQL을 실행기로 실제로 돌려서 1~20행이 나오는지 확인한 뒤 보여주고, 그 결과와 비교해 채점해요(안 맞으면 한 번만 다시 요청). JAVA는 4지선다로 만들어요. 새 문제는 기록에 남지 않아요(`app.js`의 `sqlMakeGen`, `java.js`의 `jMakeGen`). claude.ai 밖(GitHub 등)에서는 대신 비슷한 기존 문제를 보여줘요(`app.js`의 `related`, `java.js`의 `jRelated`).
 - **내 필기**: 같은 브라우저의 localStorage `wbnotes:v1`에 페이지마다 글자와 펜 획(좌표 목록)을 저장해요. 패널의 ⋮ 메뉴에서 파일로 백업하거나 다른 기기에서 불러올 수 있어요.

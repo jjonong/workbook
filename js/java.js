@@ -366,13 +366,84 @@
     });
     return '출력 결과 맞히기 · ' + (lines && lines.length ? lines[0].slice(0, 56) : '코드 실행 결과');
   }
+  // 틀린 문제 → Claude가 만든 새 객관식 문제로 다시 연습 (claude.ai에서만)
+  var JGEN = {}, jgenSeq = 0;
+  function jGenPrompt(n) {
+    var p = jbyN[n], c = JCH.filter(function (x) { return x.no === p.ch; })[0], mine = JS.a[n];
+    var model = p.t === 'mc' ? '정답 보기: ' + jText(p.choices[p.ans]) : p.t === 'out' ? 'Correct output:\n' + p.ans : jText(p.answer || '');
+    var studentSaid = p.t === 'mc' ? (typeof mine === 'number' && p.choices[mine] != null ? 'Student picked: ' + jText(p.choices[mine]) : '') : (typeof mine === 'string' && mine.trim() ? 'Student wrote:\n' + mine.slice(0, 1500) : '');
+    return [
+      'You write ONE new short multiple-choice Java practice question for a Korean beginner (교재: 자바의 정석) who just got a question wrong.',
+      'Goal: practice the same concept the student missed, in a DIFFERENT situation than the original (different code, values or example). Same level or a little easier.',
+      'Rules:',
+      '- Exactly 4 choices, exactly one correct. Wrong choices should be the mistakes a beginner would really make.',
+      '- If you include code, keep it under 15 lines, valid Java 17, and if you ask for its output, trace it carefully: the correct choice MUST be the exact output.',
+      '- Korean, polite 해요체. Put code only in "code" (plain text, no Markdown fences), not in "question".',
+      'Reply with ONLY this JSON:',
+      '{"question": "...", "code": "" , "choices": ["...", "...", "...", "..."], "answer": 0, "explain": "왜 그 보기가 답인지 1-3문장(해요체)"}',
+      '',
+      'CHAPTER: ' + p.ch + '장 ' + (c ? c.title : ''),
+      'ORIGINAL QUESTION: ' + jText(p.q).slice(0, 800),
+      p.code ? 'ORIGINAL CODE:\n' + jText(p.code).slice(0, 1500) : '',
+      p.t === 'mc' ? 'ORIGINAL CHOICES: ' + p.choices.map(function (x, i) { return (i + 1) + ') ' + jText(x); }).join(' / ') : '',
+      'MODEL ANSWER: ' + model.slice(0, 1500),
+      studentSaid
+    ].filter(Boolean).join('\n');
+  }
+  function jGenCheck(g) {
+    if (!g || typeof g !== 'object' || typeof g.question !== 'string' || !g.question.trim()) return { err: 'question must be a non-empty string.' };
+    if (!Array.isArray(g.choices) || g.choices.length !== 4 || g.choices.some(function (x) { return typeof x !== 'string' || !x.trim(); })) return { err: 'choices must be an array of exactly 4 non-empty strings.' };
+    var uniq = {}; g.choices.forEach(function (x) { uniq[x.trim()] = 1; }); if (Object.keys(uniq).length !== 4) return { err: 'the 4 choices must all be different.' };
+    if (g.answer !== +g.answer || g.answer < 0 || g.answer > 3) return { err: 'answer must be the 0-based index (0-3) of the correct choice.' };
+    return { ok: true, g: { question: g.question.trim(), code: typeof g.code === 'string' ? g.code.replace(/^```\w*\n?|```$/g, '').replace(/\s+$/, '') : '', choices: g.choices.map(function (x) { return x.trim(); }), answer: +g.answer, explain: String(g.explain || '').trim() } };
+  }
+  function jGenCardHtml(id, g) {
+    return '<div class="gen-card" data-gid="' + id + '">' +
+      '<div class="gen-q"><span class="gen-tag">새 문제</span>' + esc(g.question) + '</div>' +
+      (g.code ? '<pre class="code gen-code"><code>' + esc(g.code) + '</code></pre>' : '') +
+      '<div class="choices" role="radiogroup" aria-label="새 문제 보기">' + g.choices.map(function (c, i) {
+        return '<label class="choice"><input type="radio" name="jg-' + id + '" value="' + i + '"><span><b class="cno">' + '①②③④'[i] + '</b> ' + esc(c) + '</span></label>';
+      }).join('') + '</div>' +
+      '<div class="actions"><button class="btn primary" type="button" data-gact="grade">채점하기</button><button class="btn ghost" type="button" data-gact="answer">정답·해설</button><button class="btn ghost" type="button" data-gact="again">다른 새 문제</button></div>' +
+      '<div class="out gen-out" aria-live="polite"></div></div>';
+  }
+  function jMakeGen(n, body) {
+    WB.genBusy(body, 'Claude가 방금 틀린 개념으로 객관식 문제를 만들고 있어요.');
+    WB.getSample().then(function (sample) {
+      if (!sample) throw { code: 'not_granted' };
+      var prompt = jGenPrompt(n), opt = { modelTier: 'quick', cache: false };
+      return sample.json(prompt, opt).then(function (g) {
+        var v = jGenCheck(g); if (v.ok) return v.g;
+        return sample.json(prompt + '\n\nYOUR PREVIOUS REPLY WAS REJECTED: ' + v.err + '\nFix it and reply with the corrected JSON only.', opt).then(function (g2) {
+          var v2 = jGenCheck(g2); if (v2.ok) return v2.g; throw { code: 'bad_gen' };
+        });
+      });
+    }).then(function (g) {
+      var id = 'jg' + (++jgenSeq); JGEN[id] = g;
+      body.innerHTML = jGenCardHtml(id, g);
+    }).catch(function (e) { WB.genFail(body, e); });
+  }
+  function jGenAct(body, gc, act) {
+    var g = JGEN[gc.dataset.gid], out = gc.querySelector('.gen-out'), picked = gc.querySelector('input[type="radio"]:checked');
+    var mark = function () { $$('.choice', gc).forEach(function (l, i) { l.classList.toggle('right', i === g.answer); l.classList.toggle('wrong', !!picked && i === +picked.value && i !== g.answer); }); };
+    var exp = g.explain ? '<div class="exp" style="margin-top:6px">' + esc(g.explain) + '</div>' : '';
+    if (act === 'grade') {
+      if (!picked) { out.innerHTML = '<div class="verdict info"><b>보기를 골라 주세요</b><span>답이라고 생각하는 보기를 먼저 고른 뒤 채점해요.</span></div>'; return; }
+      mark();
+      out.innerHTML = (+picked.value === g.answer ? '<div class="verdict ok"><b>정답이에요</b><span>이번에는 맞혔어요. 원래 문제도 다시 풀어 보세요.</span></div>' : '<div class="verdict bad"><b>아직이에요</b><span>정답은 ' + '①②③④'[g.answer] + '이에요.</span></div>') + exp;
+    }
+    if (act === 'answer') { mark(); out.innerHTML = '<div class="verdict info"><b>정답 ' + '①②③④'[g.answer] + '</b><span>' + esc(g.choices[g.answer]) + '</span></div>' + exp; }
+  }
+  WB.genHandlers.java = { make: jMakeGen, act: jGenAct };
   function jShowRec(n, on) {
     var card = $('#jq-' + n); if (!card) return;
     var box = card.querySelector('.rec');
     if (!on) { if (box) box.remove(); return; }
-    var list = jRelated(n, 3); if (!list.length) return;
-    if (!box) { box = document.createElement('div'); box.className = 'rec'; card.appendChild(box); }
-    box.innerHTML = WB.recHtml(list.map(function (r) { var p = jbyN[r.n]; return { n: r.n, lv: p.lv, lvName: JLV[p.lv], text: (p.ch !== jbyN[n].ch ? p.ch + '장 · ' : '') + jRecText(p), why: r.why, sub: false }; }), 'data-jrecgo');
+    if (box) return;
+    var list = jRelated(n, 3);
+    box = document.createElement('div'); box.className = 'rec'; card.appendChild(box);
+    var sim = list.length ? WB.recHtml(list.map(function (r) { var p = jbyN[r.n]; return { n: r.n, lv: p.lv, lvName: JLV[p.lv], text: (p.ch !== jbyN[n].ch ? p.ch + '장 · ' : '') + jRecText(p), why: r.why, sub: false }; }), 'data-jrecgo').replace(/^<div class="rec-h">[^<]*<\/div>/, '') : '';
+    box.innerHTML = WB.genBoxHtml('java', n, sim);
   }
   document.addEventListener('click', function (e) { var b = e.target.closest('[data-jrecgo]'); if (b) jGoto(+b.dataset.jrecgo); });
 

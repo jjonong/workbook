@@ -454,7 +454,7 @@
 
   function onCardClick(e) {
     var btn = e.target.closest('button'); if (!btn) return;
-    var card = e.target.closest('.card'); if (!card) return;
+    var card = e.target.closest('.card'); if (!card || (btn.closest('.gen-card') && !btn.hasAttribute('data-copy'))) return;
     var n = +card.dataset.n, a = ANS[n], out = card.querySelector('.out'), sol = card.querySelector('.sol');
     var text = card.querySelector('textarea').value;
     if (btn.hasAttribute('data-copy')) {
@@ -523,14 +523,14 @@
 
   // textarea events
   document.addEventListener('input', function (e) {
-    var ta = e.target; if (!ta.matches || !ta.matches('.card textarea')) return;
+    var ta = e.target; if (!ta.matches || !ta.matches('.card textarea:not(.gen-ta)')) return;
     var n = +ta.dataset.n; S.ans[n] = ta.value; save(); fit(ta);
     var s = S.st[n]; if (!s) { var el = ta.closest('.card').querySelector('.status'); var ns = statusOf(n); el.dataset.st = ns; el.textContent = ST_LABEL[ns]; refreshStatsSoon(); }
   });
   var rsT = null; function refreshStatsSoon() { clearTimeout(rsT); rsT = setTimeout(refreshStats, 300); }
   document.addEventListener('keydown', function (e) {
     var ta = e.target; if (!ta.matches || !ta.matches('.card textarea')) return;
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); ta.closest('.card').querySelector('[data-act="run"]').click(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); (ta.classList.contains('gen-ta') ? ta.closest('.gen-card').querySelector('[data-gact="grade"]') : ta.closest('.card').querySelector('[data-act="run"]')).click(); }
     if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault(); var s = ta.selectionStart, en = ta.selectionEnd;
       ta.value = ta.value.slice(0, s) + '  ' + ta.value.slice(en); ta.selectionStart = ta.selectionEnd = s + 2;
@@ -651,14 +651,164 @@
         '<span class="rec-t">' + esc(r.text) + '</span><span class="rec-why">' + (r.why.length ? r.why.map(function (w) { return '<code>' + esc(w) + '</code>'; }).join('') : '') + (r.sub ? '<em>같은 소단원</em>' : '') + '</span></button>';
     }).join('') + '</div>';
   }
+  // ---------- 틀린 문제 → Claude가 만든 새 문제로 다시 연습 ----------
+  // claude.ai에서 열었을 때만(sample capability) 새 문제를 만들어요. 그 밖에서는 비슷한 기존 문제를 접어서 보여줘요.
+  var sampleP = null, WB_GEN = {};
+  function getSample() {
+    if (!sampleP) sampleP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('sample').catch(function () { return null; }) : Promise.resolve(null);
+    return sampleP;
+  }
+  function canSample() { return !!(window.claude && typeof window.claude.use === 'function'); }
+  function genErrText(e) {
+    var c = e && e.code;
+    if (c === 'not_granted' || c === 'sampling_disabled' || c === 'not_declared' || c === 'capability_disabled' || c === 'capability_removed') return 'Claude를 쓸 수 있게 허용되지 않았어요. 아래의 비슷한 기존 문제로 연습해 보세요.';
+    if (c === 'rate_limited') return '요청이 많아서 잠시 쉬어야 해요. 조금 뒤에 다시 눌러 주세요.';
+    if (c === 'session_expired') return 'claude.ai 로그인이 끊겼어요. 다시 로그인한 뒤 눌러 주세요.';
+    if (c === 'bad_gen') return '채점할 수 있는 문제를 만들지 못했어요. 한 번 더 눌러 주세요.';
+    return '잠시 뒤 다시 눌러 주세요.';
+  }
+  // 새 문제 상자: 처음에는 버튼 하나, 기존 비슷한 문제 목록은 접어서 아래에
+  function genBoxHtml(kind, n, simHtml) {
+    var on = canSample();
+    return '<div class="rec-h">틀린 부분을 새 문제로 연습해 보세요</div>' +
+      '<div class="gen-body" data-gkind="' + kind + '" data-gn="' + n + '">' +
+      (on ? '<div class="gen-start"><span>방금 틀린 개념으로 Claude가 짧은 새 문제를 만들어 줘요.</span><button type="button" class="btn small primary" data-gact="make">새 문제 만들기</button></div>'
+          : '<div class="gen-start"><span>새 문제 만들기는 claude.ai에서 이 페이지를 열었을 때 쓸 수 있어요.</span></div>') +
+      '</div>' + (simHtml ? '<details class="gen-sim"' + (on ? '' : ' open') + '><summary>비슷한 기존 문제 보기</summary>' + simHtml + '</details>' : '');
+  }
+  function genBusy(body, what) {
+    var old = body.querySelector('.gen-card');
+    var h = '<div class="verdict info gen-wait"><b>새 문제를 만드는 중…</b><span>' + what + ' 보통 몇 초, 길면 1분쯤 걸려요.</span></div>';
+    if (old) { var w = body.querySelector('.gen-wait'); if (!w) old.insertAdjacentHTML('beforebegin', h); }
+    else body.innerHTML = h;
+    $$('[data-gact="make"],[data-gact="again"]', body).forEach(function (b) { b.disabled = true; });
+  }
+  function genFail(body, e) {
+    var w = body.querySelector('.gen-wait'); if (w) w.remove();
+    $$('[data-gact]', body).forEach(function (b) { b.disabled = false; });
+    var msg = '<div class="verdict bad gen-err"><b>새 문제를 만들지 못했어요</b><span>' + esc(genErrText(e)) + '</span></div>';
+    var old = body.querySelector('.gen-err'); if (old) old.remove();
+    if (body.querySelector('.gen-card')) body.insertAdjacentHTML('afterbegin', msg);
+    else body.innerHTML = msg + '<div class="gen-start"><span></span><button type="button" class="btn small primary" data-gact="make">다시 만들기</button></div>';
+  }
+  function engineReady() {
+    return new Promise(function (res, rej) { if (engine) return res(); if (engineErr) return rej({ code: 'engine' }); waiters.push(res); });
+  }
+  var GEN = {}, genSeq = 0; // 지금 화면에 있는 새 문제 (새로고침하면 사라져요)
+  function tablesForPrompt() {
+    return Object.keys(W.tableKo).map(function (t) {
+      var tb = W.data[t]; if (!tb) return '';
+      return t + ' (' + W.tableKo[t] + '): ' + tb.cols.map(function (c) { return c.n + ' ' + c.t; }).join(', ') + '\n' +
+        tb.rows.map(function (r) { return r.map(function (v) { return v == null ? 'NULL' : String(v); }).join(' | '); }).join('\n');
+    }).filter(Boolean).join('\n\n');
+  }
+  function sqlGenPrompt(n) {
+    var a = ANS[n] || {}, it = ITEM[n], card = $('#p-' + n), mine = (S.ans[n] || '').trim();
+    var v = card && card.querySelector('.out .verdict'), why = v ? v.textContent.replace(/\s+/g, ' ').trim() : '';
+    return [
+      'You write ONE new short Oracle SQL practice problem for a Korean beginner who just got a problem wrong.',
+      'Goal: practice the same concept the student missed, with a DIFFERENT situation (different table, column, condition or value) than the original. Keep it simple: same level or a little easier than the original, solvable in one short SELECT.',
+      'Rules for the answer SQL:',
+      '- A single SELECT (no INSERT/UPDATE/DELETE/DDL, no semicolon), Oracle syntax, using ONLY the tables below.',
+      '- Old-style Oracle joins (WHERE a.x = b.y, (+) for outer join) are preferred; NVL, DECODE, TO_CHAR, TO_DATE, SUBSTR, ROUND, GROUP BY, HAVING, subqueries are all fine. Do NOT use ROWNUM, ROWID, PIVOT, ROLLUP, CUBE, ANY/ALL, sequences, or FETCH FIRST.',
+      '- It must return between 1 and 20 rows on the data below. Check the data carefully.',
+      '- Give columns in the order the question asks. If the question asks for a sort order, include ORDER BY and list the 0-based SELECT-column indexes of the sort keys in "order_cols" (else []).',
+      'The question must be written in Korean, polite 해요체, 1-2 sentences, and must say exactly which columns to show (and sort order if any). Do not reveal the answer.',
+      'Reply with ONLY this JSON:',
+      '{"question": "...", "sql": "SELECT ...", "order_cols": [0], "hint": "한 문장 힌트(해요체)", "explain": "1-2문장 해설(해요체)"}',
+      '',
+      'TABLES AND ALL DATA (columns, then rows separated by |):',
+      tablesForPrompt(),
+      '',
+      'ORIGINAL PROBLEM: ' + snippet(it.html, 600),
+      'MODEL ANSWER: ' + (a.sql || ''),
+      mine ? 'STUDENT\'S WRONG ANSWER: ' + mine.slice(0, 1500) : '',
+      why ? 'GRADER SAID: ' + why.slice(0, 300) : ''
+    ].filter(function (x) { return x !== ''; }).join('\n');
+  }
+  function sqlGenCheck(g) {
+    if (!g || typeof g !== 'object' || typeof g.question !== 'string' || typeof g.sql !== 'string') return { err: 'JSON must have string fields question and sql.' };
+    var sql = g.sql.trim().replace(/;\s*$/, '');
+    if (!/^(SELECT|WITH)\b/i.test(sql) || /;/.test(sql)) return { err: 'sql must be one SELECT statement without semicolons.' };
+    var r = engine.query(sql, true);
+    if (!r || !r.ok) return { err: 'The SQL failed to run: ' + (r && r.error) };
+    if (r.result.kind !== 'rows') return { err: 'The SQL must be a SELECT.' };
+    var nr = r.result.rows.length, nc = r.result.columns.length;
+    if (nr < 1 || nr > 20) return { err: 'The SQL returned ' + nr + ' rows; it must return 1 to 20 rows.' };
+    var oc = Array.isArray(g.order_cols) ? g.order_cols.filter(function (x) { return x === +x && x >= 0 && x < nc; }) : [];
+    return { ok: true, g: { question: g.question.trim(), sql: sql, order: oc, hint: String(g.hint || '').trim(), explain: String(g.explain || '').trim(), result: r.result } };
+  }
+  function askGen(sample, prompt, check) {
+    var opt = { modelTier: 'quick', cache: false };
+    return sample.json(prompt, opt).then(function (g) {
+      var v = check(g); if (v.ok) return v.g;
+      // 한 번만 고쳐 달라고 해요 (자동 반복은 하지 않아요)
+      return sample.json(prompt + '\n\nYOUR PREVIOUS REPLY WAS REJECTED: ' + v.err + '\nPrevious reply: ' + JSON.stringify(g).slice(0, 3000) + '\nFix it and reply with the corrected JSON only.', opt).then(function (g2) {
+        var v2 = check(g2); if (v2.ok) return v2.g; throw { code: 'bad_gen', message: v2.err };
+      });
+    });
+  }
+  function sqlGenCardHtml(id, g) {
+    return '<div class="gen-card" data-gid="' + id + '">' +
+      '<div class="gen-q"><span class="gen-tag">새 문제</span>' + esc(g.question) + ' <span class="rows-chip">(' + g.result.rows.length + '행)</span></div>' +
+      '<div class="editor"><span class="gut" aria-hidden="true">SQL&gt;</span><textarea class="gen-ta" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="새 문제 답안" placeholder="SQL을 쓰고 채점하기를 눌러 보세요"></textarea></div>' +
+      '<div class="actions"><button class="btn" type="button" data-gact="run">실행</button><button class="btn primary" type="button" data-gact="grade">채점하기 <kbd>Ctrl+Enter</kbd></button>' +
+      (g.hint ? '<button class="btn ghost" type="button" data-gact="hint">힌트</button>' : '') +
+      '<button class="btn ghost" type="button" data-gact="answer">정답·해설</button><button class="btn ghost" type="button" data-gact="again">다른 새 문제</button></div>' +
+      '<div class="out gen-out" aria-live="polite"></div><div class="sol gen-sol" hidden></div></div>';
+  }
+  function sqlMakeGen(n, body) {
+    genBusy(body, 'Claude가 문제를 만들고, 정답 SQL을 실제로 실행해서 확인하고 있어요.');
+    Promise.all([getSample(), engineReady()]).then(function (x) {
+      var sample = x[0]; if (!sample) throw { code: 'not_granted' };
+      return askGen(sample, sqlGenPrompt(n), sqlGenCheck);
+    }).then(function (g) {
+      var id = 'g' + (++genSeq); GEN[id] = g;
+      body.innerHTML = sqlGenCardHtml(id, g);
+      var ta = body.querySelector('.gen-ta'); if (ta) ta.focus({ preventScroll: true });
+    }).catch(function (e) { genFail(body, e && e.code === 'engine' ? { code: 'x' } : e); });
+  }
+  function sqlGenAct(body, gc, act, btn) {
+    var g = GEN[gc.dataset.gid], ta = gc.querySelector('.gen-ta'), out = gc.querySelector('.gen-out'), sol = gc.querySelector('.gen-sol'), text = ta.value.trim();
+    if (act === 'run' || act === 'grade') {
+      if (!text) { out.innerHTML = '<div class="verdict info"><b>비어 있어요</b><span>SQL을 먼저 써 주세요.</span></div>'; return; }
+      withEngine(function () {
+        if (act === 'run') { out.innerHTML = runOutput(engine.run(text)); return; }
+        var mine = engine.query(text, true);
+        if (!mine) { out.innerHTML = ''; return; }
+        if (!mine.ok) { out.innerHTML = '<div class="verdict bad"><b>오류</b><span>' + esc(mine.error) + '</span></div>'; return; }
+        if (mine.result.kind !== 'rows') { out.innerHTML = '<div class="verdict info"><b>확인</b><span>마지막 문장이 SELECT여야 결과를 비교할 수 있어요.</span></div>'; return; }
+        var c = OraLite.compare(mine.result, g.result, { order: g.order });
+        out.innerHTML = (c.ok ? '<div class="verdict ok"><b>정답이에요</b><span>이번에는 맞혔어요. 원래 문제도 다시 풀어 보세요.</span></div>'
+          : '<div class="verdict bad"><b>아직이에요</b><span>' + esc(c.msg) + '</span></div>') + resultTable(mine.result);
+      }, out);
+    }
+    if (act === 'hint') { out.innerHTML = '<div class="verdict info"><b>힌트</b><span>' + esc(g.hint) + '</span></div>'; }
+    if (act === 'answer') {
+      if (!sol.hidden) { sol.hidden = true; return; }
+      sol.innerHTML = '<h4>정답 SQL</h4>' + codeBlock(g.sql) + (g.explain ? '<h4>해설</h4><div class="exp">' + esc(g.explain) + '</div>' : '') + '<h4>정답 결과</h4>' + resultTable(g.result);
+      sol.hidden = false;
+    }
+  }
   function showRec(n, on) {
     var card = $('#p-' + n); if (!card) return;
     var box = card.querySelector('.rec');
     if (!on) { if (box) box.remove(); return; }
-    var list = related(n, 3); if (!list.length) return;
-    if (!box) { box = document.createElement('div'); box.className = 'rec'; card.appendChild(box); }
-    box.innerHTML = recHtml(list.map(function (r) { return { n: r.n, lv: LV_OF[r.n], lvName: LV_NAME[LV_OF[r.n]], text: snippet(ITEM[r.n].html, 70), why: r.why, sub: r.sub }; }), 'data-recgo');
+    if (box) return; // 이미 열려 있으면 만든 새 문제를 그대로 둬요
+    var list = related(n, 3);
+    box = document.createElement('div'); box.className = 'rec'; card.appendChild(box);
+    box.innerHTML = genBoxHtml('sql', n, list.length ? recHtml(list.map(function (r) { return { n: r.n, lv: LV_OF[r.n], lvName: LV_NAME[LV_OF[r.n]], text: snippet(ITEM[r.n].html, 70), why: r.why, sub: r.sub }; }), 'data-recgo').replace(/^<div class="rec-h">[^<]*<\/div>/, '') : '');
   }
+  // 새 문제 버튼들 (SQL은 여기서, JAVA는 WB.genHandlers.java로)
+  WB_GEN.sql = { make: sqlMakeGen, act: sqlGenAct };
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-gact]'); if (!btn || btn.disabled) return;
+    var body = btn.closest('.gen-body'); if (!body) return;
+    var h = WB_GEN[body.dataset.gkind]; if (!h) return;
+    var act = btn.dataset.gact, n = +body.dataset.gn;
+    if (act === 'make' || act === 'again') { h.make(n, body); return; }
+    var gc = btn.closest('.gen-card'); if (gc) h.act(body, gc, act, btn);
+  });
   document.addEventListener('click', function (e) { var b = e.target.closest('[data-recgo]'); if (b) gotoProblem(+b.dataset.recgo); });
 
   // ---------- 오답노트 ----------
@@ -766,6 +916,7 @@
   WB.b64 = b64; WB.unb64 = unb64; WB.pipe = pipe; WB.whenStr = whenStr; WB.plainDownload = plainDownload;
   WB.downloads = function () { return downloadsP; };
   WB.recHtml = recHtml; WB.snippet = snippet; WB.shortDate = shortDate;
+  WB.getSample = getSample; WB.genBoxHtml = genBoxHtml; WB.genBusy = genBusy; WB.genFail = genFail; WB.genHandlers = WB_GEN; WB.genErrText = genErrText;
   // 모든 스크립트를 읽은 뒤 js/main.js가 부른다
   WB.boot = function () {
     if (WB.initJava) WB.initJava();
