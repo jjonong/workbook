@@ -719,27 +719,32 @@
   document.addEventListener('change', function (e) { if (e.target.id === 'wn-sort') { S.ws = e.target.value; save(); renderWrong(); } });
 
   // ---------- routing ----------
-  var VIEWS = ['problems', 'concepts', 'cheatsheet', 'wrong', 'jproblems', 'java', 'jcheat', 'jwrong'];
+  var VIEWS = ['problems', 'concepts', 'cheatsheet', 'wrong', 'jproblems', 'java', 'jcheat', 'jwrong', 'dproblems', 'db', 'dcheat', 'dwrong'];
+  var CAT_OF = { jproblems: 'java', java: 'java', jcheat: 'java', jwrong: 'java', dproblems: 'db', db: 'db', dcheat: 'db', dwrong: 'db' };
+  var BRAND = {
+    sql: ['SQL>', 'SQL 정석 워크북', 'Oracle 실습 · 교안 1~14장'],
+    java: ['Java>', 'Java 정석 워크북', '자바의 정석 4판 · 1~13장'],
+    db: ['ERD>', 'DB 모델링 워크북', '데이터 모델링 · 1~3장']
+  };
   function route() {
     var v = (location.hash || '').slice(1); if (VIEWS.indexOf(v) < 0) v = 'problems';
     VIEWS.forEach(function (x) { $('#view-' + x).hidden = x !== v; });
     $$('.tabs a').forEach(function (a) { if (a.dataset.view === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
-    var isJava = v === 'java' || v === 'jproblems' || v === 'jcheat' || v === 'jwrong';
+    var cat = CAT_OF[v] || 'sql', isJava = cat === 'java';
     if (v === 'wrong') renderWrong(); else if (v === 'problems' && !$('#stage-view').children.length) showStage(S.stage);
     if (WB.onView) WB.onView(v);
-    if (!isJava) lastSql = v; else lastJava = v;
+    lastView[cat] = v;
     document.documentElement.classList.toggle('cat-java', isJava);
+    document.documentElement.classList.toggle('cat-db', cat === 'db');
     if (WB.onCategory) WB.onCategory(isJava);
-    $('#tabs-sql').hidden = isJava; $('#tabs-java').hidden = !isJava;
-    $$('.cat a').forEach(function (a) { var on = (a.dataset.cat === 'java') === isJava; if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
-    $('.cat a[data-cat="sql"]').setAttribute('href', '#' + lastSql);
-    $('.cat a[data-cat="java"]').setAttribute('href', '#' + lastJava);
-    $('#brand-prompt').textContent = isJava ? 'Java>' : 'SQL>';
-    $('#brand-name').textContent = isJava ? 'Java 정석 워크북' : 'SQL 정석 워크북';
-    $('#brand-sub').textContent = isJava ? '자바의 정석 4판 · 1~13장' : 'Oracle 실습 · 교안 1~14장';
-    if (isJava) { var sc = $('#scratch'); if (sc && !sc.hidden) { var x = $('#scratch-close'); if (x) x.click(); } }
+    $('#tabs-sql').hidden = cat !== 'sql'; $('#tabs-java').hidden = cat !== 'java'; $('#tabs-db').hidden = cat !== 'db';
+    $$('.cat a').forEach(function (a) { if (a.dataset.cat === cat) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); a.setAttribute('href', '#' + lastView[a.dataset.cat]); });
+    $('#brand-prompt').textContent = BRAND[cat][0];
+    $('#brand-name').textContent = BRAND[cat][1];
+    $('#brand-sub').textContent = BRAND[cat][2];
+    if (cat !== 'sql') { var sc = $('#scratch'); if (sc && !sc.hidden) { var x = $('#scratch-close'); if (x) x.click(); } }
   }
-  var lastSql = 'problems', lastJava = 'jproblems';
+  var lastView = { sql: 'problems', java: 'jproblems', db: 'dproblems' };
   window.addEventListener('hashchange', function () { route(); window.scrollTo({ top: 0 }); });
 
   document.addEventListener('click', function (e) { if (e.target.closest('#stage-view') || e.target.closest('#wrong-view')) onCardClick(e); });
@@ -764,6 +769,7 @@
   // 모든 스크립트를 읽은 뒤 js/main.js가 부른다
   WB.boot = function () {
     if (WB.initJava) WB.initJava();
+    if (WB.initDb) WB.initDb();
     buildRail(); showStage(S.stage); refreshStats(); buildDocs(); route(); initScratch(); initTheme(); bootEngine();
   };
 })();

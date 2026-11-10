@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>SQL·Java 정석 워크북</title>
+<title>SQL·Java·DB 정석 워크북</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -7,11 +7,12 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/java.css">
 <link rel="stylesheet" href="css/notes.css">
+<link rel="stylesheet" href="css/db.css">
 <script src="js/theme-init.js"></script>
 <header class="top">
   <div class="top-in">
     <div class="brand"><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
-    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a></nav>
+    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a></nav>
     <nav class="tabs" id="tabs-sql" aria-label="SQL 보기">
       <a href="#problems" data-view="problems">실습 문제</a>
       <a href="#concepts" data-view="concepts">개념 정리</a>
@@ -23,6 +24,12 @@
       <a href="#java" data-view="java">개념 정리</a>
       <a href="#jcheat" data-view="jcheat">핵심 정리</a>
       <a href="#jwrong" data-view="jwrong">오답노트<span class="tab-n" id="jwrong-n" hidden></span></a>
+    </nav>
+    <nav class="tabs" id="tabs-db" aria-label="DB 모델링 보기" hidden>
+      <a href="#dproblems" data-view="dproblems">실습 문제</a>
+      <a href="#db" data-view="db">개념 정리</a>
+      <a href="#dcheat" data-view="dcheat">핵심 정리</a>
+      <a href="#dwrong" data-view="dwrong">오답노트<span class="tab-n" id="dwrong-n" hidden></span></a>
     </nav>
     <div class="spacer"></div>
     <div class="engine-pill" id="engine-pill" title="브라우저 안에서 SQL을 실행하는 실행기 상태"><i></i><span id="engine-text">실행기 불러오는 중…</span></div>
@@ -195,6 +202,83 @@
   <section class="view" id="view-jwrong" hidden>
     <div class="wn" id="jwrong-view"></div>
   </section>
+  <section class="view" id="view-dproblems" hidden>
+    <div class="pgrid">
+      <aside class="rail" aria-label="DB 모델링 진행 상황">
+        <div class="panel collapsible open" id="dpanel-progress">
+          <h3>진행 상황</h3>
+          <div class="stats">
+            <div class="stat"><b id="dst-ok">0</b><span>맞힌 문제</span></div>
+            <div class="stat"><b id="dst-done">0</b><span id="dst-total">푼 문제</span></div>
+          </div>
+          <div class="body">
+            <div class="dg-tools"><button type="button" class="to-sync" id="dto-sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>기록 저장하기</button><button type="button" id="ddg-open">모두 펼치기</button><span>·</span><button type="button" id="ddg-close">모두 접기</button></div>
+            <div class="dgrps" id="ddots"></div>
+            <div class="legend"><span class="l-ok">정답</span><span class="l-bad">오답</span><span class="l-seen">답만 확인</span><span class="l-draft">작성 중</span></div>
+          </div>
+        </div>
+        <div class="panel collapsible" id="dpanel-sync">
+          <h3>기록 저장·불러오기</h3>
+          <div class="body">
+            <p class="note-sm" style="margin-top:0">DB 모델링 기록은 이 브라우저에만 저장돼요. 다른 기기에서 이어서 풀려면 여기서 저장하고, 그 기기에서 불러오세요. SQL·자바 기록과는 따로 저장돼요.</p>
+            <div class="sync-row"><button class="btn small" id="dsync-save" type="button">파일로 저장</button><button class="btn small" id="dsync-load" type="button">파일 불러오기</button><input type="file" id="dsync-file" accept=".json,.txt,application/json,text/plain" hidden></div>
+            <div class="sync-row"><button class="btn small" id="dsync-code" type="button">코드 만들기</button><button class="btn small" id="dsync-paste" type="button">코드 붙여넣기</button></div>
+            <div id="dsync-box" hidden>
+              <textarea id="dsync-text" class="sync-text" spellcheck="false" autocomplete="off"></textarea>
+              <div class="sync-row" id="dsync-box-act"></div>
+            </div>
+            <p class="note-sm" id="dsync-msg" role="status"></p>
+          </div>
+        </div>
+        <div class="panel collapsible open" id="dpanel-stages">
+          <h3>교안 장</h3>
+          <div class="body"><ul class="stages" id="dstages"></ul></div>
+        </div>
+        <div class="panel collapsible open" id="dpanel-data">
+          <h3>내 기록</h3>
+          <div class="body">
+            <button class="btn ghost small" id="dclear" type="button">DB 모델링 답과 기록 모두 지우기</button>
+            <div id="dclear-confirm" hidden class="note-sm">정말 지울까요? 이 기기에 저장된 DB 모델링 답이 모두 사라져요.
+              <div style="display:flex;gap:6px;margin-top:6px"><button class="btn small" id="dclear-yes" type="button">지우기</button><button class="btn small ghost" id="dclear-no" type="button">취소</button></div></div>
+          </div>
+        </div>
+      </aside>
+      <div class="pmain" style="min-width:0">
+        <div class="intro">
+          <p><b>객관식 문제</b>는 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요. 강의 교안(1장 데이터 모델링 이론, 2장 개념 모델링, 3장 논리 모델링)과 수업 필기를 바탕으로 만들었고, 장마다 기초·응용·심화가 고루 있어요.</p>
+          <p><b>서술·설계 문제</b>는 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나와요. 비교해 보고 ‘맞았어요/틀렸어요’로 스스로 채점하거나, ‘Claude에게 채점받기’로 내 설계를 채점받을 수 있어요. 엔티티는 <code>주문(주문번호 | 주문일자, 고객번호 FK)</code>처럼 써도 돼요.</p>
+        </div>
+        <div id="dstage-view"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-db" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-db">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-db" aria-label="DB 모델링 개념 정리 목차"></nav>
+      <article class="doc" id="doc-db"></article>
+    </div>
+  </section>
+
+  <section class="view" id="view-dcheat" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-dcheat">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-dcheat" aria-label="DB 모델링 핵심 정리 목차"></nav>
+      <div style="min-width:0">
+        <label class="search" for="dcheat-q">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input id="dcheat-q" type="search" placeholder="용어나 개념으로 찾기 (예: 식별자, 정규형, 이력, 주제영역, 코드)" autocomplete="off">
+          <span class="cnt" id="dcheat-cnt"></span>
+        </label>
+        <article class="doc" id="doc-dcheat"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-dwrong" hidden>
+    <div class="wn" id="dwrong-view"></div>
+  </section>
 </main>
 
 <button type="button" class="fab jfab" id="jfab" aria-expanded="false" aria-controls="jscratch" aria-label="Java 연습장" title="Java 연습장 열기 (끌어서 옮길 수 있어요)">
@@ -290,9 +374,13 @@
 <script src="data/java-problems.js"></script>
 <script src="data/java-concepts.js"></script>
 <script src="data/java-cheatsheet.js"></script>
+<script src="data/db-problems.js"></script>
+<script src="data/db-concepts.js"></script>
+<script src="data/db-cheatsheet.js"></script>
 <script src="js/oralite.js"></script>
 <script src="js/app.js"></script>
 <script src="js/java.js"></script>
+<script src="js/db.js"></script>
 <script src="js/notes.js"></script>
 <script src="js/main.js"></script>
 </body></html>

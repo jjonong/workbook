@@ -1,6 +1,6 @@
-# SQL·Java 정석 워크북
+# SQL·Java·DB 정석 워크북
 
-Oracle SQL(교안 1~14장)과 「자바의 정석 4판」(1~13장)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
+Oracle SQL(교안 1~14장), 「자바의 정석 4판」(1~13장), DB 모델링(데이터 모델링 교안 1~3장)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
 
 ## 파일 구조
 
@@ -9,12 +9,14 @@ index.html              화면 뼈대(HTML)만. CSS·JS·데이터는 아래 파
 css/
   style.css             공통 + SQL 화면 스타일 (색상 변수, 라이트/다크 모드 포함)
   java.css              JAVA 화면 전용 스타일
+  db.css                DB 모델링 화면 전용 스타일
   notes.css             내 필기 사이드 패널 스타일
 js/
   theme-init.js         화면이 그려지기 전에 라이트/다크 설정 적용
   oralite.js            Oracle 문법을 SQLite(sql.js)에서 돌려주는 SQL 실행기
-  app.js                공통 화면(SQL/JAVA 전환, 탭, 테마) + SQL 실습 문제·SQL 연습장
+  app.js                공통 화면(SQL/JAVA/DB 전환, 탭, 테마) + SQL 실습 문제·SQL 연습장
   java.js               JAVA 실습 문제, 기록 저장·불러오기, Java 연습장, Claude 채점
+  db.js                 DB 모델링 실습 문제, 오답노트, 기록 저장·불러오기, Claude 채점
   notes.js              내 필기 (오른쪽 사이드 패널: 글자 + 펜 필기, 페이지, 이미지·파일 저장)
   main.js               모든 파일을 읽은 뒤 화면을 시작
 data/
@@ -27,6 +29,9 @@ data/
   java-problems.js      JAVA 문제 520개
   java-concepts.js      JAVA 개념 정리 탭 (HTML)
   java-cheatsheet.js    JAVA 핵심 정리 탭 (HTML)
+  db-problems.js        DB 모델링 문제 132개 (1~3장)
+  db-concepts.js        DB 모델링 개념 정리 탭 (HTML)
+  db-cheatsheet.js      DB 모델링 핵심 정리 탭 (HTML)
 tools/
   verify-java.js        JAVA 문제 검사기 (실제로 컴파일·실행해서 정답 확인)
 ```
@@ -51,6 +56,13 @@ node tools/verify-java.js 5 7      # 5장, 7장만
 node tools/verify-java.js 421      # 421번 문제만 (14 이상은 문제 번호)
 ```
 
+**DB 모델링 문제 고치기·추가하기**: `data/db-problems.js`에서 번호(`n`)를 찾아 고쳐요. 규칙은 JAVA와 같고(`n`은 바꾸지 않기), 유형은 두 가지예요.
+
+- `t: "mc"` 객관식: `choices` 보기 배열, `ans` 정답 보기 위치(0부터)
+- `t: "self"` 서술·설계: `answer` 모범 답안(일반 텍스트), `kw` 핵심 키워드, 필요하면 `code`(문제에 붙는 자료)
+
+새 장(예: 4장 물리 모델링)은 `WDB.chapters`에 장을 추가하고 문제의 `ch`를 그 번호로 쓰면 돼요. 개념 정리 문서의 장 제목은 `<h1 id="d-ch-4">`처럼 써야 문제 화면의 “개념 정리 보기” 링크가 맞는 장으로 가요.
+
 **개념 정리·핵심 정리 글 고치기**: `data/*-concepts.js`, `data/*-cheatsheet.js`의 HTML을 고쳐요. 목차는 `<h1>`, `<h2>` 제목으로 자동으로 만들어져요.
 
 **SQL 문제 고치기**: 문제 글은 `data/sql-problems.js`(`html`), 정답 SQL은 `data/sql-answers.js`에서 같은 번호(`n`)를 찾아 고쳐요.
@@ -60,7 +72,7 @@ node tools/verify-java.js 421      # 421번 문제만 (14 이상은 문제 번�
 ## 동작 메모
 
 - **SQL 실행기**: 실행할 때 jsDelivr에서 sql.js를 불러오므로 인터넷 연결이 필요해요.
-- **Java 연습장과 Claude 채점**: claude.ai에 올린 페이지에서만 동작해요. 브라우저에서 진짜 JVM을 돌릴 수 없어서 Claude가 코드를 읽고 결과를 예측하는 방식이에요. GitHub에서 열면 사용할 수 없다는 안내가 나와요.
-- **풀이 기록**: 브라우저 localStorage에 저장돼요. SQL은 `sqlwb:v3`, JAVA는 `javawb:v1` 키를 써요.
+- **Java 연습장과 Claude 채점**(DB 모델링 서술·설계 문제의 Claude 채점 포함): claude.ai에 올린 페이지에서만 동작해요. 브라우저에서 진짜 JVM을 돌릴 수 없어서 Claude가 코드를 읽고 결과를 예측하는 방식이에요. GitHub에서 열면 사용할 수 없다는 안내가 나와요.
+- **풀이 기록**: 브라우저 localStorage에 저장돼요. SQL은 `sqlwb:v3`, JAVA는 `javawb:v1`, DB 모델링은 `dbwb:v1` 키를 써요.
 - **오답노트·연관 문제 추천**: 틀린 문제는 풀이 기록 안의 `wrong`(틀린 횟수, 마지막으로 틀린 시각)에 쌓이고, 기록 저장·불러오기에도 함께 들어가요. 추천은 SQL은 정답 SQL에 쓰인 키워드·함수와 같은 소단원, JAVA는 코드에 쓰인 식별자·키워드와 같은 장을 기준으로 아직 맞히지 않은 문제를 골라요(`app.js`의 `related`, `java.js`의 `jRelated`).
 - **내 필기**: 같은 브라우저의 localStorage `wbnotes:v1`에 페이지마다 글자와 펜 획(좌표 목록)을 저장해요. 패널의 ⋮ 메뉴에서 파일로 백업하거나 다른 기기에서 불러올 수 있어요.

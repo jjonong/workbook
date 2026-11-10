@@ -1,0 +1,4 @@
+/* DB 모델링 탭: SQL 실행기·연습장은 숨겨요 */
+.cat-db .engine-pill, .cat-db .fab:not(.jfab), .cat-db .scratch:not(.jscratch) { display: none !important; }
+.sol pre.dans { white-space: pre-wrap; word-break: break-word; }
+.q pre.code { white-space: pre; overflow-x: auto; }
