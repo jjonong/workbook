@@ -256,7 +256,7 @@
   cv.addEventListener('pointercancel', function (e) { if (drawing === e.pointerId && cur) { cur = null; H().u.pop(); syncUndo(); render(); } drawing = null; });
 
   // ---------- 지금 위치 넣기 ----------
-  var VIEWN = { problems: 'SQL · 실습 문제', concepts: 'SQL · 개념 정리', cheatsheet: 'SQL · 핵심 정리', jproblems: 'JAVA · 실습 문제', java: 'JAVA · 개념 정리', jcheat: 'JAVA · 핵심 정리' };
+  var VIEWN = { problems: 'SQL · 실습 문제', concepts: 'SQL · 개념 정리', cheatsheet: 'SQL · 핵심 정리', jproblems: 'JAVA · 실습 문제', java: 'JAVA · 개념 정리', jcheat: 'JAVA · 핵심 정리', dproblems: 'DB 모델링 · 실습 문제', db: 'DB 모델링 · 개념 정리', dcheat: 'DB 모델링 · 핵심 정리' };
   $('#nt-where').addEventListener('click', function () {
     var v = (location.hash || '#problems').slice(1).split(/[:/?]/)[0], view = $('#view-' + v);
     var where = VIEWN[v] || '워크북', sub = '';
