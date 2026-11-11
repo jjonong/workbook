@@ -35,7 +35,7 @@ data/
   db-problems.js        DB 모델링 문제 139개 (1~3장, ERD 설계 포함)
   db-concepts.js        DB 모델링 개념 정리 탭 (HTML)
   db-cheatsheet.js      DB 모델링 핵심 정리 탭 (HTML)
-  tune-problems.js      SQL 튜닝 문제 155개 (1~7장·부록)
+  tune-problems.js      SQL 튜닝 문제 166개 (1~7장·부록)
   tune-concepts.js      SQL 튜닝 개념 정리 탭 (HTML, 책 목차 기준)
   tune-cheatsheet.js    SQL 튜닝 핵심 정리 탭 (HTML, 책 색인 기준 용어·힌트·파라미터)
 tools/

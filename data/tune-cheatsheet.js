@@ -439,6 +439,11 @@ WTU.cheat = String.raw`
 <td>p.145</td>
 </tr>
 <tr>
+<td>컬럼 추가와 CF</td>
+<td>변별력 좋은 컬럼을 뒤에 붙이면 정렬이 바뀌어 클러스터링 팩터가 나빠질 수 있음</td>
+<td>3.1.4</td>
+</tr>
+<tr>
 <td>인덱스만 읽고 처리</td>
 <td>모든 컬럼이 인덱스에 있으면 테이블 액세스 없음(Covered)</td>
 <td>p.149</td>
@@ -586,8 +591,13 @@ WTU.cheat = String.raw`
 </tr>
 <tr>
 <td>함수호출부하</td>
-<td>PL/SQL 함수는 느림(컨텍스트 스위칭, Recursive Call) → 액세스 조건으로 먼저 줄이기</td>
+<td>PL/SQL 함수는 느림(인터프리터, 컨텍스트 스위칭, Recursive Call) → 액세스 조건으로 먼저 줄이기, 대량이면 조인으로</td>
 <td>3.3.12</td>
+</tr>
+<tr>
+<td>스캔 효율 측정</td>
+<td>트레이스의 인덱스 단계 cr(읽은 블록)과 Rows(결과) 비교</td>
+<td>3.3.2</td>
 </tr>
 </tbody>
 </table>
@@ -1140,7 +1150,7 @@ WTU.cheat = String.raw`
 </tr>
 <tr>
 <td>MERGE 문</td>
-<td>UPSERT. Optional Clauses, Conditional, DELETE 절</td>
+<td>UPSERT(9i~). Source 기준 Target과 Left Outer 조인 → 성공 UPDATE, 실패 INSERT. Optional Clauses, Conditional, DELETE 절</td>
 <td>p.430</td>
 </tr>
 </tbody>
@@ -1266,8 +1276,13 @@ WTU.cheat = String.raw`
 </tr>
 <tr>
 <td>로컬/글로벌 Prefixed</td>
-<td>조합별 지원 여부 (글로벌 Nonprefixed 없음)</td>
+<td>조합별 지원 여부 (글로벌 파티션 인덱스는 Prefixed만)</td>
 <td>p.454</td>
+</tr>
+<tr>
+<td>로컬 인덱스 장점</td>
+<td>파티션 ADD·DROP·EXCHANGE 때 재생성 불필요 → 무중단 관리</td>
+<td>6.3.2</td>
 </tr>
 <tr>
 <td>Unique 인덱스 제약</td>
@@ -1475,6 +1490,11 @@ WTU.cheat = String.raw`
 <td>7.1.3</td>
 </tr>
 <tr>
+<td>모두 = 조건일 때 비용</td>
+<td>BLEVEL + AVG_LEAF_BLOCKS_PER_KEY + AVG_DATA_BLOCKS_PER_KEY</td>
+<td>7.1.3</td>
+</tr>
+<tr>
 <td>유효 인덱스 선택도</td>
 <td>액세스 조건으로 선택될 인덱스 레코드 비율</td>
 <td>p.509</td>
@@ -1539,7 +1559,7 @@ WTU.cheat = String.raw`
 </tr>
 <tr>
 <td>옵티마이저 한계</td>
-<td>통계 불완전(샘플링, 상관관계, 바인드 변수), 최적화 시간 제약</td>
+<td>통계 불완전(샘플링, 상관관계, 바인드 변수 사용 시 히스토그램 활용 불가), 최적화 시간 제약</td>
 <td>7.2.4</td>
 </tr>
 <tr>

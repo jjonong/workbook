@@ -240,6 +240,7 @@ WTU.concepts = String.raw`
 <li>오라클은 SQL <strong>텍스트 자체</strong>가 이름(ID) 역할을 해요. 공백·대소문자·주석·리터럴 값이 하나라도 다르면 <strong>다른 SQL</strong>로 보고 따로 하드 파싱해요.</li>
 <li>리터럴 값을 그대로 붙이면(<code>WHERE LOGIN_ID = 'tom'</code>, <code>'kim'</code>…) 사용자마다 하드 파싱 → 라이브러리 캐시 경합.</li>
 <li><strong>바인드 변수</strong>를 쓰면 SQL 텍스트가 같아서 <strong>한 번만 하드 파싱</strong>하고 재사용해요.</li>
+<li><strong>이름 없는 SQL</strong>: 프로시저·함수·트리거·패키지는 이름이 있고 딕셔너리에 영구 저장돼요. SQL은 이름이 없어 <strong>텍스트 자체가 식별자</strong>이고 딕셔너리에 저장되지 않아요. 캐시 공간이 부족해 밀려나면 다음 실행 때 다시 하드 파싱해서 적재해요.</li>
 </ul>
 <pre><code class="language-sql">-- ✗ 리터럴: 로그인할 때마다 서로 다른 SQL
 SELECT * FROM CUSTOMER WHERE LOGIN_ID = 'tom';
@@ -404,6 +405,7 @@ SELECT * FROM CUSTOMER WHERE LOGIN_ID = :LOGIN_ID;
 <ul>
 <li>Direct Path I/O를 제외한 모든 블록 I/O는 메모리 버퍼캐시를 경유해요.</li>
 <li>버퍼캐시 탐색 과정: 데이터 블록 주소(DBA)를 <strong>해시 함수</strong>에 넣어 <strong>해시 체인</strong>을 찾고, 체인을 따라 <strong>버퍼 헤더</strong>를 찾아요.</li>
+<li>해시 구조의 성질: 같은 입력 값은 항상 같은 체인에 연결되고, 다른 입력 값이 같은 체인에 연결될 수도 있으며, 체인 안의 정렬은 보장되지 않아요.</li>
 </ul>
 <p><strong>메모리 공유자원 보호(직렬화)</strong></p>
 <ul>
@@ -751,12 +753,14 @@ WHERE 생년월일 = '19821225'   -- ✓
 <li>테이블 액세스 후 <strong>필터 조건</strong>에 의해 대부분 버려진다면 → 그 필터 컬럼을 <strong>인덱스에 추가</strong>하면 테이블 액세스 횟수가 크게 줄어요.</li>
 <li>예: 인덱스 <code>[deptno + job]</code>, 조건 <code>deptno = 30 AND sal &gt;= 2000</code> → 인덱스를 <code>[deptno + job + sal]</code>로 바꾸면 sal 조건을 인덱스에서 걸러요.</li>
 <li>⚠️ 인덱스 <strong>추가</strong>는 DML 부하 증가, 관리 부담이 있으므로 기존 인덱스에 컬럼을 <strong>덧붙이는</strong> 방법이 효과적이에요.</li>
+<li>효과: 인덱스 <strong>스캔량은 그대로</strong>지만 테이블 랜덤 액세스 횟수가 줄어요. 가장 흔한 테이블 액세스 최소화 기법이에요.</li>
+<li>⚠️ <strong>컬럼 추가에 따른 CF 변화</strong>: 키 값이 같은 인덱스 레코드는 ROWID 순으로 정렬돼 있는데, 변별력 좋은 컬럼을 뒤에 추가하면 그 컬럼 순으로 정렬이 바뀌어 <strong>클러스터링 팩터가 나빠질</strong> 수 있어요. 변별력 나쁜 컬럼 뒤에 변별력 좋은 컬럼을 붙일 땐 CF 변화를 확인하세요.</li>
 </ul>
 <h3 id="t-46">3.1.5 인덱스만 읽고 처리 (p.149)</h3>
 <ul>
 <li>쿼리에 쓰인 <strong>모든 컬럼이 인덱스에 있으면</strong> 테이블 액세스가 아예 없어요 → <strong>Covered 쿼리</strong>(Covered Index).</li>
 <li>실행계획에 <code>TABLE ACCESS BY INDEX ROWID</code>가 사라져요.</li>
-<li><strong>Include 인덱스</strong>(SQL Server 기능, 색인 p.150): 리프 블록에만 컬럼을 추가해 두는 방식. 오라클에는 아직 없어요.</li>
+<li><strong>Include 인덱스</strong>(SQL Server 기능, 색인 p.150): 리프 블록에만 컬럼을 추가해 두는 방식. 추가한 컬럼은 수직적 탐색에는 못 쓰고, 필터와 테이블 액세스 줄이기에만 쓰여요. 오라클에는 아직 없어요.</li>
 </ul>
 <h3 id="t-47">3.1.6 인덱스 구조 테이블 (p.152)</h3>
 <ul>
@@ -788,7 +792,8 @@ ORGANIZATION INDEX;
 </table>
 </div>
 <ul>
-<li>💡 SQL Server/MySQL의 “클러스터형 인덱스”(=IOT 개념)와 오라클 “클러스터 테이블”은 다른 개념이에요.</li>
+<li>인덱스 클러스터는 <strong>여러 테이블 레코드를 한 블록에 함께</strong> 저장하는 다중 테이블 클러스터도 가능해요.</li>
+<li>💡 SQL Server/MySQL의 “클러스터형 인덱스”(=IOT 개념)와 오라클 “클러스터 테이블”은 달라요. 오라클 클러스터는 같은 키 값을 <strong>모아만 둘 뿐 정렬하지 않아요</strong>.</li>
 </ul>
 <h2 id="t-49">3.2 부분범위 처리 활용 (p.158)</h2>
 <h3 id="t-50">3.2.1 부분범위 처리 (p.158) ⭐</h3>
@@ -820,7 +825,8 @@ ORGANIZATION INDEX;
 <ul>
 <li><strong>스캔 효율</strong> = 인덱스 리프에서 <strong>읽은 레코드 중 결과로 남는 비율</strong>. 읽고 버리는 게 많을수록 비효율.</li>
 <li>💡 비유: 사전에서 ‘성’으로 시작하고 넷째 글자가 ‘다’인 단어를 찾으면 ‘성’으로 시작하는 모든 단어를 훑어야 해요. 반면 ‘성능검사’로 시작하는 단어는 바로 찾아요.</li>
-<li><strong>선행 컬럼이 모두 = 조건일 때</strong> 필요한 범위만 스캔하고 멈출 수 있어요.</li>
+<li><strong>선행 컬럼이 모두 = 조건일 때</strong> 필요한 범위만 스캔하고 멈출 수 있어요. 선행 컬럼이 조건절에 없거나 = 조건이 아니면 비효율이 생겨요.</li>
+<li><strong>측정 방법</strong>: SQL 트레이스에서 인덱스 단계의 <strong>읽은 블록 수(cr)</strong> 와 <strong>결과 건수(Rows)</strong> 를 비교해요. 예를 들어 결과 10건을 얻으려고 블록 수천 개를 읽었다면 리프에서 수백만 건을 읽고 버린 셈이에요.</li>
 </ul>
 <h3 id="t-56">3.3.3 액세스 조건과 필터 조건 (p.185) ⭐</h3>
 <div class="tw"><table>
@@ -878,6 +884,8 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 </code></pre>
 <ul>
 <li>⚠️ 주의: <strong>IN-List 개수가 적어야</strong> 해요. 많으면 수직적 탐색이 여러 번 반복되어 오히려 느려져요. 또 <strong>해당 컬럼의 Distinct 값이 적어서 값 목록이 고정</strong>일 때 유리.</li>
+<li>⭐ 효과가 있는 경우: 조건을 만족하는 레코드들이 <strong>서로 멀리 떨어져</strong> 있을 때. 어차피 가까이 모여 있다면 범위 스캔과 차이가 거의 없어요.</li>
+<li>💡 인덱스 구조를 바꾸기 어려울 때 쓰는 방법이에요. 근본 해결은 범위 조건 컬럼을 인덱스 뒤로 보내는 것.</li>
 <li>💡 <strong>NUM_INDEX_KEYS</strong> 힌트(색인 p.207): IN-List를 인덱스 <strong>액세스 조건으로 쓸지 필터로 쓸지</strong> 제어. 예 <code>/*+ NUM_INDEX_KEYS(a 고객별가입상품_X1 1) */</code> → 첫 1개 컬럼까지만 액세스 조건.</li>
 </ul>
 <h3 id="t-60">3.3.7 Index Skip Scan 활용 (p.199)</h3>
@@ -918,13 +926,13 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 <td><strong>OR 조건</strong></td>
 <td><code>(:cust_id IS NULL OR 고객ID = :cust_id)</code></td>
 <td>간단</td>
-<td>인덱스 <strong>액세스 조건으로 못 씀</strong>(필터로만), 테이블 필터일 때만 고려</td>
+<td>인덱스 <strong>액세스 조건도, 인덱스 필터 조건도 못 됨</strong> → <strong>테이블 필터</strong>로만 쓰임. 인덱스 선두 컬럼 옵션에는 쓰면 안 됨</td>
 </tr>
 <tr>
 <td><strong>LIKE/BETWEEN</strong></td>
 <td><code>고객ID LIKE :cust_id \|\| '%'</code></td>
-<td>편리</td>
-<td>① 인덱스 선두 컬럼에 쓰면 값이 없을 때 전체 스캔 ② NULL 허용 컬럼에 쓰면 결과 누락(NULL은 LIKE '%'에 안 걸림) ③ <strong>숫자형 컬럼</strong>은 자동 형변환으로 인덱스 못 탐 ④ 가변 길이 컬럼은 다른 값도 걸릴 수 있음</td>
+<td>편리. 변별력 좋은 <strong>필수 조건</strong>이 따로 있어 그게 액세스 조건이 될 때 성능도 좋음</td>
+<td>① 인덱스 선두 컬럼에 쓰면 값이 없을 때 전체 스캔 ② NULL 허용 컬럼에 쓰면 결과 누락(NULL은 LIKE '%'에 안 걸림) ③ <strong>숫자형 컬럼</strong>은 자동 형변환으로 인덱스 못 탐 ④ 가변 길이 컬럼은 다른 값도 걸릴 수 있음(예: '김훈' 검색에 '김훈남'도 나옴)</td>
 </tr>
 <tr>
 <td><strong>UNION ALL</strong></td>
@@ -935,8 +943,8 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 <tr>
 <td><strong>NVL/DECODE</strong></td>
 <td><code>고객ID = NVL(:cust_id, 고객ID)</code></td>
-<td>옵티마이저가 <strong>OR-Expansion</strong>(<code>_or_expand_nvl_predicate</code>)으로 분기 처리</td>
-<td>이 패턴을 <strong>여러 컬럼에 쓰면</strong> 하나만 분기, NOT NULL 컬럼에만 사용 가능</td>
+<td>SQL이 간단하면서 UNION ALL과 비슷한 성능. 옵티마이저가 <strong>OR-Expansion</strong>(<code>_or_expand_nvl_predicate</code>)으로 분기 처리</td>
+<td>NULL 허용 컬럼엔 못 씀, <strong>변환이 안 일어나면 인덱스를 못 탐</strong>, <strong>여러 컬럼에 쓰면</strong> 하나만 분기</td>
 </tr>
 <tr>
 <td><strong>Dynamic SQL</strong></td>
@@ -952,7 +960,8 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 </ul>
 <h3 id="t-65">3.3.12 함수호출부하 해소를 위한 인덱스 구성 (p.225)</h3>
 <ul>
-<li><strong>PL/SQL 사용자 정의 함수</strong>는 매우 느려요: 가상머신(PL/SQL 엔진)에서 실행, 호출 시마다 <strong>컨텍스트 스위칭</strong>, 함수 안의 SQL은 <strong>Recursive Call</strong> 반복.</li>
+<li><strong>PL/SQL 사용자 정의 함수</strong>는 대량 데이터에서 매우 느려요. 이유 세 가지: ① 가상머신(PL/SQL 엔진)에서 <strong>인터프리터</strong> 방식으로 실행 ② 호출 시마다 <strong>컨텍스트 스위칭</strong> ③ 함수 안의 SQL이 <strong>Recursive Call</strong>로 반복 실행(가장 결정적).</li>
+<li>💡 대량 데이터라면 함수 호출 대신 <strong>조인</strong>으로 바꾸는 것을 먼저 고려해요.</li>
 <li>조건절에 함수가 있으면 <strong>테이블 필터</strong> 단계에서 읽은 건수만큼 호출돼요.</li>
 <li>⭐ 해결: <strong>효과적인 인덱스 구성</strong>으로 함수 호출 전에 <strong>액세스 조건으로 대상을 최대한 줄이기</strong>. 예: <code>WHERE 생년 = '1987' AND 회원구분 = :b AND encryption(전화번호) = :tel</code> → <code>[생년 + 회원구분]</code> 인덱스로 먼저 걸러서 함수 호출 횟수 최소화.</li>
 </ul>
@@ -973,17 +982,24 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 <h3 id="t-69">3.4.3 스캔 효율성 이외의 판단 기준 (p.233)</h3>
 <ul>
 <li><strong>수행 빈도</strong> ⭐: 자주 수행되는 SQL은 조금 비효율이어도 전체 영향이 커요.</li>
-<li>NL 조인의 <strong>Inner 쪽</strong> 인덱스는 반복 액세스되므로 특히 중요 → <strong>= 조건 컬럼을 선두</strong>에.</li>
-<li><strong>업무상 중요도</strong>, <strong>클러스터링 팩터</strong>, <strong>데이터량</strong>(작은 테이블은 굳이 인덱스 불필요), <strong>DML 부하</strong>(INSERT가 많은 테이블은 인덱스를 아껴야), <strong>저장 공간</strong>, <strong>인덱스 관리 비용</strong>.</li>
+<li>NL 조인 <strong>Outer(드라이빙) 쪽</strong> 인덱스는 스캔 비효율이 있어도 한 번만 읽으므로 영향이 제한적이에요.</li>
+<li>NL 조인 <strong>Inner 쪽</strong> 인덱스는 비효율이 조인 횟수만큼 누적돼 치명적 → <strong>= 조건 컬럼을 선두</strong>에 두고, 테이블 액세스 없이 <strong>인덱스에서 필터링이 끝나도록</strong> 구성.</li>
+<li><strong>업무상 중요도</strong>, <strong>클러스터링 팩터</strong>, <strong>데이터량</strong>(작은 테이블은 굳이 인덱스 불필요, 초대용량은 DML 발생량을 특히 고려), <strong>DML 부하</strong>(기존 인덱스 개수, 초당 DML 발생량, 자주 갱신되는 컬럼 포함 여부), <strong>저장 공간</strong>, <strong>인덱스 관리 비용</strong>.</li>
 </ul>
 <h3 id="t-70">3.4.4 공식을 초월한 전략적 설계 (p.236)</h3>
 <ul>
 <li>모든 조건 조합에 최적 인덱스를 만들 순 없으니, 핵심 액세스 경로 <strong>한두 개를 전략적으로</strong> 설계하고 나머지는 그걸 활용하도록.</li>
-<li>예: 가입상품 조회 화면에서 조회 기간 등 범위 조건이 들어가도, 자주 쓰는 = 조건 컬럼 조합을 앞에 두고 범위 컬럼을 뒤에. 필요하면 <strong>IN-List</strong> 로 범위를 = 처럼 처리할 수 있도록 설계.</li>
+<li>책의 예(보험 가계약 조회): = 조건 컬럼을 모두 앞에 두는 공식대로 하면 인덱스가 수십 개 필요해 DML 부담이 너무 커요. 그래서 <strong>일자 조건을 선두</strong>로 한 소수의 인덱스로 줄이는 전략을 택해요.</li>
+<li>💡 가장 많이 쓰는 조회 패턴(대부분의 호출)에 최적화하고, 나머지 패턴의 약간의 비효율은 <strong>목표 성능을 만족하는 선</strong>에서 감수해요.</li>
 </ul>
 <h3 id="t-71">3.4.5 소트 연산을 생략하기 위한 컬럼 추가 (p.238)</h3>
 <ul>
-<li>인덱스로 <strong>소트 생략</strong>을 하려면: <strong>= 조건 컬럼</strong>(순서 무관) 다음에 <strong>ORDER BY 컬럼 순서대로</strong>, 그 뒤에 <strong>= 조건이 아닌 조건 컬럼</strong>.</li>
+<li>인덱스는 정렬돼 있으므로 ORDER BY뿐 아니라 <strong>GROUP BY 소트</strong>도 생략할 수 있어요.</li>
+<li><strong>소트 생략 컬럼 순서 공식</strong> ⭐</li>
+<li><strong>= 조건 컬럼</strong>을 먼저 선정 (ORDER BY에 없어도 되고, ORDER BY 컬럼 사이 어디에 둬도 정렬이 깨지지 않음)</li>
+<li><strong>ORDER BY 컬럼</strong>을 순서대로 추가</li>
+<li><strong>= 조건이 아닌 조건 컬럼</strong>은 그 뒤에. 넣을지 말지는 데이터 분포를 보고 결정</li>
+<li>⚠️ 소트만 없애는 구성은, 조건을 만족하는 데이터가 인덱스 <strong>뒤쪽</strong>에 있으면 앞부분을 한참 읽고 버려야 해서 I/O와 대기가 커질 수 있어요.</li>
 <li>예: <code>WHERE 계약ID = :a AND 거래일자 BETWEEN ... ORDER BY 시간대, 회사</code> → 정렬 생략하려면 <code>[계약ID + 시간대 + 회사 + 거래일자]</code>.</li>
 <li>⚠️ I/O 최소화와 소트 생략을 <strong>둘 다</strong> 완벽히 만족시키기 어려울 수 있어 트레이드오프를 판단해야 해요.</li>
 <li>💡 <strong>IN 조건은 = 이 아니다</strong>: IN-List Iterator로 풀면 소트 생략이 깨질 수 있어요(각 값마다 따로 정렬된 결과를 이어 붙이므로).</li>
@@ -995,7 +1011,8 @@ WHERE C1 = 1 AND C2 = 'A' AND C3 BETWEEN 100 AND 200 AND C4 = 'X'
 <li><strong>컬럼 순서 결정 시 선택도 이슈</strong> ⭐</li>
 <li>선두 컬럼들이 모두 <code>=</code> 조건이면 <strong>선택도는 순서와 무관</strong>(2.1.5에서 본 대로 스캔 범위가 같음).</li>
 <li>“선택도 낮은(좋은) 컬럼을 앞에” 가 의미 있는 경우: 그 컬럼이 <strong>항상 조건에 쓰이는지</strong>, 또는 <strong>선두 범위 조건</strong>이라 뒤 컬럼이 필터가 될 때.</li>
-<li>💡 <strong>선분이력</strong>(색인 p.241~244) 같은 <code>시작일 &lt;= :dt AND 종료일 &gt;= :dt</code> 조건은 어느 컬럼이 선두든 범위 조건이라, 최근 데이터 조회가 많으면 <code>[종료일 + 시작일]</code>이 유리해요.</li>
+<li><strong>인덱스 선택도</strong>: 인덱스 컬럼을 <strong>모두 = 조건</strong>으로 조회할 때 평균적으로 선택되는 비율. 선택도가 높은(카디널리티가 높은) 인덱스는 테이블 액세스가 많아 효용이 낮아요.</li>
+<li>⭐ 결론: 선택도가 낮은 컬럼을 앞에 두려는 노력은 의미가 없거나 오히려 손해일 수 있어요. 기준은 <strong>항상(자주) 쓰는 컬럼</strong>을 앞에, 그중 <strong>= 조건 컬럼</strong>을 앞쪽에.</li>
 </ul>
 <h3 id="t-73">3.4.7 중복 인덱스 제거 (p.244)</h3>
 <ul>
@@ -1082,7 +1099,13 @@ AND   c.최종주문금액 &gt;= 20000         -- ④
 </table>
 </div>
 <ul>
-<li><strong>올바른 조인 메소드 선택</strong>: OLTP에서는 일단 NL 조인부터 고려. 랜덤 액세스 때문에 성능이 안 나오면 → 조인 순서 변경 → 소트 머지/해시 조인 검토.</li>
+<li>⭐ NL 조인의 <strong>전체 일량</strong>은 맨 처음 Outer 인덱스 스캔에서 얻는 결과 건수에 좌우돼요(그 건수만큼 이후 단계가 반복되므로).</li>
+<li>
+<p>단계를 하나씩 끝내고 넘어가는 게 아니라 <strong>레코드 한 건씩</strong> 모든 단계를 거쳐 진행돼요.</p>
+</li>
+<li>
+<p><strong>올바른 조인 메소드 선택</strong>: OLTP에서는 일단 NL 조인부터 고려. 랜덤 액세스 때문에 성능이 안 나오면 → 조인 순서 변경 → 소트 머지/해시 조인 검토.</p>
+</li>
 </ul>
 <h3 id="t-80">4.1.5 NL 조인 특징 요약 (p.265) ⭐</h3>
 <ol>
@@ -1128,6 +1151,7 @@ AND   c.최종주문금액 &gt;= 20000         -- ④
 </table>
 </div>
 <ul>
+<li>두 기능 모두 <strong>블록마다 I/O Call이 발생하는 비효율</strong>을 줄이려고 도입됐어요.</li>
 <li>⚠️ 배치 I/O는 Inner 쪽 테이블 블록을 모두 버퍼캐시에서 찾으면(디스크 I/O가 없으면) 데이터 정렬 순서가 바뀌지 않지만, 일부라도 디스크에서 읽으면 <strong>결과 순서가 Outer 순서와 다를 수</strong> 있어요 → 정렬이 필요하면 ORDER BY를 꼭 명시.</li>
 </ul>
 <h2 id="t-83">4.2 소트 머지 조인 (p.274)</h2>
@@ -1165,7 +1189,7 @@ FROM 사원 e, 고객 c WHERE c.관리사원번호 = e.사원번호 ...
 <ul>
 <li>조인 조건식이 <strong>등치(=) 조건이 아닌</strong> 대량 데이터 조인 (해시 조인은 = 조건에서만 가능)</li>
 <li>조인 조건식이 <strong>아예 없는</strong> 카테시안 곱(Cross Join): <code>MERGE JOIN CARTESIAN</code></li>
-<li>양쪽 집합이 <strong>이미 정렬</strong>되어 있거나 인덱스로 정렬 생략 가능할 때</li>
+<li>💡 (보충) 양쪽 집합이 이미 정렬돼 있거나 인덱스로 정렬을 생략할 수 있을 때도 유리할 수 있어요.</li>
 </ul>
 <h3 id="t-88">4.2.5 소트 머지 조인 제어하기 (p.280)</h3>
 <pre><code class="language-sql">SELECT /*+ ORDERED USE_MERGE(c) */ ...    -- 사원 → 고객 순으로 소트 머지
@@ -1176,7 +1200,7 @@ FROM 사원 e, 고객 c WHERE c.관리사원번호 = e.사원번호 ...
 <h3 id="t-89">4.2.6 소트 머지 조인 특징 요약 (p.281)</h3>
 <ol>
 <li><strong>조인을 위해 실시간으로 인덱스를 생성</strong>하는 것과 비슷(Inner 쪽 PGA 정렬 집합). 양쪽 집합을 정렬한 뒤 NL 조인과 같은 방식으로 진행하지만 PGA를 쓰므로 빠름.</li>
-<li><strong>조인 컬럼에 인덱스가 없어도</strong> 됨 → 인덱스 유무에 영향 덜 받음.</li>
+<li><strong>조인 컬럼에 인덱스가 없어도</strong> 됨 → 인덱스 유무에 영향 덜 받음. 특히 양쪽 집합을 <strong>각자 조건으로 먼저 줄일 수 있을 때</strong> 유리해요.</li>
 <li>양쪽 집합을 <strong>개별적으로 읽고</strong> 조인 시작 → 스캔 위주 액세스 방식(Full Scan도 가능).</li>
 <li>⚠️ 모든 처리가 스캔 방식은 아니에요. 양쪽 소스 집합에서 대상을 찾을 때 인덱스를 쓰면 랜덤 액세스가 생겨요(해시 조인도 마찬가지).</li>
 </ol>
@@ -1216,11 +1240,17 @@ SELECT /*+ USE_HASH(e c) SWAP_JOIN_INPUTS(c) */ ... -- c를 Build Input으로
 </code></pre>
 <ul>
 <li><strong>세 개 이상 테이블 해시 조인</strong>: 조인 연결고리를 따라 순방향·역방향 <strong>어떤 조합도</strong> 가능. <code>LEADING</code>으로 첫 번째 Build Input을 정하고, 이후 조인에서 Build Input을 바꾸려면 <code>SWAP_JOIN_INPUTS</code>, 그대로 두려면 <code>NO_SWAP_JOIN_INPUTS</code>.</li>
+<li><code>USE_HASH</code>만 쓰고 순서를 지정하지 않으면 Build Input은 옵티마이저가 정해요. 보통 <strong>카디널리티가 작은</strong> 쪽을 골라요.</li>
 <li>💡 <code>ORDERED</code>/<code>LEADING</code>으로 지정한 첫 테이블이 <strong>Build Input</strong>(위쪽)이 되는 게 기본이에요.</li>
 </ul>
 <h3 id="t-95">4.3.5 조인 메소드 선택 기준 (p.296) ⭐</h3>
-<ol>
-<li><strong>소량</strong> 데이터 조인 → <strong>NL 조인</strong></li>
+<ul>
+<li>
+<p>💡 여기서 “대량”의 기준은 단순 건수가 아니라, <strong>NL 조인을 최적화해도 랜덤 액세스가 많아 목표 성능이 안 나오는</strong> 경우예요.</p>
+</li>
+<li>
+<p><strong>소량</strong> 데이터 조인 → <strong>NL 조인</strong></p>
+</li>
 <li><strong>대량</strong> 데이터 조인 → <strong>해시 조인</strong></li>
 <li>
 <p>대량 데이터 조인인데 해시 조인으로 처리할 수 없을 때(<strong>조인 조건식이 = 조건이 아닐 때</strong>, 조인 조건이 아예 없는 카테시안 곱 포함) → <strong>소트 머지 조인</strong></p>
@@ -1230,7 +1260,7 @@ SELECT /*+ USE_HASH(e c) SWAP_JOIN_INPUTS(c) */ ... -- c를 Build Input으로
 </li>
 <li>이유 ⭐: <strong>해시 테이블은 단 하나의 쿼리를 위해 생성하고 조인이 끝나면 바로 소멸</strong>하는 자료구조. 수행 빈도가 높은 쿼리에 쓰면 CPU·메모리 사용률이 크게 증가하고, 해시 맵 생성 과정의 래치 경합도 생겨요. 반면 NL 조인이 쓰는 인덱스는 영구적으로 유지되며 다양한 쿼리에 공유·재사용돼요.</li>
 <li>💡 해시 조인은 수행빈도가 낮고, 쿼리 수행 시간이 오래 걸리는 <strong>대량 데이터 조인</strong>(배치, DW, OLAP)에 적합.</li>
-</ol>
+</ul>
 <h2 id="t-96">4.4 서브쿼리 조인 (p.299)</h2>
 <h3 id="t-97">4.4.1 서브쿼리 변환이 필요한 이유 (p.299)</h3>
 <ul>
@@ -1319,12 +1349,13 @@ WHERE t.고객번호 = c.고객번호 ...
 <h3 id="t-100">4.4.4 스칼라 서브쿼리 조인 (p.317) ⭐</h3>
 <p><strong>스칼라 서브쿼리 특징</strong></p>
 <ul>
+<li>함수와 달리 <strong>재귀적으로 실행되지 않고</strong>, 컨텍스트 스위칭 없이 메인쿼리와 한 몸체처럼 실행돼요.</li>
 <li>메인쿼리 레코드마다 <strong>정확히 하나의 값</strong>만 반환. 스칼라 서브쿼리를 이용한 조인은 <strong>NL 조인</strong>과 같은 방식이지만, <strong>Outer 조인</strong>처럼 동작(결과 없으면 NULL).</li>
 <li>실행계획: 스칼라 서브쿼리가 <strong>메인쿼리보다 위쪽</strong>에 표시돼요.</li>
 </ul>
 <p><strong>스칼라 서브쿼리 캐싱 효과</strong> (색인 p.318)</p>
 <ul>
-<li>입력 값(메인쿼리 컬럼)과 출력 값을 <strong>쿼리 실행 동안 캐시(PGA)</strong> 에 저장. 같은 입력 값이면 서브쿼리를 실행하지 않고 캐시 값 반환 → <strong>함수 호출 횟수 최소화</strong>에도 활용.</li>
+<li>입력 값(메인쿼리 컬럼)과 출력 값을 <strong>Query Execution Cache</strong>에 저장. 이 캐시는 <strong>쿼리 단위로 PGA</strong>에 할당되고 쿼리가 끝나면 반환돼요. 같은 입력 값이면 서브쿼리를 실행하지 않고 캐시 값 반환 → <strong>함수 호출 횟수 최소화</strong>에도 활용.</li>
 <li>캐시 크기: 파라미터 <code>_query_execution_cache_max_size</code>.</li>
 </ul>
 <pre><code class="language-sql">-- 함수를 스칼라 서브쿼리로 감싸면 입력 값이 같을 때 캐싱되어 호출 감소
@@ -1337,10 +1368,12 @@ SELECT 판매번호, (SELECT GET_상품명(상품번호) FROM DUAL) ...
 </ul>
 <p><strong>두 개 이상의 값 반환</strong></p>
 <ul>
+<li>같은 테이블에서 여러 값을 얻으려고 스칼라 서브쿼리를 여러 번 쓰면 <strong>같은 데이터를 반복해서 읽는</strong> 비효율이 생겨요.</li>
 <li>스칼라 서브쿼리는 값 하나만 반환 → 여러 컬럼이 필요하면 문자열로 <strong>결합 후 SUBSTR로 분리</strong>하거나, 오브젝트 TYPE 사용, 또는 인라인 뷰 + 조인 조건 Pushdown(11g~)이 더 깔끔해요.</li>
 </ul>
 <p><strong>스칼라 서브쿼리 Unnesting</strong> (12c, 색인 p.325)</p>
 <ul>
+<li>💡 <strong>병렬 쿼리</strong>에서는 스칼라 서브쿼리를 피하고 해시 조인으로 처리하는 편이 효과적이에요.</li>
 <li>스칼라 서브쿼리도 NL 방식으로 반복 실행되므로 대량이면 느림 → 12c부터 옵티마이저가 <strong>조인문으로 변환</strong>(Unnesting, 주로 해시 Outer 조인)할 수 있어요.</li>
 <li>힌트 <code>UNNEST</code> / <code>NO_UNNEST</code>, 파라미터 <code>_optimizer_unnest_scalar_sq</code>. ⚠️ 원치 않게 풀려서 성능이 나빠지면 <code>NO_UNNEST</code>로 막기.</li>
 </ul>
@@ -1401,7 +1434,7 @@ SELECT 판매번호, (SELECT GET_상품명(상품번호) FROM DUAL) ...
 </tr>
 <tr>
 <td><strong>Sort Unique</strong></td>
-<td>Unnesting된 서브쿼리가 M쪽 집합이거나 Unique 인덱스 없을 때 <strong>중복 제거</strong>. UNION, MINUS, INTERSECT, DISTINCT</td>
+<td>Unnesting된 서브쿼리가 M쪽 집합이거나 Unique 인덱스 없을 때 <strong>중복 제거</strong>. UNION, MINUS, INTERSECT, DISTINCT. 유일성이 PK·Unique 인덱스로 보장되면 생략</td>
 </tr>
 <tr>
 <td><strong>Hash Unique</strong></td>
@@ -1450,12 +1483,14 @@ SELECT p.상품번호, p.상품명 ... FROM 상품 p
 WHERE ... AND EXISTS (SELECT 'x' FROM 계약 c WHERE c.상품번호 = p.상품번호 AND ...);
 </code></pre>
 <ul>
+<li>💡 <strong>상품 수는 적고 계약 건수는 많을수록</strong> 효과가 커요(DISTINCT는 많은 계약을 다 읽어야 하지만 EXISTS는 상품마다 하나만 찾으면 되므로).</li>
 <li><strong>MINUS → NOT EXISTS</strong> 로 바꾸는 것도 같은 원리.</li>
 </ul>
 <h3 id="t-107">5.2.3 조인 방식 변경 (p.348)</h3>
 <ul>
 <li>인덱스로 소트 생략이 가능한 상황인데 <strong>해시 조인</strong>을 하면 Build Input이 바뀌거나 결과 순서가 보장되지 않아 <strong>SORT ORDER BY</strong> 발생.</li>
 <li><strong>NL 조인</strong>으로 바꾸면(정렬 기준 테이블을 드라이빙, 인덱스로 정렬 순서대로 읽음) 소트 연산 생략 가능.</li>
+<li>조건(예: 지점ID)을 만족하는 데이터가 많고 <strong>부분범위 처리</strong>가 가능한 상황에서 효과가 커요.</li>
 <li>⚠️ 정렬 기준이 <strong>조인 키 컬럼</strong>이면 소트 머지 조인도 Sort Order By를 생략할 수 있어요.</li>
 </ul>
 <pre><code class="language-sql">SELECT /*+ LEADING(c) USE_NL(a) */ ...   -- 계약_X01 [지점ID + 계약일시]로 정렬 순서대로
@@ -1494,14 +1529,20 @@ SELECT * FROM (
 ) WHERE NO &gt;= (:page - 1) * 10 + 1;
 </code></pre>
 <ul>
-<li>체크 포인트: ① 부분범위 처리 가능하도록 SQL 작성(인덱스로 소트 생략 가능하게) ② <strong>작성한 SQL 문을 Top N 쿼리 형태로</strong> ③ ROWNUM 조건은 <strong>안쪽</strong>에.</li>
+<li>체크 포인트: ① 부분범위 처리 가능하도록 SQL 작성(인덱스로 소트 생략 가능하게) ② <strong>작성한 SQL 문을 Top N 쿼리 형태로</strong>(표준 페이징 패턴의 SQL Body 자리에 넣기) ③ ROWNUM 조건은 <strong>안쪽</strong>에.</li>
+<li>💡 뒤쪽 페이지로 갈수록 읽는 양이 늘어나는 단점이 있지만, 사용자는 대부분 앞쪽 몇 페이지만 보므로 보통 문제되지 않아요.</li>
 <li>⚠️ <strong>페이징 처리 ANTI 패턴</strong>: <code>WHERE NO BETWEEN (:page-1)*10+1 AND :page*10</code> 처럼 ROWNUM 조건을 <strong>바깥쪽 한 번에</strong> 쓰면 STOPKEY가 작동하지 않아 전체를 읽어요. (ORDER BY 없이 ROWNUM을 쓰면 정렬 전에 잘려서 틀린 결과도 나와요.)</li>
-<li><strong>부분범위 처리 가능하도록 SQL 수정</strong>: 소트 생략이 깨지는 원인(인덱스 컬럼 가공, OR 조건, IN 조건 등)을 찾아 고쳐야 Stopkey가 의미 있어요. 예: <code>ORDER BY</code> 컬럼이 인덱스와 다르면 COUNT STOPKEY가 있어도 SORT ORDER BY STOPKEY가 되어 전체를 읽어요.</li>
+<li><strong>부분범위 처리 가능하도록 SQL 수정</strong> ⭐</li>
+<li>조건절이 <strong>인덱스를 사용</strong>할 수 있게 작성(컬럼 가공, OR 조건 등 제거)</li>
+<li>조인은 <strong>NL 조인 위주</strong>로(룩업용 작은 테이블은 해시 조인 Build Input으로 써도 됨)</li>
+<li>ORDER BY가 있어도 <strong>소트를 생략할 수 있게</strong> 인덱스 구성</li>
+<li>토드·오렌지 같은 쿼리 툴에서 실제로 부분범위 처리가 되는지(첫 화면이 바로 뜨는지) 테스트</li>
+<li>소트 생략이 깨지면 Stopkey가 있어도 의미가 없어요. 예: <code>ORDER BY</code> 컬럼이 인덱스와 다르면 COUNT STOPKEY가 있어도 SORT ORDER BY STOPKEY가 되어 전체를 읽어요.</li>
 <li><strong>Row Limiting 절</strong>(12c, 색인 p.353·373): <code>OFFSET n ROWS FETCH NEXT m ROWS ONLY</code>. 내부적으로 ROW_NUMBER로 변환되어 Window Sort Pushed Rank 형태로 처리.</li>
 </ul>
 <h3 id="t-111">5.3.3 최소값/최대값 구하기 (p.360) ⭐</h3>
 <ul>
-<li>MIN/MAX를 구할 때도 보통 전체 데이터를 읽어 Sort Aggregate 하지만, <strong>인덱스를 이용</strong>하면 정렬 없이 <strong>첫 번째/마지막 한 건만</strong> 읽고 멈춤.</li>
+<li>MIN/MAX를 구할 때도 보통 전체 데이터를 읽어 Sort Aggregate 하지만, <strong>인덱스를 이용</strong>하면 정렬 없이 <strong>첫 번째/마지막 한 건만</strong> 읽고 멈춤(오라클 8i부터).</li>
 <li>실행계획: <code>FIRST ROW</code> + <code>INDEX RANGE SCAN (MIN/MAX)</code> → <strong>First Row Stopkey 알고리즘</strong>.</li>
 <li>조건: <strong>조건절 컬럼과 MIN/MAX 함수 인자 컬럼이 모두 인덱스에 포함</strong>, 테이블 액세스 X.</li>
 <li>인덱스 <code>[DEPTNO + MGR + SAL]</code>, <code>WHERE DEPTNO = 30 AND MGR = 7698</code> → <code>MAX(SAL)</code> 하나만 읽음 ✓</li>
@@ -1539,7 +1580,7 @@ SELECT LPAD(상품번호, 30) || LPAD(상품명, 30) || ...
 FROM (SELECT 상품번호, 상품명, ... FROM 예수금원장 ORDER BY 상품번호);
 </code></pre>
 <ul>
-<li><strong>SELECT-LIST에 필요한 컬럼만</strong>: <code>SELECT *</code> 로 모든 컬럼을 정렬하면 Sort Area를 많이 써요. 필요한 컬럼만 지정.</li>
+<li><strong>SELECT-LIST에 필요한 컬럼만</strong>: <code>SELECT *</code> 로 모든 컬럼을 정렬하면 Sort Area를 많이 써요. 필요한 컬럼만 지정. 같은 테이블을 똑같이 Full Scan해도 정렬 대상 컬럼을 줄이면 소트 데이터량이 수십 배까지 줄 수 있어요.</li>
 </ul>
 <h3 id="t-116">5.4.2 Top N 쿼리의 소트 부하 경감 원리 (p.383) ⭐</h3>
 <ul>
@@ -1577,7 +1618,7 @@ WHERE RNUM = 1;
 <tbody>
 <tr>
 <td><strong>인덱스</strong></td>
-<td>테이블에 레코드 입력 시 <strong>인덱스에도 입력</strong>(정렬 위치 찾아서). UPDATE는 인덱스 <strong>삭제 + 삽입</strong> 2개 오퍼레이션. 인덱스 개수가 DML 성능에 큰 영향 → 핵심 트랜잭션 테이블은 인덱스 하나라도 줄이기</td>
+<td>테이블에 레코드 입력 시 <strong>인덱스에도 입력</strong>. 테이블은 Freelist로 빈 블록을 받지만 인덱스는 정렬 구조라 <strong>수직적 탐색</strong>으로 입력할 블록을 찾아야 해서 더 무거움. UPDATE는 인덱스 <strong>삭제 + 삽입</strong> 2개 오퍼레이션. 인덱스 개수가 DML 성능에 큰 영향 → 핵심 트랜잭션 테이블은 인덱스 하나라도 줄이기</td>
 </tr>
 <tr>
 <td><strong>무결성 제약</strong></td>
@@ -1601,11 +1642,11 @@ WHERE RNUM = 1;
 </tr>
 <tr>
 <td><strong>Lock</strong></td>
-<td>동시성 제어를 위한 Lock 획득·대기</td>
+<td>필요 이상으로 자주·길게·높은 레벨로 쓰면 DML이 느려지고, 너무 적게·짧게 쓰면 데이터 품질이 나빠짐 → 세심한 동시성 제어 필요</td>
 </tr>
 <tr>
 <td><strong>커밋</strong></td>
-<td>커밋마다 Redo 로그 버퍼 → 디스크 기록(LGWR) 대기</td>
+<td>Fast Commit 덕분에 빠르지만, 커밋마다 Redo 로그 버퍼를 디스크에 기록(LGWR)하는 <strong>Sync 방식</strong>이라 가볍지 않음</td>
 </tr>
 </tbody>
 </table>
@@ -1632,6 +1673,7 @@ WHERE RNUM = 1;
 <p><strong>Lock / 커밋</strong></p>
 <ul>
 <li>커밋은 <strong>LGWR</strong>이 Redo 로그 버퍼를 디스크에 기록할 때까지 대기 → <strong>너무 잦은 커밋은 성능 저하</strong>, 너무 안 하면 Undo 공간 부족·Lock 장기 보유.</li>
+<li>💡 Undo 로깅은 생략할 수 없지만, <strong>INSERT</strong>는 Redo 로깅을 생략할 수 있는 방법이 있어요(NOLOGGING + Direct Path Insert). UPDATE/DELETE는 Redo 생략 불가.</li>
 <li>💡 커밋 내부 과정: DB 버퍼캐시 → (DBWR, 나중에 모아서) 데이터파일, Redo 로그버퍼 → (LGWR, 커밋 시) Redo 로그파일.</li>
 </ul>
 <h3 id="t-121">6.1.2 데이터베이스 Call과 성능 (p.408) ⭐</h3>
@@ -1657,6 +1699,7 @@ WHERE RNUM = 1;
 <h3 id="t-123">6.1.4 인덱스 및 제약 해제를 통한 대량 DML 튜닝 (p.418)</h3>
 <ul>
 <li>대량 INSERT/UPDATE 때는 인덱스·무결성 제약 체크 부담이 큼 → <strong>배치 작업 중에는 인덱스·제약을 해제</strong>했다가 끝난 후 재생성.</li>
+<li>⚠️ <strong>온라인 트랜잭션 시스템에서는 불가</strong>. 동시 트랜잭션이 없는 대량 적재 배치에서만 써요.</li>
 <li><strong>PK 제약과 인덱스 해제 1 – PK 제약에 Unique 인덱스를 사용한 경우</strong>: PK 제약을 <code>DISABLE ... DROP INDEX</code>로 끄고(인덱스도 함께 삭제) 다른 인덱스는 <code>UNUSABLE</code> 상태로 → 입력 후 PK <code>ENABLE</code>, 인덱스 <code>REBUILD</code>.</li>
 <li><strong>PK 제약과 인덱스 해제 2 – PK 제약에 Non-Unique 인덱스를 사용한 경우</strong>: PK를 Non-Unique 인덱스로 만들어 두면 PK 제약만 <code>DISABLE</code>하고 인덱스는 <code>UNUSABLE</code> → 나중에 REBUILD 후 ENABLE NOVALIDATE 가능.</li>
 <li>파라미터 <strong><code>skip_unusable_indexes</code></strong>(기본 TRUE): Unusable 인덱스를 무시하고 DML 진행. ⚠️ Unique 인덱스는 Unusable 상태에서 입력 불가.</li>
@@ -1682,7 +1725,7 @@ SET 최종거래일시 = 거래일시;
 </code></pre>
 <ul>
 <li><strong>조인 뷰</strong>: FROM 절에 두 개 이상 테이블을 가진 뷰. <strong>수정가능 조인 뷰</strong>(Updatable/Modifiable Join View): 입력·수정·삭제가 허용되는 조인 뷰.</li>
-<li>⭐ <strong>키 보존 테이블(Key-Preserved Table)</strong>: 조인된 결과 집합을 통해서도 <strong>중복 없이 Unique하게 식별 가능한</strong> 테이블(1쪽 집합과 조인되는 M쪽 테이블). <strong>키 보존 테이블의 컬럼만 수정 가능</strong>.</li>
+<li>⭐ <strong>키 보존 테이블(Key-Preserved Table)</strong>: 조인된 결과 집합을 통해서도 <strong>중복 없이 Unique하게 식별 가능한</strong> 테이블(1쪽 집합과 조인되는 M쪽 테이블). 쉽게 말해 <strong>뷰에 ROWID를 제공하는 테이블</strong>. <strong>키 보존 테이블의 컬럼만 수정 가능</strong>.</li>
 <li>1쪽 테이블에 <strong>Unique 인덱스(PK)</strong> 가 있어야 옵티마이저가 키 보존을 인식. 없으면 <strong>ORA-01779</strong>(키 보존 테이블이 아닌 테이블로 매핑된 열을 수정할 수 없음).</li>
 <li><strong>비 키-보존 테이블</strong>(Non Key-Preserved Table): 키 보존 테이블이 아닌 쪽.</li>
 <li><strong>ORA-01779 회피</strong>: 10g까지 <code>BYPASS_UJVC</code> 힌트(11g부터 사용 불가) → 11g~ <strong>MERGE 문</strong>으로 바꾸기.</li>
@@ -1690,7 +1733,8 @@ SET 최종거래일시 = 거래일시;
 </ul>
 <h3 id="t-125">6.1.6 MERGE 문 활용 (p.430) ⭐</h3>
 <ul>
-<li>DW에서 원천(Source)의 변경분을 타겟(Target)에 반영할 때(UPSERT).</li>
+<li>DW에서 기간계 시스템(Source)의 변경분을 타겟(Target)에 반영해 동기화할 때 써요(오라클 9i~).</li>
+<li>원리: Source를 기준으로 Target과 <strong>Left Outer 조인</strong>해서 조인에 성공하면 UPDATE, 실패하면 INSERT → 그래서 <strong>UPSERT</strong>라고도 해요.</li>
 </ul>
 <pre><code class="language-sql">MERGE INTO customer t USING customer_delta s ON (t.cust_id = s.cust_id)
 WHEN MATCHED THEN UPDATE
@@ -1760,11 +1804,14 @@ WHEN NOT MATCHED THEN INSERT
 <ul>
 <li>⚠️ 주의</li>
 <li><strong>Exclusive 모드 TM Lock</strong> → 다른 트랜잭션이 해당 테이블에 DML 불가(커밋 전까지). 트랜잭션이 빈번한 주간에 쓰면 안 됨.</li>
-<li><strong>Freelist를 조회하지 않고 HWM 바깥에 입력</strong> → DELETE로 생긴 빈 공간을 재활용 못 함 → 과거 데이터를 DELETE만 하고 APPEND로 입력하면 테이블 크기가 계속 커짐 → TRUNCATE 또는 파티션 DROP/TRUNCATE로 관리.</li>
+<li><strong>Freelist를 조회하지 않고 HWM 바깥에 입력</strong> → DELETE로 생긴 빈 공간을 재활용 못 함 → 과거 데이터를 DELETE만 하고 APPEND로 입력하면 테이블 크기가 계속 커짐 → Range 파티션이면 <strong>파티션 DROP</strong>으로 지우고, 비파티션 테이블은 주기적으로 <strong>Reorg</strong>.</li>
+<li>NOLOGGING으로 입력한 데이터는 <strong>장애 시 복구 불가</strong> → 입력 후 바로 백업하거나, 언제든 다시 만들 수 있는 데이터에만 사용.</li>
+<li>💡 일반(Conventional) INSERT는 Redo 로깅을 생략할 방법이 없어요.</li>
 </ul>
 <h3 id="t-129">6.2.3 병렬 DML (p.441)</h3>
 <ul>
-<li>INSERT는 APPEND 힌트로 Direct Path Write가 되지만, <strong>UPDATE·DELETE는 기본적으로 Direct Path Write 불가</strong> → <strong>병렬 DML</strong>로 처리하면 Direct Path Write 방식.</li>
+<li>INSERT는 APPEND 힌트로 Direct Path Write가 되지만, <strong>UPDATE·DELETE는 기본적으로 Direct Path Write 불가</strong> → <strong>병렬 DML이 유일한 방법</strong>이에요(오라클은 병렬 DML에 항상 Direct Path Write 사용).</li>
+<li>병렬 INSERT는 APPEND 힌트 없이도 Direct Path Insert로 동작하지만, 병렬 DML이 안 될 때를 대비해 <strong>APPEND를 함께</strong> 쓰는 게 좋아요.</li>
 <li>병렬 DML 활성화 필수: <code>ALTER SESSION ENABLE PARALLEL DML;</code> (12c~ <code>/*+ ENABLE_PARALLEL_DML */</code> 힌트).</li>
 </ul>
 <pre><code class="language-sql">ALTER SESSION ENABLE PARALLEL DML;
@@ -1791,18 +1838,18 @@ UPDATE /*+ FULL(c) PARALLEL(c 4) */ 고객 c SET 고객상태코드 = 'WD' WHERE
 </thead>
 <tbody>
 <tr>
-<td><strong>Range 파티션</strong></td>
-<td>값의 <strong>범위</strong></td>
-<td>주문일자 기준 월별</td>
+<td><strong>Range 파티션</strong>(8~)</td>
+<td>값의 <strong>범위</strong>. 주로 날짜 컬럼. <code>MAXVALUE</code> 파티션으로 나머지 값 수용</td>
+<td>주문일자 기준 월·분기별</td>
 </tr>
 <tr>
-<td><strong>해시 파티션</strong></td>
-<td>해시 함수 결과</td>
-<td>고객ID로 균등 분산(=, IN 조건일 때만 Pruning)</td>
+<td><strong>해시 파티션</strong>(8i~)</td>
+<td>해시 함수 결과. 사용자는 <strong>개수만</strong> 정하고 분산은 오라클이 결정. 변별력 높고 분포가 고른 컬럼에 적합. <strong>= / IN-List 조건일 때만 Pruning</strong></td>
+<td>고객ID로 균등 분산</td>
 </tr>
 <tr>
-<td><strong>리스트 파티션</strong></td>
-<td><strong>불연속적인 값 목록</strong></td>
+<td><strong>리스트 파티션</strong>(9i~)</td>
+<td>사용자가 정한 <strong>값 목록(그룹)</strong>. 값의 순서와 무관. <code>DEFAULT</code> 파티션으로 기타 값 수용. 파티션별 데이터가 고르게 나뉘도록</td>
 <td>지역(서울/경기/…)</td>
 </tr>
 </tbody>
@@ -1858,7 +1905,9 @@ UPDATE /*+ FULL(c) PARALLEL(c 4) */ 고객 c SET 고객상태코드 = 'WD' WHERE
 </table>
 </div>
 <ul>
-<li>조합: <strong>로컬 Prefixed</strong>, <strong>로컬 Nonprefixed</strong>, <strong>글로벌 Prefixed</strong>, 비파티션 (글로벌 Nonprefixed는 오라클에서 지원 안 함).</li>
+<li>조합: <strong>로컬 Prefixed</strong>, <strong>로컬 Nonprefixed</strong>, <strong>글로벌 Prefixed</strong>, 비파티션 (<strong>글로벌 파티션 인덱스는 Prefixed만</strong> 지원).</li>
+<li>로컬 인덱스는 파티션 ADD·DROP·EXCHANGE 때 재생성이 필요 없어, 피크 시간만 피하면 <strong>무중단</strong> 작업이 가능해요. 글로벌 파티션·비파티션 인덱스는 DROP·EXCHANGE·SPLIT 때 Unusable이 되어 재생성하는 동안 서비스에 영향이 있어요.</li>
+<li>⚠️ DBA가 테이블과 인덱스 파티션을 수동으로 똑같이 맞춰도 오라클이 자동 관리하지 않으므로 <strong>로컬이 아니라 글로벌 파티션 인덱스</strong>예요.</li>
 <li><strong>중요한 인덱스 파티션 제약</strong> ⭐: <strong>Unique 인덱스를 파티셔닝하려면 파티션 키가 모두 인덱스 구성 컬럼이어야</strong> 해요. (그래야 다른 파티션에 같은 값이 없음을 보장)</li>
 <li>그래서 PK 인덱스를 로컬로 만들려면 파티션 키를 PK에 포함해야 하고, 못하면 글로벌/비파티션 인덱스가 되어 파티션 관리가 불편해져요.</li>
 </ul>
@@ -1897,7 +1946,7 @@ UPDATE /*+ FULL(c) PARALLEL(c 4) */ 고객 c SET 고객상태코드 = 'WD' WHERE
 <li>종류: DML Lock, DDL Lock, 래치, 버퍼 Lock, 라이브러리 캐시 Lock/Pin 등.</li>
 <li><strong>DML Lock</strong>: 다중 트랜잭션이 동시에 액세스하는 사용자 데이터의 <strong>무결성 보호</strong>.</li>
 <li><strong>DML 로우 Lock</strong>(TX Lock, 색인 p.467): 두 트랜잭션이 <strong>같은 로우를 동시에 변경</strong>하지 못하도록. 로우 Lock은 항상 <strong>배타적 모드</strong>. 단, <strong>MVCC 모델</strong> 덕분에 <strong>SELECT는 Lock 없이</strong> 읽음(변경 중인 로우도 Consistent 모드로 읽음, FOR UPDATE 제외).</li>
-<li><strong>DML 테이블 Lock</strong>(<strong>TM Lock</strong>, 색인 p.468): 변경 중인 테이블 구조를 다른 트랜잭션이 바꾸지 못하게. Lock 모드: RS, RX, S, SRX, X. </li>
+<li><strong>DML 테이블 Lock</strong>(<strong>TM Lock</strong>, 색인 p.468): 로우 Lock을 얻기 전에 먼저 걸어서, 변경 중인 테이블 구조를 다른 트랜잭션이 바꾸지 못하게. Lock 모드: RS, RX, S, SRX, X. 💡 테이블 전체의 DML을 막는다는 뜻이 아니라, “이 테이블에서 작업 중”이라는 <strong>푯말</strong>에 가까워요. </li>
 <li><strong>Lock 호환성</strong>(색인 p.468): 선행 트랜잭션과 후행 트랜잭션이 동시에 Lock을 걸 수 있는지 정리한 표. 예: DML끼리는 RX 모드끼리 호환 → 다른 로우는 동시에 변경 가능.</li>
 <li><strong>대상 리소스가 사용 중일 때</strong>: 기본은 <strong>기다림</strong>. DDL은 <code>ddl_lock_timeout</code>(색인 p.470) 파라미터, SELECT FOR UPDATE는 <code>WAIT n</code> / <code>NOWAIT</code> 로 제어.</li>
 </ul>
@@ -1926,7 +1975,7 @@ UPDATE /*+ FULL(c) PARALLEL(c 4) */ 고객 c SET 고객상태코드 = 'WD' WHERE
 <ul>
 <li><strong>Lock을 푸는 열쇠, 커밋</strong></li>
 <li><strong>블로킹(Blocking)</strong>: 선행 트랜잭션이 Lock을 걸어 후행이 진행 못하고 <strong>멈춰 있는</strong> 상태 → <strong>커밋/롤백</strong>으로 해소.</li>
-<li><strong>교착상태(Deadlock, 색인 p.471)</strong>: 두 트랜잭션이 <strong>서로 상대가 가진 Lock을 기다리며</strong> 진행 못함. 오라클은 먼저 인지한 트랜잭션 쪽 <strong>문장 수준 롤백</strong> + 에러(ORA-00060).</li>
+<li><strong>교착상태(Deadlock, 색인 p.471)</strong>: 두 트랜잭션이 <strong>서로 상대가 가진 Lock을 기다리며</strong> 진행 못함. 오라클은 먼저 인지한 트랜잭션 쪽 <strong>문장 수준 롤백</strong> + 에러(ORA-00060). ⚠️ 트랜잭션 전체가 아니라 문장만 롤백되므로, 에러를 받은 쪽은 <strong>커밋 또는 롤백을 명시적으로 결정</strong>해야 해요(예외 처리가 없으면 Lock을 쥔 채 남을 수 있음).</li>
 <li>커밋 시점 원칙: 불필요하게 트랜잭션을 길게 유지하지 말고, 너무 자주 커밋하지도 말기.</li>
 <li><strong>비동기식 커밋</strong>(색인 p.471~472, 10gR2~): <code>COMMIT WRITE NOWAIT</code> / <code>WAIT</code>, <code>BATCH</code> / <code>IMMEDIATE</code>. LGWR이 Redo를 디스크에 기록할 때까지 기다리지 않음 → 빠르지만 장애 시 데이터 손실 가능.</li>
 <li><strong>배치 커밋</strong>(색인 p.472): <code>BATCH</code> 옵션 — Redo 로그를 모아서 일괄 기록.</li>
@@ -2065,7 +2114,17 @@ WHERE 상품코드 = :prod_cd AND 최종변경일시 = :mod_dt;   -- 0건이면 
 </ul>
 <h3 id="t-143">7.1.3 비용 계산 원리 (p.509)</h3>
 <ul>
-<li>인덱스를 이용한 테이블 액세스 비용(I/O 비용 모델):</li>
+<li>
+<p>인덱스를 이용한 테이블 액세스 비용(I/O 비용 모델):</p>
+</li>
+<li>
+<p>인덱스 키 값을 <strong>모두 = 조건</strong>으로 검색할 때:</p>
+</li>
+</ul>
+<pre><code>비용 = BLEVEL + AVG_LEAF_BLOCKS_PER_KEY + AVG_DATA_BLOCKS_PER_KEY
+</code></pre>
+<ul>
+<li>그 외(범위 조건 포함 등)의 경우:</li>
 </ul>
 <pre><code>비용 = BLEVEL                                   -- 인덱스 수직적 탐색 비용
      + LEAF_BLOCKS × 유효 인덱스 선택도           -- 인덱스 수평적 탐색 비용
@@ -2114,7 +2173,7 @@ WHERE 상품코드 = :prod_cd AND 최종변경일시 = :mod_dt;   -- 0건이면 
 </tr>
 <tr>
 <td><strong>비용기반 옵티마이저</strong>(CBO, Cost-Based)</td>
-<td><strong>통계정보</strong>를 바탕으로 각 실행계획의 <strong>비용을 계산</strong>해 가장 낮은 것 선택</td>
+<td><strong>통계정보</strong>(데이터량, 컬럼 값 수·분포, 인덱스 높이, 클러스터링 팩터 등)를 바탕으로 각 실행계획의 <strong>비용을 계산</strong>해 가장 낮은 것 선택</td>
 <td>현재 표준</td>
 </tr>
 </tbody>
@@ -2141,13 +2200,13 @@ WHERE 상품코드 = :prod_cd AND 최종변경일시 = :mod_dt;   -- 0건이면 
 </tr>
 <tr>
 <td><strong>FIRST_ROWS</strong></td>
-<td>전체 결과 중 <strong>일부만 Fetch</strong> 하다가 멈추는 것을 전제로 <strong>가장 빠른 응답 속도</strong>. (비용·규칙 혼합, 지원 중단 예정)</td>
+<td>전체 결과 중 <strong>일부만 Fetch</strong> 하다가 멈추는 것을 전제로 <strong>가장 빠른 응답 속도</strong>. 인덱스·NL 조인을 선호하는 경향. 폐기 예정이라 비권장</td>
 <td>구 OLTP</td>
 </tr>
 <tr>
 <td><strong>FIRST_ROWS_N</strong></td>
-<td>처음 <strong>N개 로우만 Fetch</strong> 하는 것을 전제로 가장 빠른 응답 속도. N = 1, 10, 100, 1000</td>
-<td><strong>OLTP</strong> (힌트로는 <code>FIRST_ROWS(30)</code> 처럼 임의 숫자 가능)</td>
+<td>처음 <strong>N개 로우만 Fetch</strong> 하는 것을 전제로 가장 빠른 응답 속도. 읽을 건수가 명시돼 FIRST_ROWS보다 비용 산정이 정확. 세션·시스템 설정은 N = 1, 10, 100, 1000</td>
+<td><strong>OLTP</strong> (힌트로는 <code>FIRST_ROWS(30)</code> 처럼 0보다 큰 임의 정수 가능)</td>
 </tr>
 </tbody>
 </table>
@@ -2194,7 +2253,7 @@ WHERE 상품코드 = :prod_cd AND 최종변경일시 = :mod_dt;   -- 0건이면 
 </div>
 <h3 id="t-148">7.2.4 옵티마이저의 한계 (p.518)</h3>
 <ul>
-<li>옵티마이저 행동에 가장 큰 영향을 주는 <strong>통계정보가 완벽하지 않음</strong>: 수집 시간·리소스 부담 때문에 <strong>샘플링</strong>, 컬럼 간 <strong>상관관계</strong> 반영 어려움, 바인드 변수 사용 시 실제 값 모름 → 균등 분포 가정.</li>
+<li>옵티마이저 행동에 가장 큰 영향을 주는 <strong>통계정보가 완벽하지 않음</strong>: 수집 시간·리소스 부담 때문에 <strong>샘플링</strong>, 컬럼 간 <strong>상관관계</strong> 반영 어려움, <strong>바인드 변수를 쓰면 컬럼 히스토그램을 활용할 수 없음</strong>(실제 값을 모르니 균등 분포 가정).</li>
 <li><strong>최적화 시간 제약</strong>: 모든 실행계획 후보를 다 평가할 수 없음(조인 테이블이 많으면 순열 폭발) → 적당히 좋은 계획을 빨리 찾는 게 목표.</li>
 <li>💡 그래서 옵티마이저는 <strong>“완벽한” 답이 아니라 “충분히 좋은” 답</strong>을 찾아요.</li>
 </ul>
