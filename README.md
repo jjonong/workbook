@@ -17,6 +17,7 @@ js/
   app.js                공통 화면(SQL/JAVA/DB 전환, 탭, 테마) + SQL 실습 문제·SQL 연습장
   java.js               JAVA 실습 문제, 기록 저장·불러오기, Java 연습장, Claude 채점
   db.js                 DB 모델링 실습 문제, 오답노트, 기록 저장·불러오기, Claude 채점
+  db-erd.js             DB 모델링 ERD 설계 편집기 (ERD 미리보기, 구조 검사, DDL 내보내기)
   notes.js              내 필기 (오른쪽 사이드 패널: 글자 + 펜 필기, 페이지, 이미지·파일 저장)
   main.js               모든 파일을 읽은 뒤 화면을 시작
 data/
@@ -29,7 +30,7 @@ data/
   java-problems.js      JAVA 문제 520개
   java-concepts.js      JAVA 개념 정리 탭 (HTML)
   java-cheatsheet.js    JAVA 핵심 정리 탭 (HTML)
-  db-problems.js        DB 모델링 문제 132개 (1~3장)
+  db-problems.js        DB 모델링 문제 139개 (1~3장, ERD 설계 문제 12개 포함)
   db-concepts.js        DB 모델링 개념 정리 탭 (HTML)
   db-cheatsheet.js      DB 모델링 핵심 정리 탭 (HTML)
 tools/
@@ -59,7 +60,8 @@ node tools/verify-java.js 421      # 421번 문제만 (14 이상은 문제 번�
 **DB 모델링 문제 고치기·추가하기**: `data/db-problems.js`에서 번호(`n`)를 찾아 고쳐요. 규칙은 JAVA와 같고(`n`은 바꾸지 않기), 유형은 두 가지예요.
 
 - `t: "mc"` 객관식: `choices` 보기 배열, `ans` 정답 보기 위치(0부터)
-- `t: "self"` 서술·설계: `answer` 모범 답안(일반 텍스트), `kw` 핵심 키워드, 필요하면 `code`(문제에 붙는 자료)
+- `t: "self"` 서술: `answer` 모범 답안(일반 텍스트), `kw` 핵심 키워드, 필요하면 `code`(문제에 붙는 자료)
+- `t: "erd"` ERD 설계: `model` 모범 설계, `checks` 구조 검사 규칙, 필요하면 `start`(편집기에 처음 들어 있는 설계). 규칙 종류는 파일 맨 위 주석에 있어요. ERD 미리보기는 jsDelivr에서 mermaid를 불러와 그리고, 불러오지 못하면 목록으로 보여줘요.
 
 새 장(예: 4장 물리 모델링)은 `WDB.chapters`에 장을 추가하고 문제의 `ch`를 그 번호로 쓰면 돼요. 개념 정리 문서의 장 제목은 `<h1 id="d-ch-4">`처럼 써야 문제 화면의 “개념 정리 보기” 링크가 맞는 장으로 가요.
 
