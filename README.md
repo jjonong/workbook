@@ -11,16 +11,16 @@ css/
   java.css              JAVA 화면 전용 스타일
   db.css                DB 모델링 화면 전용 스타일
   tune.css              SQL 튜닝 화면 전용 스타일
-  notes.css             내 필기 사이드 패널 스타일
+  notes.css             메모장(내 필기) 떠 있는 창 스타일
 js/
   theme-init.js         화면이 그려지기 전에 라이트/다크 설정 적용
   oralite.js            Oracle 문법을 SQLite(sql.js)에서 돌려주는 SQL 실행기
-  app.js                공통 화면(SQL/JAVA/DB/튜닝 전환, 탭, 테마) + SQL 실습 문제·SQL 연습장
+  app.js                공통 화면(SQL/JAVA/DB/튜닝 전환, 탭, 테마, 왼쪽 메뉴 접기, 동그란 버튼의 메모장/연습 코드 고르기) + SQL 실습 문제·SQL 연습장
   java.js               JAVA 실습 문제, 기록 저장·불러오기, Java 연습장, Claude 채점
   db-erd.js             DB 모델링 ERD 설계 편집기·그리기
   db.js                 DB 모델링 실습 문제, 오답노트, 기록 저장·불러오기, Claude 채점
   tune.js               SQL 튜닝 실습 문제, 오답노트, 기록 저장·불러오기, Claude 채점
-  notes.js              내 필기 (오른쪽 사이드 패널: 글자 + 펜 필기, 페이지, 이미지·파일 저장)
+  notes.js              메모장 (동그란 버튼 → ‘메모장’으로 여는 창: 글자 + 펜 필기, 페이지, 이미지·파일 저장)
   main.js               모든 파일을 읽은 뒤 화면을 시작
 data/
   sql-tables.js         SQL 실습 테이블과 데이터

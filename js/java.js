@@ -583,8 +583,9 @@
     function setOpen(open) {
       box.hidden = !open; fab.setAttribute('aria-expanded', String(open));
       fab.title = open ? 'Java 연습장 닫기 (끌어서 옮길 수 있어요)' : 'Java 연습장 열기 (끌어서 옮길 수 있어요)';
-      if (open) { placeBox(); setTimeout(function () { ta.focus(); }, 0); }
+      if (open) { if (WB.notes) WB.notes.close(true); placeBox(); setTimeout(function () { ta.focus(); }, 0); }
     }
+    function fabClick() { if (WB.fab) WB.fab.click(fab, box, setOpen, 'Java 연습장'); else setOpen(box.hidden); }
     jScratchPlace = function (isJava) { if (isJava) place(); else if (!box.hidden) setOpen(false); };
     jScratchOpen = function (code, run) {
       ta.value = code; try { localStorage.setItem(DKEY, code); } catch (e) {}
@@ -605,6 +606,7 @@
       var x = Math.max(M, Math.min(vw() - SZ - M, e.clientX - drag.ox)), y = Math.max(topMin(), Math.min(vh() - SZ - M, e.clientY - drag.oy));
       fab.style.left = x + 'px'; fab.style.top = y + 'px';
       if (!box.hidden) placeBox();
+      if (WB.fab) WB.fab.moved();
     });
     function endDrag(e, cancel) {
       if (!drag || e.pointerId !== drag.id) return;
@@ -613,16 +615,16 @@
         var r = fab.getBoundingClientRect();
         pos = { rx: r.left / Math.max(1, vw() - SZ), ry: r.top / Math.max(1, vh() - SZ) };
         try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {}
-      } else if (!cancel) setOpen(box.hidden);
+      } else if (!cancel) fabClick();
     }
     fab.addEventListener('pointerup', function (e) { endDrag(e, false); });
     fab.addEventListener('pointercancel', function (e) { endDrag(e, true); });
-    fab.addEventListener('click', function (e) { if (e.detail === 0) setOpen(box.hidden); });
+    fab.addEventListener('click', function (e) { if (e.detail === 0) fabClick(); });
     fab.addEventListener('keydown', function (e) {
       var k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!k || !e.altKey) return;
       e.preventDefault(); var r = fab.getBoundingClientRect();
       pos = { rx: Math.max(0, Math.min(1, (r.left + k[0] * 40) / (vw() - SZ))), ry: Math.max(0, Math.min(1, (r.top + k[1] * 40) / (vh() - SZ))) };
-      try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {} place();
+      try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {} place(); if (WB.fab) WB.fab.moved();
     });
     $('#jscratch-close').addEventListener('click', function () { setOpen(false); fab.focus(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden && box.contains(document.activeElement)) { setOpen(false); fab.focus(); } });

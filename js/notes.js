@@ -1,11 +1,11 @@
-/* 내 필기: 오른쪽 사이드 패널. 페이지마다 글자(textarea)와 펜 필기(canvas)를 함께 저장해요.
+/* 내 필기(메모장): 동그란 버튼 → ‘메모장’으로 여는 떠 있는 창. 페이지마다 글자(textarea)와 펜 필기(canvas)를 함께 저장해요.
  * 저장 위치: 이 브라우저 localStorage ('wbnotes:v1' 필기 내용, 'wbnotes:ui' 패널 설정) */
 (function () {
   'use strict';
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
   var root = document.documentElement;
-  var tab = $('#nt-tab'), panel = $('#notes'), sheet = $('#nt-sheet'), paper = $('#nt-paper');
+  var panel = $('#notes'), sheet = $('#nt-sheet'), paper = $('#nt-paper');
   var titleEl = $('#nt-title'), ta = $('#nt-text'), cv = $('#nt-ink'), ctx = cv.getContext('2d');
   var stEl = $('#nt-st'), sel = $('#nt-page'), menu = $('#nt-menu'), moreBtn = $('#nt-more');
   if (!panel) return;
@@ -75,23 +75,62 @@
     }
   });
 
-  // ---------- 열기 / 닫기 ----------
-  function setOpen(open) {
+  // ---------- 열기 / 닫기 (지금 보이는 동그란 버튼 옆에 떠요) ----------
+  var FABS = ['#fab', '#jfab'];
+  function visFab() {
+    for (var i = 0; i < FABS.length; i++) { var f = $(FABS[i]); if (f && f.getClientRects().length && getComputedStyle(f).display !== 'none') return f; }
+    return null;
+  }
+  function markFabs() {
+    var f = U.open ? visFab() : null;
+    FABS.forEach(function (sel) {
+      var b = $(sel); if (!b) return;
+      var box = $('#' + b.getAttribute('aria-controls'));
+      if (b === f) b.setAttribute('aria-expanded', 'true');
+      else if (!box || box.hidden) b.setAttribute('aria-expanded', 'false');
+    });
+  }
+  function place() {
+    if (!U.open) return;
+    var f = visFab(), M = 12, W2 = document.documentElement.clientWidth, H2 = window.innerHeight;
+    var t = $('.top'), topMin = t ? Math.max(M, t.getBoundingClientRect().bottom + 8) : M;
+    var w = Math.min(440, W2 - 2 * M), left, top, h;
+    if (f) {
+      var r = f.getBoundingClientRect();
+      var above = r.top - topMin - 10, below = H2 - r.bottom - M - 10, up = above >= below;
+      h = Math.max(320, Math.min(720, up ? above : below));
+      left = (r.left + r.width / 2 > W2 / 2) ? r.right - w : r.left;
+      top = up ? r.top - 10 - h : r.bottom + 10;
+    } else { h = Math.min(720, H2 - topMin - M); left = W2 - w - M; top = topMin; }
+    panel.style.width = w + 'px'; panel.style.height = h + 'px';
+    panel.style.left = Math.max(M, Math.min(W2 - w - M, left)) + 'px';
+    panel.style.top = Math.max(topMin, Math.min(H2 - h - M, top)) + 'px';
+    markFabs(); layout();
+  }
+  function setOpen(open, quiet) {
+    var was = U.open;
     U.open = open; saveUI();
     root.classList.toggle('nt-open', open);
-    tab.setAttribute('aria-expanded', String(open));
-    tab.title = open ? '내 필기 닫기' : '내 필기 열기';
-    if (open) { panel.removeAttribute('inert'); requestAnimationFrame(layout); }
-    else { panel.setAttribute('inert', ''); closeMenu(); }
+    if (open) { panel.removeAttribute('inert'); place(); requestAnimationFrame(layout); if (!quiet && U.mode !== 'pen') setTimeout(function () { ta.focus({ preventScroll: true }); }, 0); }
+    else {
+      var f = visFab(); panel.setAttribute('inert', ''); closeMenu(); markFabs();
+      if (was && !quiet && f) f.focus();
+    }
   }
-  tab.addEventListener('click', function () { setOpen(!U.open); });
-  $('#nt-close').addEventListener('click', function () { setOpen(false); tab.focus(); });
+  $('#nt-close').addEventListener('click', function () { setOpen(false); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape' || !U.open) return;
     if (!menu.hidden) { closeMenu(); moreBtn.focus(); return; }
     var a = document.activeElement;
-    if (panel.contains(a) && a !== ta && a !== titleEl) { setOpen(false); tab.focus(); }
+    if (panel.contains(a) && a !== ta && a !== titleEl) setOpen(false);
   });
+  // 동그란 버튼(app.js·java.js)에서 쓰는 열기·닫기
+  WB.notes = {
+    open: function () { setOpen(true); },
+    close: function (quiet) { if (U.open) setOpen(false, quiet); },
+    isOpen: function () { return !!U.open; },
+    place: place
+  };
 
   // ---------- 글자 / 펜 모드와 도구 ----------
   function setMode(m) {
@@ -372,10 +411,14 @@
   });
 
   // ---------- 화면 변화 ----------
-  window.addEventListener('resize', function () { layout(); });
-  new MutationObserver(function () { readInk(); render(); }).observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+  window.addEventListener('resize', function () { if (U.open) place(); });
+  // 과목이 바뀌면(SQL↔Java) 보이는 버튼이 달라지니 그 옆으로 옮겨요
+  new MutationObserver(function () { readInk(); render(); if (U.open) place(); }).observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
   if (window.matchMedia) { var mq = window.matchMedia('(prefers-color-scheme: dark)'); (mq.addEventListener ? mq.addEventListener('change', function () { readInk(); render(); }) : null); }
   window.addEventListener('beforeunload', function () { if (saveT) save(true); });
 
-  readInk(); showPage(); setMode(U.mode === 'pen' ? 'pen' : 'text'); syncUndo(); setOpen(!!U.open);
+  readInk(); showPage(); setMode(U.mode === 'pen' ? 'pen' : 'text'); syncUndo();
+  // 버튼 위치는 WB.boot()에서 정해지니, 그 뒤에 지난번 열림 상태를 되살려요
+  root.classList.remove('nt-open'); panel.setAttribute('inert', '');
+  if (U.open) setTimeout(function () { setOpen(true, true); }, 0);
 })();

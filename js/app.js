@@ -95,7 +95,7 @@
     function setOpen(open) {
       box.hidden = !open; fab.setAttribute('aria-expanded', String(open));
       fab.title = open ? 'SQL 연습장 닫기 (끌어서 옮길 수 있어요)' : 'SQL 연습장 열기 (끌어서 옮길 수 있어요)';
-      if (open) { placeBox(); setTimeout(function () { ta.focus(); }, 0); }
+      if (open) { if (WB.notes) WB.notes.close(true); placeBox(); setTimeout(function () { ta.focus(); }, 0); }
     }
     // drag vs click
     var drag = null;
@@ -112,6 +112,7 @@
       var x = Math.max(M, Math.min(vw() - SZ - M, e.clientX - drag.ox)), y = Math.max(topMin(), Math.min(vh() - SZ - M, e.clientY - drag.oy));
       fab.style.left = x + 'px'; fab.style.top = y + 'px';
       if (!box.hidden) placeBox();
+      fabMoved();
     });
     function endDrag(e, cancel) {
       if (!drag || e.pointerId !== drag.id) return;
@@ -120,16 +121,16 @@
         var r = fab.getBoundingClientRect();
         pos = { rx: (r.left) / Math.max(1, vw() - SZ), ry: (r.top) / Math.max(1, vh() - SZ) };
         try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {}
-      } else if (!cancel) setOpen(box.hidden);
+      } else if (!cancel) fabClick(fab, box, setOpen, 'SQL 연습장');
     }
     fab.addEventListener('pointerup', function (e) { endDrag(e, false); });
     fab.addEventListener('pointercancel', function (e) { endDrag(e, true); });
-    fab.addEventListener('click', function (e) { if (e.detail === 0) setOpen(box.hidden); }); // keyboard (Enter/Space)
+    fab.addEventListener('click', function (e) { if (e.detail === 0) fabClick(fab, box, setOpen, 'SQL 연습장'); }); // keyboard (Enter/Space)
     fab.addEventListener('keydown', function (e) {
       var k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!k || !e.altKey) return;
       e.preventDefault(); var r = fab.getBoundingClientRect();
       pos = { rx: Math.max(0, Math.min(1, (r.left + k[0] * 40) / (vw() - SZ))), ry: Math.max(0, Math.min(1, (r.top + k[1] * 40) / (vh() - SZ))) };
-      try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {} place();
+      try { localStorage.setItem(FKEY, JSON.stringify(pos)); } catch (er) {} place(); fabMoved();
     });
     $('#scratch-close').addEventListener('click', function () { setOpen(false); fab.focus(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden && box.contains(document.activeElement)) { setOpen(false); fab.focus(); } });
@@ -153,6 +154,73 @@
       withEngine(function () { engine.reset(); out.innerHTML = '<div class="msg">실습 데이터를 처음 상태로 되돌렸어요. 직접 만든 테이블과 바꾼 데이터가 모두 사라졌어요.</div>'; }, out);
     });
     place();
+  }
+  // ---------- 동그란 버튼 → 메모장 / 연습 코드 입력 고르기 ----------
+  // SQL·Java 버튼이 함께 써요. 연습장이나 메모장이 열려 있으면 버튼은 닫기(X)로 동작해요.
+  var pickEl = null, pickFab = null, pickCode = null;
+  function pickClose(focusFab) {
+    if (!pickEl || pickEl.hidden) return;
+    pickEl.hidden = true;
+    if (focusFab && pickFab) pickFab.focus();
+  }
+  function pickPlace() {
+    if (!pickEl || pickEl.hidden || !pickFab) return;
+    var r = pickFab.getBoundingClientRect(), W2 = document.documentElement.clientWidth, H2 = window.innerHeight, M = 12;
+    var w = pickEl.offsetWidth, h = pickEl.offsetHeight;
+    var left = (r.left + r.width / 2 > W2 / 2) ? r.right - w : r.left;
+    var top = (r.top + r.height / 2 > H2 / 2) ? r.top - h - 10 : r.bottom + 10;
+    pickEl.style.left = Math.max(M, Math.min(W2 - w - M, left)) + 'px';
+    pickEl.style.top = Math.max(M, Math.min(H2 - h - M, top)) + 'px';
+  }
+  function fabClick(fab, box, setOpen, codeName) {
+    if (!box.hidden) { setOpen(false); return; }
+    if (WB.notes && WB.notes.isOpen()) { WB.notes.close(); return; }
+    if (!pickEl) return setOpen(true);
+    if (!pickEl.hidden && pickFab === fab) { pickClose(); return; }
+    pickFab = fab; pickCode = function () { setOpen(true); };
+    $('#fab-pick-sub').textContent = codeName;
+    pickEl.hidden = false; pickPlace();
+    var first = $('button', pickEl); if (first) first.focus({ preventScroll: true });
+  }
+  function fabMoved() { pickClose(); if (WB.notes) WB.notes.place(); }
+  function initFabPick() {
+    pickEl = $('#fab-pick'); if (!pickEl) return;
+    pickEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-pick]'); if (!b) return;
+      var fab = pickFab; pickClose();
+      if (b.dataset.pick === 'notes') { if (WB.notes) WB.notes.open(fab); }
+      else if (pickCode) pickCode();
+    });
+    pickEl.addEventListener('keydown', function (e) {
+      var bs = $$('[data-pick]', pickEl), i = bs.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); bs[(i + (e.key === 'ArrowDown' ? 1 : bs.length - 1)) % bs.length].focus(); }
+      else if (e.key === 'Escape') { e.preventDefault(); pickClose(true); }
+      else if (e.key === 'Tab') pickClose();
+    });
+    document.addEventListener('pointerdown', function (e) {
+      if (pickEl.hidden || pickEl.contains(e.target) || (pickFab && pickFab.contains(e.target))) return;
+      pickClose();
+    });
+    window.addEventListener('resize', function () { pickClose(); });
+  }
+  var WB_FAB = { click: fabClick, moved: fabMoved, close: pickClose };
+
+  // ---------- 왼쪽 메뉴(진행 상황·목차) 접기/펼치기 ----------
+  function initLnb() {
+    var btn = $('#lnb-btn'), KEY = 'wb:lnb-off', root = document.documentElement;
+    if (!btn) return;
+    function set(off, keep) {
+      root.classList.toggle('lnb-off', off);
+      btn.setAttribute('aria-pressed', String(off));
+      var t = off ? '왼쪽 메뉴 펼치기' : '왼쪽 메뉴 접기';
+      btn.title = t; btn.setAttribute('aria-label', t);
+      if (!keep) { try { localStorage.setItem(KEY, off ? '1' : '0'); } catch (e) {} }
+    }
+    function sync() { var v = (location.hash || '').slice(1); btn.hidden = /wrong$/.test(v); }
+    var off0 = false; try { off0 = localStorage.getItem(KEY) === '1'; } catch (e) {}
+    set(off0, true); sync();
+    btn.addEventListener('click', function () { set(!root.classList.contains('lnb-off')); });
+    window.addEventListener('hashchange', sync);
   }
   // ---------- Claude 연결: claude.ai 밖에서 쓸 내 API 키 ----------
   function initKey() {
@@ -1026,6 +1094,7 @@
     $('#brand-prompt').textContent = BRAND[cat][0];
     $('#brand-name').textContent = BRAND[cat][1];
     $('#brand-sub').textContent = BRAND[cat][2];
+    pickClose();
     if (cat !== 'sql') { var sc = $('#scratch'); if (sc && !sc.hidden) { var x = $('#scratch-close'); if (x) x.click(); } }
   }
   var lastView = { sql: 'problems', java: 'jproblems', db: 'dproblems', tune: 'tproblems' };
@@ -1049,6 +1118,7 @@
   WB.$ = $; WB.$$ = $$; WB.esc = esc; WB.mark = mark; WB.buildToc = buildToc;
   WB.b64 = b64; WB.unb64 = unb64; WB.pipe = pipe; WB.whenStr = whenStr; WB.plainDownload = plainDownload;
   WB.downloads = function () { return downloadsP; };
+  WB.fab = WB_FAB;
   WB.recHtml = recHtml; WB.snippet = snippet; WB.shortDate = shortDate;
   WB.getSample = getSample; WB.genBoxHtml = genBoxHtml; WB.genBusy = genBusy; WB.genFail = genFail; WB.genHandlers = WB_GEN; WB.genErrText = genErrText;
   WB.mcMake = mcMake; WB.mcAct = mcAct; WB.claudeErrText = claudeErrText; WB.NO_CLAUDE = NO_CLAUDE; WB.canSample = canSample;
@@ -1057,6 +1127,6 @@
     if (WB.initJava) WB.initJava();
     if (WB.initDb) WB.initDb();
     if (WB.initTune) WB.initTune();
-    buildRail(); showStage(S.stage); refreshStats(); buildDocs(); route(); initScratch(); initTheme(); initKey(); bootEngine();
+    buildRail(); showStage(S.stage); refreshStats(); buildDocs(); route(); initFabPick(); initLnb(); initScratch(); initTheme(); initKey(); bootEngine();
   };
 })();
