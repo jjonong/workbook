@@ -1,0 +1,4 @@
+/* SQL 튜닝 탭: SQL 실행기·연습장은 숨겨요 */
+.cat-tune .engine-pill, .cat-tune .fab:not(.jfab), .cat-tune .scratch:not(.jscratch) { display: none !important; }
+#view-tproblems .q pre.code, #view-twrong .q pre.code { white-space: pre; overflow-x: auto; font-size: 12.5px; }
+#view-tproblems .sol pre.dans, #view-twrong .sol pre.dans { white-space: pre-wrap; word-break: break-word; }

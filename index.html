@@ -8,11 +8,12 @@
 <link rel="stylesheet" href="css/java.css">
 <link rel="stylesheet" href="css/notes.css">
 <link rel="stylesheet" href="css/db.css">
+<link rel="stylesheet" href="css/tune.css">
 <script src="js/theme-init.js"></script>
 <header class="top">
   <div class="top-in">
     <div class="brand"><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
-    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a></nav>
+    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a><a href="#tproblems" data-cat="tune">튜닝</a></nav>
     <nav class="tabs" id="tabs-sql" aria-label="SQL 보기">
       <a href="#problems" data-view="problems">실습 문제</a>
       <a href="#concepts" data-view="concepts">개념 정리</a>
@@ -30,6 +31,12 @@
       <a href="#db" data-view="db">개념 정리</a>
       <a href="#dcheat" data-view="dcheat">핵심 정리</a>
       <a href="#dwrong" data-view="dwrong">오답노트<span class="tab-n" id="dwrong-n" hidden></span></a>
+    </nav>
+    <nav class="tabs" id="tabs-tune" aria-label="SQL 튜닝 보기" hidden>
+      <a href="#tproblems" data-view="tproblems">실습 문제</a>
+      <a href="#tune" data-view="tune">개념 정리</a>
+      <a href="#tcheat" data-view="tcheat">핵심 정리</a>
+      <a href="#twrong" data-view="twrong">오답노트<span class="tab-n" id="twrong-n" hidden></span></a>
     </nav>
     <div class="spacer"></div>
     <div class="engine-pill" id="engine-pill" title="브라우저 안에서 SQL을 실행하는 실행기 상태"><i></i><span id="engine-text">실행기 불러오는 중…</span></div>
@@ -249,7 +256,8 @@
       <div class="pmain" style="min-width:0">
         <div class="intro">
           <p><b>객관식 문제</b>는 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요. 강의 교안(1장 데이터 모델링 이론, 2장 개념 모델링, 3장 논리 모델링)과 수업 필기를 바탕으로 만들었고, 장마다 기초·응용·심화가 고루 있어요.</p>
-          <p><b>서술·설계 문제</b>는 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나와요. 비교해 보고 ‘맞았어요/틀렸어요’로 스스로 채점하거나, ‘Claude에게 채점받기’로 내 설계를 채점받을 수 있어요. 엔티티는 <code>주문(주문번호 | 주문일자, 고객번호 FK)</code>처럼 써도 돼요.</p>
+          <p><b>ERD 설계 문제</b>는 편집기에 엔티티와 속성(PK, FK 참조, 타입, 길이, NULL, 기본값)을 입력하면 오른쪽에 ERD가 바로 그려져요. ‘구조 검사’로 PK·FK·정규화 같은 핵심을 자동으로 확인하고, ‘Claude에게 채점받기’로 이름이 달라도 설계가 맞는지 판단받을 수 있어요. ‘DDL로 보기’를 누르면 내 설계가 <code>CREATE TABLE</code> 문으로 바뀌어요.</p>
+          <p><b>서술 문제</b>는 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나와요. 스스로 채점하거나 Claude에게 채점받을 수 있어요.</p>
         </div>
         <div id="dstage-view"></div>
       </div>
@@ -281,6 +289,83 @@
 
   <section class="view" id="view-dwrong" hidden>
     <div class="wn" id="dwrong-view"></div>
+  </section>
+  <section class="view" id="view-tproblems" hidden>
+    <div class="pgrid">
+      <aside class="rail" aria-label="SQL 튜닝 진행 상황">
+        <div class="panel collapsible open" id="tpanel-progress">
+          <h3>진행 상황</h3>
+          <div class="stats">
+            <div class="stat"><b id="tst-ok">0</b><span>맞힌 문제</span></div>
+            <div class="stat"><b id="tst-done">0</b><span id="tst-total">푼 문제</span></div>
+          </div>
+          <div class="body">
+            <div class="dg-tools"><button type="button" class="to-sync" id="tto-sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>기록 저장하기</button><button type="button" id="tdg-open">모두 펼치기</button><span>·</span><button type="button" id="tdg-close">모두 접기</button></div>
+            <div class="dgrps" id="tdots"></div>
+            <div class="legend"><span class="l-ok">정답</span><span class="l-bad">오답</span><span class="l-seen">답만 확인</span><span class="l-draft">작성 중</span></div>
+          </div>
+        </div>
+        <div class="panel collapsible" id="tpanel-sync">
+          <h3>기록 저장·불러오기</h3>
+          <div class="body">
+            <p class="note-sm" style="margin-top:0">SQL 튜닝 기록은 이 브라우저에만 저장돼요. 다른 기기에서 이어서 풀려면 여기서 저장하고, 그 기기에서 불러오세요. SQL·자바 기록과는 따로 저장돼요.</p>
+            <div class="sync-row"><button class="btn small" id="tsync-save" type="button">파일로 저장</button><button class="btn small" id="tsync-load" type="button">파일 불러오기</button><input type="file" id="tsync-file" accept=".json,.txt,application/json,text/plain" hidden></div>
+            <div class="sync-row"><button class="btn small" id="tsync-code" type="button">코드 만들기</button><button class="btn small" id="tsync-paste" type="button">코드 붙여넣기</button></div>
+            <div id="tsync-box" hidden>
+              <textarea id="tsync-text" class="sync-text" spellcheck="false" autocomplete="off"></textarea>
+              <div class="sync-row" id="tsync-box-act"></div>
+            </div>
+            <p class="note-sm" id="tsync-msg" role="status"></p>
+          </div>
+        </div>
+        <div class="panel collapsible open" id="tpanel-stages">
+          <h3>책의 장</h3>
+          <div class="body"><ul class="stages" id="tstages"></ul></div>
+        </div>
+        <div class="panel collapsible open" id="tpanel-data">
+          <h3>내 기록</h3>
+          <div class="body">
+            <button class="btn ghost small" id="tclear" type="button">SQL 튜닝 답과 기록 모두 지우기</button>
+            <div id="tclear-confirm" hidden class="note-sm">정말 지울까요? 이 기기에 저장된 SQL 튜닝 답이 모두 사라져요.
+              <div style="display:flex;gap:6px;margin-top:6px"><button class="btn small" id="tclear-yes" type="button">지우기</button><button class="btn small ghost" id="tclear-no" type="button">취소</button></div></div>
+          </div>
+        </div>
+      </aside>
+      <div class="pmain" style="min-width:0">
+        <div class="intro">
+          <p><b>『친절한 SQL 튜닝』(조시형)</b>의 목차와 색인을 따라 1~7장과 부록(SQL 분석 도구)을 장별로 정리한 <b>155문제</b>예요. 장마다 기초·응용·심화가 고루 있어요. <b>객관식</b>은 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요.</p>
+          <p><b>서술·SQL 문제</b>는 실행계획을 읽거나, SQL을 고쳐 쓰거나, 인덱스를 설계하는 문제예요. 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나오고, ‘맞았어요/틀렸어요’로 스스로 채점하거나 ‘Claude에게 채점받기’를 쓸 수 있어요. 튜닝 문제는 오라클 실행계획이 필요해서 브라우저 실행기로는 채점하지 않아요.</p>
+        </div>
+        <div id="tstage-view"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-tune" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-tune">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-tune" aria-label="SQL 튜닝 개념 정리 목차"></nav>
+      <article class="doc" id="doc-tune"></article>
+    </div>
+  </section>
+
+  <section class="view" id="view-tcheat" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-tcheat">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-tcheat" aria-label="SQL 튜닝 핵심 정리 목차"></nav>
+      <div style="min-width:0">
+        <label class="search" for="tcheat-q">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input id="tcheat-q" type="search" placeholder="용어·힌트·파라미터로 찾기 (예: 클러스터링, 해시 조인, use_nl, Top N, Direct Path)" autocomplete="off">
+          <span class="cnt" id="tcheat-cnt"></span>
+        </label>
+        <article class="doc" id="doc-tcheat"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-twrong" hidden>
+    <div class="wn" id="twrong-view"></div>
   </section>
 </main>
 
@@ -393,10 +478,15 @@
 <script src="data/db-problems.js"></script>
 <script src="data/db-concepts.js"></script>
 <script src="data/db-cheatsheet.js"></script>
+<script src="data/tune-problems.js"></script>
+<script src="data/tune-concepts.js"></script>
+<script src="data/tune-cheatsheet.js"></script>
 <script src="js/oralite.js"></script>
 <script src="js/app.js"></script>
 <script src="js/java.js"></script>
+<script src="js/db-erd.js"></script>
 <script src="js/db.js"></script>
+<script src="js/tune.js"></script>
 <script src="js/notes.js"></script>
 <script src="js/main.js"></script>
 </body></html>
