@@ -1,6 +1,6 @@
 # 워크북
 
-Oracle SQL(교안 1~14장), 「자바의 정석 4판」(1~13장), DB 모델링(데이터 모델링 교안 1~3장), SQL 튜닝(「친절한 SQL 튜닝」 1~7장·부록)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
+Oracle SQL(교안 1~14장), 「자바의 정석 4판」(1~13장), DB 모델링(데이터 모델링 교안 1~4장), SQL 튜닝(「친절한 SQL 튜닝」 1~7장·부록)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
 
 ## 파일 구조
 
@@ -32,7 +32,7 @@ data/
   java-problems.js      JAVA 문제 520개
   java-concepts.js      JAVA 개념 정리 탭 (HTML)
   java-cheatsheet.js    JAVA 핵심 정리 탭 (HTML)
-  db-problems.js        DB 모델링 문제 139개 (1~3장, ERD 설계 포함)
+  db-problems.js        DB 모델링 문제 179개 (1~4장, ERD 설계 문제 18개 포함)
   db-concepts.js        DB 모델링 개념 정리 탭 (HTML)
   db-cheatsheet.js      DB 모델링 핵심 정리 탭 (HTML)
   tune-problems.js      SQL 튜닝 문제 166개 (1~7장·부록)

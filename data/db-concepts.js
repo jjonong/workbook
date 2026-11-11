@@ -1,8 +1,8 @@
 // DB 모델링 개념 정리 탭 (HTML)
 var WDB = window.WDB = window.WDB || {};
 WDB.concepts = String.raw`
-<h1 id="d-0">DB 모델링 개념 정리: 데이터 모델링 1~3장</h1>
-<p>강의 교안(1장 데이터 모델링 이론, 2장 개념 모델링, 3장 논리 모델링)과 수업 필기를 장별로 정리한 문서예요. 4장 물리 모델링은 수업이 진행되면 추가할 예정이에요.</p>
+<h1 id="d-0">DB 모델링 개념 정리: 데이터 모델링 1~4장</h1>
+<p>강의 교안(1장 데이터 모델링 이론, 2장 개념 모델링, 3장 논리 모델링, 4장 물리 모델링)과 수업 필기를 장별로 정리한 문서예요.</p>
 <blockquote>
 <p>📌 <strong>표시 안내</strong></p>
 <ul>
@@ -13,7 +13,7 @@ WDB.concepts = String.raw`
 </blockquote>
 <hr />
 <h2 id="d-1">0. 전체 그림 먼저 보기 ⭐</h2>
-<p>📝 <strong>이 과목의 순서</strong>: ① 모델링 이론 → <strong>② 개념 모델링 → ③ 논리 모델링</strong> (⭐ 핵심) → ④ 물리 모델링 (4장, 아직 안 나감)</p>
+<p>📝 <strong>이 과목의 순서</strong>: ① 모델링 이론 → <strong>② 개념 모델링 → ③ 논리 모델링</strong> (⭐ 핵심) → ④ 물리 모델링</p>
 <p>📝 <strong>필기로 그린 전체 구조</strong></p>
 <div class="tw"><table>
 <thead>
@@ -1058,17 +1058,17 @@ WDB.concepts = String.raw`
 </tr>
 <tr>
 <td></td>
-<td>약관</td>
+<td>약관 📝 표준계약서</td>
 <td></td>
 </tr>
 <tr>
 <td>계약</td>
-<td>수신</td>
+<td>수신 📝 고객이 은행에 돈을 맡김(예금)</td>
 <td></td>
 </tr>
 <tr>
 <td></td>
-<td>여신</td>
+<td>여신 📝 대출</td>
 <td></td>
 </tr>
 </tbody>
@@ -1261,6 +1261,7 @@ WDB.concepts = String.raw`
 <p>📝 <strong>핵심 엔티티 → 파생 엔티티: ① 상세 ② 상태 ③ 이력 ④ 교차</strong></p>
 <hr />
 <h2 id="d-20">3-3. ⭐ 파생 엔티티</h2>
+<p>📝 <strong>필요하면 체크</strong>: 네 가지를 모두 만들어야 하는 게 아니라, 업무에 필요한 것만 골라 만들어요.</p>
 <blockquote>
 <p><strong>핵심 엔티티와 관련된 엔티티</strong> (상세, 상태, 이력, 교차 등)</p>
 </blockquote>
@@ -1475,6 +1476,7 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 <p>📝 물리 이름(컬럼명)도 제각각이었던 것을 통일해요.</p>
 <hr />
 <h2 id="d-23">3-6. 엔티티 정의</h2>
+<p>📝 엔티티 정의 = <strong>쪼개고 합치는 것</strong></p>
 <blockquote>
 <p><strong>데이터 집합을 규정하고, 발생 규칙, 업무 규칙, 설명을 기술</strong></p>
 </blockquote>
@@ -1537,7 +1539,7 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 </tr>
 <tr>
 <td>식별체계 일원화</td>
-<td>같은 분류 안의 데이터를 유일하고 중복 없이 식별</td>
+<td>같은 분류 안의 데이터를 유일하고 중복 없이 식별 📝 PK 체계 통일 (예: ORD0001)</td>
 <td>개인: 주민번호·외국인등록번호·여권번호 / 법인: 사업자등록번호·법인번호</td>
 </tr>
 <tr>
@@ -1557,6 +1559,7 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 <li>행위의 주체, 대상, 상세, 인과, 역할/자격, 구성, ⭕<strong>참조 관계</strong> 등으로 구분</li>
 <li>두 엔티티 간 관계를 <strong>양방향</strong>으로 정의: 관계수, 선택성, 식별자 상속</li>
 <li>관계가 명확하지 않으면 <strong>관계명</strong>(명사, 동사)을 추가 📝 (<strong>보통은 안 적음</strong>)</li>
+<li>📝 <strong>종속 관계</strong> = 부모-자식(PK 상속), <strong>참조 관계</strong> = FK로 참조만 함</li>
 </ul>
 <p><strong>예시: 부서 ─ 사원</strong> (두 관계가 동시에 있는 병렬 관계)
 - <code>소속부서</code>: 부서 1 ─ N 사원 (사원.부서번호 FK)
@@ -1613,6 +1616,7 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 <p>📝 <strong>"키로 써야 하는데 안 될 때 인조 식별자로 활용"</strong></p>
 <hr />
 <h2 id="d-29">3-12. 도메인 및 데이터 타입 지정</h2>
+<p>📝 도메인 = 속성 값의 <strong>타입</strong>, <strong>범위</strong>, <strong>조건</strong></p>
 <blockquote>
 <p><strong>속성 값의 타입과 범위, 조건을 지정</strong></p>
 </blockquote>
@@ -1656,6 +1660,7 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 </div>
 <hr />
 <h2 id="d-31">3-14. 데이터 표준화</h2>
+<p>📝 <strong>공통적으로 사용되는 것을 추상화해서 재사용하는 것.</strong> 특히 <strong>표준코드!</strong></p>
 <blockquote>
 <p><strong>속성의 명칭, 의미, 데이터 형식, 범위 등에 대한 규정</strong>
 표준을 지키면 명칭과 타입에 일관성이 생겨서 의사소통과 개발 생산성이 올라가요.</p>
@@ -1884,7 +1889,8 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 </blockquote>
 <ul>
 <li>값을 코드로 관리하면 <strong>잘못된 값 입력을 막고</strong>, <strong>통계 작업에도 유리</strong>해요.</li>
-<li>가능하면 여러 코드 테이블을 <strong>하나로 묶어서 코드 사전</strong>으로 관리해요.</li>
+<li>가능하면 여러 코드 테이블을 <strong>하나로 묶어서 코드 사전</strong>으로 관리해요. 📝 아래 코드 사전 = 결재상태·결재수단 <strong>테이블 2개를 합친 것</strong></li>
+<li>📝 코드로 막아 두면 <strong>DB 데이터가 틀어지는 것(남자/남/M 섞임)을 막아줘요.</strong> 예: 성별 M=남자, F=여자</li>
 </ul>
 <p><strong>코드 사전 예시</strong></p>
 <div class="tw"><table>
@@ -1946,8 +1952,8 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 </thead>
 <tbody>
 <tr>
-<td><strong>분류형</strong></td>
-<td>대/중/소 계층 구조, 자릿수에 의미 부여</td>
+<td>⭐ <strong>분류형</strong></td>
+<td>대/중/소 계층 구조, 자릿수에 의미 부여. 📝 이미 상위·하위로 묶여 있어서 <strong>그룹화하기 쉬움</strong></td>
 <td>한국표준산업분류: 01 농업, 011 작물 재배업, 0111 곡물 재배업, 012 축산업</td>
 </tr>
 <tr>
@@ -2014,11 +2020,282 @@ WHERE 변경시작일자 &lt;= '20190401' AND 변경종료일자 &gt;= '20190401
 </div>
 <p>💡 <strong>단어 → 용어 → 컬럼명</strong>으로 이어져요. "고객" + "전화번호" 단어를 조합해 "고객전화번호" 용어를 만들고, 영문약어 CUST + TELNO로 컬럼명 <code>CUST_TELNO</code>가 나오는 거예요.</p>
 <hr />
-<h2 id="d-32">✅ 1~3장 흐름 한 장 요약</h2>
+<h1 id="d-ch-4">4장. 물리 모델링</h1>
+<h2 id="d-32">4-1. 물리 모델링이란? ⭐</h2>
+<blockquote>
+<p><strong>논리 모델을 DB에 맞는 구조로 변환하는 과정</strong>
+📝 <strong>속성 → 컬럼</strong></p>
+</blockquote>
+<ul>
+<li>속성을 <strong>컬럼</strong>으로 변환하고</li>
+<li><strong>데이터 타입 및 길이</strong>를 지정</li>
+<li><strong>관계 및 무결성</strong>을 설계 (PK, FK, NOT NULL, CHECK 등)</li>
+<li>성능 향상을 위해 엔티티를 <strong>역정규화</strong>하거나 <strong>중복 컬럼</strong>을 추가</li>
+<li>📝 역정규화 = <strong>다시 붙이기</strong> → <strong>성능이 안 나오는 경우!</strong></li>
+</ul>
+<p>💡 <strong>논리 → 물리 용어 대응</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>논리 모델</th>
+<th>물리 모델</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>엔티티</td>
+<td>테이블</td>
+</tr>
+<tr>
+<td>속성</td>
+<td>컬럼</td>
+</tr>
+<tr>
+<td>식별자</td>
+<td>PK (기본키)</td>
+</tr>
+<tr>
+<td>관계</td>
+<td>FK (참조키)</td>
+</tr>
+<tr>
+<td>도메인</td>
+<td>데이터 타입·길이·NOT NULL·DEFAULT·CHECK</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>💡 1장에서 "쪼개기(정규화) ↔ 다시 붙이기(역정규화)"를 배웠죠. 논리 모델링까지는 쪼개서 중복을 없애고, 물리 모델링에서 <strong>성능 문제가 확인될 때만</strong> 다시 붙여요.</p>
+<hr />
+<h2 id="d-33">4-2. 테이블 설계</h2>
+<blockquote>
+<p><strong>엔티티를 테이블, 속성을 컬럼으로 변환</strong></p>
+</blockquote>
+<ul>
+<li>테이블명, 컬럼명은 <strong>표준 단어와 영문 약어를 조합</strong>해서 사용 (예: 고객 → <code>CUST</code>, 고객명 → <code>CUST_NM</code>)</li>
+<li>슈퍼타입/서브타입은 세 가지 방법으로 테이블로 만들 수 있어요.</li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>방법</th>
+<th>테이블 구조</th>
+<th>💡 장점</th>
+<th>💡 단점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 슈퍼타입 기준</strong> (하나로 통합)</td>
+<td><code>고객</code>(고객번호 | 고객명, 고객유형코드, 주민등록번호, 법인등록번호)</td>
+<td>테이블 하나라 조회·JOIN이 단순</td>
+<td>개인이면 법인등록번호가, 법인이면 주민번호가 비어 NULL 컬럼이 많아짐</td>
+</tr>
+<tr>
+<td><strong>② 서브타입 기준</strong> (서브타입마다 따로)</td>
+<td><code>개인고객</code>(고객번호 | 고객명, 주민등록번호), <code>법인고객</code>(고객번호 | 고객명, 법인등록번호)</td>
+<td>각 테이블이 깔끔, NULL 없음</td>
+<td>공통 컬럼(고객명) 중복, "전체 고객" 조회에 UNION 필요</td>
+</tr>
+<tr>
+<td><strong>③ 슈퍼타입/서브타입 각각</strong> (1:1)</td>
+<td><code>고객</code>(고객번호 | 고객명, 고객유형코드) + <code>개인고객</code>(고객번호 FK | 주민등록번호) + <code>법인고객</code>(고객번호 FK | 법인등록번호)</td>
+<td>논리 모델과 같은 구조, 중복·NULL 최소</td>
+<td>상세 정보를 보려면 항상 JOIN</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>💡 <strong>고르는 기준</strong>: 개인·법인을 함께 조회하는 일이 많으면 ①, 따로 쓰는 일이 대부분이면 ②, 공통 처리와 개별 속성이 둘 다 중요하면 ③. 1장 "고객 설계 ①②③"과 같은 이야기예요.</p>
+<hr />
+<h2 id="d-34">4-3. 관계 설계</h2>
+<blockquote>
+<p><strong>엔티티 간의 관계를 물리 설계에 반영</strong></p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>관계</th>
+<th>설계 방법</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>기본적인 관계</strong></td>
+<td>두 테이블 사이에 참조키(FK) 설정. 가장 일반적</td>
+<td>주문.고객번호 → 고객</td>
+</tr>
+<tr>
+<td><strong>상호배타적 관계</strong></td>
+<td>참조 컬럼을 <strong>하나로 통합</strong>하거나 <strong>개별 컬럼으로 분리</strong></td>
+<td>계좌의 주인이 개인·법인·단체 중 <strong>하나</strong></td>
+</tr>
+<tr>
+<td><strong>재귀적 관계</strong></td>
+<td>계층 관계를 표현할 때 사용</td>
+<td>한국표준산업분류코드(산업분류코드 | 산업분류명, 정렬순서, 상위산업분류코드 FK)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>상호배타적 관계: 계좌 예시</h3>
+<p>계좌 하나의 주인은 개인, 법인, 단체 중 <strong>딱 하나</strong>예요.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>설계</th>
+<th>계좌 테이블 컬럼</th>
+<th>💡 특징</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>컬럼 통합 설계</strong></td>
+<td>계좌일련번호 | 은행명, 계좌번호, 예금주명, <strong>고객유형코드, 고객번호</strong></td>
+<td>컬럼이 적고 단순. 하지만 고객번호가 세 테이블 중 어디를 가리키는지 고객유형코드로만 알 수 있어서 <strong>DB의 FK 제약을 걸 수 없음</strong></td>
+</tr>
+<tr>
+<td><strong>컬럼 분리 설계</strong></td>
+<td>계좌일련번호 | 은행명, 계좌번호, 예금주명, 고객유형코드, <strong>개인번호(FK), 법인번호(FK), 단체번호(FK)</strong></td>
+<td>각각 FK 제약을 걸 수 있음. 대신 셋 중 하나만 값이 있고 나머지는 NULL. "하나만 값이 있어야 한다"는 CHECK 제약으로 보장</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+<h2 id="d-35">4-4. 컬럼 설계 ⭐</h2>
+<blockquote>
+<p><strong>속성을 컬럼으로 변환. 표준 용어, 표준 단어, 표준 도메인을 적용</strong></p>
+</blockquote>
+<ul>
+<li>속성과 컬럼을 <strong>1:1로 변환</strong></li>
+<li>📝 이때 <strong>저장할지, 파생(계산)할지</strong>를 정해요 (1장 저장 속성 vs 파생 속성)</li>
+<li>테이블의 <strong>마지막에 4개의 시스템 컬럼</strong>을 추가 ⭐</li>
+<li>컬럼명, 데이터 타입 및 길이 지정</li>
+</ul>
+<h3>시스템 컬럼 4개 ⭐</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>📝 언제 채워지나</th>
+<th>값 예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최초등록일시</td>
+<td><strong>insert</strong> 할 때 (When)</td>
+<td>2015-05-01 09:10:21</td>
+</tr>
+<tr>
+<td>최초등록자식별번호</td>
+<td><strong>insert</strong> 할 때 (Who)</td>
+<td>1000</td>
+</tr>
+<tr>
+<td>최종수정일시</td>
+<td><strong>update</strong> 할 때마다 (When)</td>
+<td>2019-11-30 11:23:41</td>
+</tr>
+<tr>
+<td>최종수정자식별번호</td>
+<td><strong>update</strong> 할 때마다 (Who)</td>
+<td>A01</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>등록자/수정자 식별번호는 <strong>사원번호, 고객번호, 로그인ID</strong> 등이에요.</li>
+<li>💡 데이터에 문제가 생겼을 때 "누가, 언제 넣고 고쳤는지" 추적하려고 모든 테이블에 똑같이 붙여요.</li>
+</ul>
+<h3>타입 선택의 세 가지 이슈</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>이슈</th>
+<th>선택지</th>
+<th>💡 설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 고정 길이 vs 가변 길이</strong></td>
+<td><code>CHAR</code> vs <code>VARCHAR</code></td>
+<td>CHAR는 길이가 모자라면 공백으로 채워요. 성별(M/F), 여부(Y/N), 코드처럼 <strong>길이가 늘 같은 값</strong>에 CHAR, 이름·주소처럼 <strong>길이가 제각각인 값</strong>에 VARCHAR</td>
+</tr>
+<tr>
+<td><strong>② 날짜 타입 vs 문자 타입</strong></td>
+<td><code>DATE</code> vs <code>VARCHAR(8)</code> 'YYYYMMDD'</td>
+<td>DATE는 날짜 계산(+1일, 기간 차이)과 잘못된 날짜 차단에 유리. VARCHAR(8)은 보기 쉽고 '99991231' 같은 값을 쓰기 편하지만 '20250230' 같은 틀린 날짜도 들어갈 수 있어요</td>
+</tr>
+<tr>
+<td><strong>③ 유니코드 지원 여부</strong></td>
+<td><code>VARCHAR</code> vs <code>NVARCHAR</code></td>
+<td>NVARCHAR는 유니코드(국가별 문자) 전용 타입이라 다국어 저장이 확실해요. Oracle은 <code>VARCHAR2</code>/<code>NVARCHAR2</code>. 💡 Oracle <code>VARCHAR2(10)</code>은 기본이 <strong>바이트</strong> 단위라 UTF-8에서 한글(3바이트)은 3자만 들어가요. <code>VARCHAR2(10 CHAR)</code>로 쓰면 글자 수 기준</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+<h2 id="d-36">4-5. 성능을 고려한 데이터 구조 ⭐</h2>
+<blockquote>
+<p><strong>성능 향상을 위해 논리 모델과 다르게 물리 설계를 변경</strong></p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>방법</th>
+<th>내용</th>
+<th>교안 예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>집계/요약 테이블 추가</strong></td>
+<td>자주 쓰는 합계를 미리 계산해 저장. <strong>실시간 처리</strong> 또는 <strong>배치 처리</strong>로 갱신</td>
+<td>일별 매출 요약 테이블</td>
+</tr>
+<tr>
+<td>⭐ <strong>역정규화, 중복 컬럼 추가</strong></td>
+<td>JOIN을 줄이려고 다른 테이블의 컬럼을 복사해 둠</td>
+<td>주문내역에 <strong>주문일자</strong> 추가 (부모 테이블 중복 컬럼), 회원에 <strong>최종방문일시(LAST), 방문횟수(SUM)</strong> 추가</td>
+</tr>
+<tr>
+<td><strong>테이블 분할</strong></td>
+<td><strong>수직</strong> 분할: 컬럼을 나눔 / <strong>수평</strong> 분할: 행을 나눔</td>
+<td>수직: 게시판 → 게시판 + 게시판내용 / 수평: 게시판 → 게시판 + Q&amp;A</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>중복 컬럼 예시</h3>
+<pre><code>[전] 주문(주문번호 | 주문일자, 고객번호)
+     주문내역(주문번호 FK, 상품코드 | 주문수량, 주문금액)
+     → &quot;이번 달 상품별 판매량&quot;을 구하려면 주문과 JOIN해야 주문일자를 알 수 있음
+
+[후] 주문내역(주문번호 FK, 상품코드 | 주문수량, 주문금액, 주문일자(추가))
+     → 주문내역만 읽어서 기간 조회 가능
+</code></pre>
+<pre><code>회원(회원번호 | …, 최종방문일시, 방문횟수)   ← 방문이력에서 MAX, COUNT 한 값을 미리 저장
+방문이력(회원번호 FK, 방문일시)
+</code></pre>
+<h3>테이블 분할 예시</h3>
+<ul>
+<li><strong>수직 분할</strong>: <code>게시판</code>(게시물번호 | 제목, 일자, 작성자명, 조회수, <strong>게시물내용</strong>) → <code>게시판</code>(제목, 일자, 작성자명, 조회수) + <code>게시판내용</code>(게시물번호 FK | 게시물내용)</li>
+<li>💡 목록 화면은 긴 내용을 읽을 필요가 없어서, 큰 컬럼을 떼어 두면 목록 조회가 가벼워져요.</li>
+<li><strong>수평 분할</strong>: <code>게시판</code>(게시판종류코드, 게시물번호 | …) → <code>게시판</code> + <code>Q&amp;A</code></li>
+<li>💡 종류별로 행을 나눠서 한 테이블에 쌓이는 양을 줄여요.</li>
+</ul>
+<p>💡 <strong>역정규화의 대가</strong>: 같은 값이 두 곳에 있으니, 원본이 바뀌면 복사본도 같이 바꿔야 해요(트리거, 배치, 애플리케이션 처리). 그래서 "성능이 안 나오는 경우에만" 해요.</p>
+<hr />
+<h2 id="d-37">✅ 1~4장 흐름 한 장 요약</h2>
 <ol>
 <li><strong>1장 이론</strong>: 업무 자료를 <strong>그룹화(네모)</strong>하고 <strong>줄긋기(관계)</strong>하면 ER 모델이 된다. 구성요소는 엔티티·관계·속성·식별자. 중복은 <strong>정규화(쪼개기)</strong>로 없애고, 성능이 필요하면 <strong>역정규화(다시 붙이기)</strong>한다.</li>
 <li><strong>2장 개념 모델링 (대충)</strong>: 현행을 분석(AS-IS → TO-BE)하고, 데이터를 <strong>주제영역</strong>으로 크게 나눈 뒤(주어·목적어·동사), 영역마다 <strong>핵심 엔티티</strong>와 식별자·주요 속성만 잡는다.</li>
 <li><strong>3장 논리 모델링 (구체적)</strong>: 핵심 엔티티에서 <strong>파생 엔티티(상세·상태·이력·교차)</strong>로 확장하고, 엔티티·관계·속성·식별자·도메인을 모두 정의한 뒤 검토한다. 모든 이름과 타입은 <strong>데이터 표준(단어·용어·도메인·코드)</strong>을 따른다.</li>
-<li><strong>4장 물리 모델링 (다음 시간)</strong>: 논리 모델을 실제 DB 테이블로 바꾸고, 성능을 위해 역정규화 등을 한다.</li>
+<li><strong>4장 물리 모델링 (구현)</strong>: 엔티티 → 테이블, 속성 → 컬럼(타입·길이·시스템 컬럼 4개)으로 바꾸고, 슈퍼/서브타입과 상호배타 관계를 테이블로 옮긴다. 성능이 안 나오면 역정규화, 중복 컬럼, 집계 테이블, 테이블 분할로 <strong>다시 붙이거나 나눈다</strong>.</li>
 </ol>
 `;

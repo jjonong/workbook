@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var esc = WB.esc;
-  var TYPES = ['VARCHAR2', 'NUMBER', 'CHAR', 'DATE'];
+  var TYPES = ['VARCHAR2', 'NUMBER', 'CHAR', 'DATE', 'NVARCHAR2'];
   function blankAttr() { return { n: '', pk: false, fk: '', type: 'VARCHAR2', len: '', nul: false, def: '' }; }
   function blank() { return { ents: [{ id: 'e1', name: '', attrs: [blankAttr(), blankAttr()] }] }; }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -214,7 +214,7 @@
       var tn = colName(e.name), cols = e.attrs.filter(function (a) { return a.n.trim(); });
       var defs = cols.map(function (a) {
         var t = a.type || 'VARCHAR2', len = String(a.len || '').trim();
-        if (t === 'VARCHAR2' && !len) { len = '100'; }
+        if ((t === 'VARCHAR2' || t === 'NVARCHAR2') && !len) { len = '100'; }
         var ty = t + (len && t !== 'DATE' ? '(' + len + ')' : '');
         var dv = String(a.def || '').trim();
         if (dv) dv = /^(sysdate|systimestamp|null|-?\d+(\.\d+)?)$/i.test(dv) || /^'.*'$/.test(dv) ? dv : "'" + dv.replace(/'/g, "''") + "'";

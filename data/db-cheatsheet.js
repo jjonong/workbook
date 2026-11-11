@@ -12,7 +12,7 @@ WDB.cheat = String.raw`
 <tr><td>개념 모델링</td><td><b>개략적</b>(대충) 설계: 주제영역 정의, 핵심 엔티티 정의</td><td>추상적</td></tr>
 <tr><td>논리 모델링</td><td><b>구체적</b>(명확) 설계: 엔티티·관계·속성 정의</td><td>DBMS 물리 특성은 고려 X</td></tr>
 <tr><td>물리 모델링</td><td>DB에 맞게 구현: 테이블, 무결성, 인덱스 설계</td><td>성능 저하 확인 시 역정규화</td></tr>
-<tr><td>데이터 표준</td><td>표준단어, 표준용어, 표준도메인, 표준코드 → Repository</td><td>모든 단계에 적용</td></tr>
+<tr><td>데이터 표준</td><td>표준단어, 표준용어, 표준도메인, 표준코드 → Repository</td><td>공통으로 쓰는 것을 추상화해 재사용</td></tr>
 </tbody>
 </table>
 </div>
@@ -292,13 +292,74 @@ WDB.cheat = String.raw`
 <tr><td>이음동의어</td><td>허용 X, 많이 쓰는 말로</td><td>에러/오류 → 오류, 구좌 → 계좌</td></tr>
 <tr><td>영문 약어</td><td>대문자, _만, 4자리 이하(최대 6), 한글 발음 표기 X</td><td>INSA → HR, GOGAEG → CUST</td></tr>
 <tr><td>도메인 표준화</td><td>자주 쓰는 도메인을 미리 정의</td><td>여부C1 CHAR(1) Y/N, 금액N15</td></tr>
-<tr><td>코드 표준화</td><td>값을 코드로 목록화, 코드 사전 하나로</td><td>오입력 방지, 통계 유리</td></tr>
+<tr><td>코드 표준화</td><td>값을 코드로 목록화, 코드 사전 하나로</td><td>DB 데이터가 틀어지는 것을 막음, 통계 유리</td></tr>
 <tr><td>코드 사전</td><td>코드유형ID + 코드 (PK), 코드명, 정렬순서, 사용여부</td><td>C001 결재상태 01 기안</td></tr>
-<tr><td>분류형 코드</td><td>대/중/소 계층, 자릿수에 의미</td><td>한국표준산업분류</td></tr>
+<tr><td>분류형 코드</td><td>대/중/소 계층, 자릿수에 의미</td><td>이미 묶여 있어 그룹화 쉬움, 한국표준산업분류</td></tr>
 <tr><td>일련번호형 코드</td><td>의미 없는 순번, 앞에 0</td><td>01 개인, 02 법인, 99 기타</td></tr>
 <tr><td>약어형 코드</td><td>의미 있는 영문 약어</td><td>M 남자, F 여자</td></tr>
 <tr><td>차용형 코드</td><td>통용 코드 그대로</td><td>은행코드 001, 002</td></tr>
 <tr><td>용어 사전</td><td>용어, 영문약어, 정의, 도메인, 인포타입</td><td>고객전화번호 CUST_TELNO</td></tr>
+</tbody>
+</table>
+</div>
+<h1 id="dc-ch-4">4장 물리 모델링</h1>
+<h2 id="dc-21">물리 모델링</h2>
+<div class="tw"><table><thead><tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>정의</td><td>논리 모델을 DB에 맞는 구조로 변환</td><td>속성 → 컬럼</td></tr>
+<tr><td>하는 일</td><td>컬럼 변환, 타입·길이 지정, 관계·무결성 설계, 역정규화·중복 컬럼</td><td>역정규화 = 다시 붙이기, 성능이 안 나올 때</td></tr>
+<tr><td>용어 대응</td><td>엔티티 → 테이블, 속성 → 컬럼, 식별자 → PK, 관계 → FK, 도메인 → 타입·제약</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dc-22">테이블 설계</h2>
+<div class="tw"><table><thead><tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>테이블명·컬럼명</td><td>표준 단어 + 영문 약어 조합</td><td>고객 CUST, 고객명 CUST_NM</td></tr>
+<tr><td>슈퍼타입 기준</td><td>하나의 테이블로 통합(고객 + 고객유형코드)</td><td>JOIN 없음, NULL 컬럼 많음</td></tr>
+<tr><td>서브타입 기준</td><td>서브타입마다 테이블(개인고객, 법인고객)</td><td>NULL 없음, 공통 컬럼 중복·전체 조회 UNION</td></tr>
+<tr><td>슈퍼/서브타입 각각</td><td>고객 + 개인고객 + 법인고객 (1:1 식별 관계)</td><td>중복·NULL 최소, 상세 조회 시 JOIN</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dc-23">관계 설계</h2>
+<div class="tw"><table><thead><tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>기본적인 관계</td><td>두 테이블 사이에 FK 설정</td><td>가장 일반적</td></tr>
+<tr><td>상호배타적 관계</td><td>여러 부모 중 하나만 참조(계좌 주인: 개인·법인·단체)</td><td></td></tr>
+<tr><td>컬럼 통합 설계</td><td>고객유형코드 + 고객번호 하나로</td><td>단순, DB FK 제약 불가</td></tr>
+<tr><td>컬럼 분리 설계</td><td>개인번호(FK), 법인번호(FK), 단체번호(FK) 각각</td><td>FK 가능, 하나만 값(CHECK)</td></tr>
+<tr><td>재귀적 관계</td><td>상위코드가 자기 테이블 참조</td><td>한국표준산업분류: 상위산업분류코드(FK)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dc-24">컬럼 설계</h2>
+<div class="tw"><table><thead><tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>변환 원칙</td><td>속성과 컬럼 1:1, 표준 용어·단어·도메인 적용</td><td>저장할지 파생(계산)할지 결정</td></tr>
+<tr><td>시스템 컬럼</td><td>최초등록일시, 최초등록자식별번호, 최종수정일시, 최종수정자식별번호</td><td>테이블 마지막에 4개</td></tr>
+<tr><td>최초등록일시/자</td><td>insert 할 때 (When, Who)</td><td>식별번호: 사원번호, 고객번호, 로그인ID</td></tr>
+<tr><td>최종수정일시/자</td><td>update 할 때마다</td><td></td></tr>
+<tr><td>CHAR vs VARCHAR</td><td>고정 길이 vs 가변 길이</td><td>CHAR: 성별·여부·코드 / VARCHAR: 이름·주소</td></tr>
+<tr><td>DATE vs VARCHAR(8)</td><td>날짜 타입 vs 'YYYYMMDD' 문자</td><td>DATE: 계산·검증 / 문자: 단순, 틀린 날짜 위험</td></tr>
+<tr><td>VARCHAR vs NVARCHAR</td><td>유니코드 지원 여부</td><td>Oracle VARCHAR2(10)은 바이트 기준, 한글은 10 CHAR로</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="dc-25">성능을 고려한 데이터 구조</h2>
+<div class="tw"><table><thead><tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>집계/요약 테이블</td><td>합계를 미리 계산해 저장</td><td>실시간 처리 or 배치 처리</td></tr>
+<tr><td>중복 컬럼(부모)</td><td>주문내역에 주문일자 추가</td><td>JOIN 없이 기간 조회</td></tr>
+<tr><td>집계 컬럼</td><td>회원에 최종방문일시(LAST), 방문횟수(SUM)</td><td>방문이력 MAX·COUNT 대신</td></tr>
+<tr><td>수직 분할</td><td>컬럼을 나눔: 게시판 + 게시판내용</td><td>큰 컬럼 분리 → 목록 조회 가벼움</td></tr>
+<tr><td>수평 분할</td><td>행을 나눔: 게시판 + Q&A (종류별)</td><td>한 테이블의 양을 줄임</td></tr>
+<tr><td>역정규화 대가</td><td>원본이 바뀌면 복사본도 갱신</td><td>트리거·배치·애플리케이션으로 정합성 관리</td></tr>
 </tbody>
 </table>
 </div>
