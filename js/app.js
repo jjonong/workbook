@@ -1006,7 +1006,7 @@
   var BRAND = {
     sql: ['SQL>', 'SQL 정석 워크북', 'Oracle 실습 · 교안 1~14장'],
     java: ['Java>', 'Java 정석 워크북', '자바의 정석 4판 · 1~13장'],
-    db: ['ERD>', 'DB 모델링 워크북', '데이터 모델링 · 1~3장'],
+    db: ['ERD>', 'DB 모델링 워크북', '데이터 모델링 · 1~4장'],
     tune: ['PLAN>', 'SQL 튜닝 워크북', '친절한 SQL 튜닝 · 1~7장·부록']
   };
   function route() {
