@@ -10,7 +10,12 @@
   var dsaveT;
   function dsave() { clearTimeout(dsaveT); dsaveT = setTimeout(function () { try { localStorage.setItem(DKEY, JSON.stringify(DS)); } catch (e) {} }, 250); }
   var DLV = { 1: '기초', 2: '응용', 3: '심화' };
-  var DMODE = { mc: '객관식 · 자동 채점', self: '서술·설계 · 스스로 채점' };
+  var DMODE = { mc: '객관식 · 자동 채점', self: '서술 · 스스로 채점', erd: 'ERD 설계 · 구조 검사' };
+  var ERD = WB.erd, dDesigns = {};
+  function dDesign(p) { if (!dDesigns[p.n]) dDesigns[p.n] = ERD.init(p, DS.a[p.n]); return dDesigns[p.n]; }
+  var dPrevT = {};
+  function dPrev(n, now) { clearTimeout(dPrevT[n]); dPrevT[n] = setTimeout(function () { var p = dbyN[n]; if (p) ERD.render(document.getElementById('dprev-' + n), dDesign(p)); }, now ? 0 : 450); }
+  function dRenderPreviews(root) { $$('.erd[data-dn]', root).forEach(function (el) { dPrev(+el.dataset.dn, true); }); }
   var DSTL = { ok: '정답', bad: '오답', seen: '답만 확인', draft: '작성 중' };
   var DP = WDB.problems, DCH = WDB.chapters;
   var dbyN = {}; DP.forEach(function (p) { dbyN[p.n] = p; });
@@ -45,8 +50,8 @@
   // 틀린 문제 → Claude가 만든 새 객관식 문제로 다시 연습
   function dGenPrompt(n) {
     var p = dbyN[n], c = DCH.filter(function (x) { return x.no === p.ch; })[0], mine = DS.a[n];
-    var model = p.t === 'mc' ? 'Correct choice: ' + dText(p.choices[p.ans]) : dText(p.answer || '');
-    var said = p.t === 'mc' ? (typeof mine === 'number' && p.choices[mine] != null ? 'Student picked: ' + dText(p.choices[mine]) : '') : (typeof mine === 'string' && mine.trim() ? 'Student wrote:\n' + mine.slice(0, 1500) : '');
+    var model = p.t === 'mc' ? 'Correct choice: ' + dText(p.choices[p.ans]) : p.t === 'erd' ? 'Model ER design (Entity(PK | attributes), FK→parent):\n' + ERD.toText(p.model) : dText(p.answer || '');
+    var said = p.t === 'mc' ? (typeof mine === 'number' && p.choices[mine] != null ? 'Student picked: ' + dText(p.choices[mine]) : '') : (p.t === 'erd' && mine && typeof mine === 'object' ? 'Student design:\n' + ERD.toText(mine).slice(0, 1500) : typeof mine === 'string' && mine.trim() ? 'Student wrote:\n' + mine.slice(0, 1500) : '');
     return [
       'You write ONE new short multiple-choice practice question on DATA MODELING for a Korean beginner who just got a question wrong. The course covers: 데이터 모델링 이론, 개념 모델링(엔티티, 속성, 관계, 식별자, 카디널리티, 선택성), 논리 모델링(정규화, 반정규화, PK/FK, 관계 해소, 이력, 코드 등).',
       'Goal: practice the same concept the student missed, in a DIFFERENT situation than the original (a different business example such as a library, hospital, shopping mall, school or gym). Same level or a little easier.',
@@ -121,7 +126,7 @@
     $('#ddg-close').addEventListener('click', function () { $$('#ddots details').forEach(function (d) { d.open = false; }); });
     $('#dclear').addEventListener('click', function () { $('#dclear-confirm').hidden = false; });
     $('#dclear-no').addEventListener('click', function () { $('#dclear-confirm').hidden = true; });
-    $('#dclear-yes').addEventListener('click', function () { DS.a = {}; DS.st = {}; DS.wrong = {}; dsave(); $('#dclear-confirm').hidden = true; dShow(DS.ch); dRefresh(); });
+    $('#dclear-yes').addEventListener('click', function () { DS.a = {}; DS.st = {}; DS.wrong = {}; dDesigns = {}; dsave(); $('#dclear-confirm').hidden = true; dShow(DS.ch); dRefresh(); });
     if (window.matchMedia('(max-width: 960px)').matches) { $('#dpanel-progress').classList.remove('open'); $('#dpanel-data').classList.remove('open'); }
   }
 
@@ -129,7 +134,7 @@
   function dCard(p) {
     var st = DS.st[p.n] || '', saved = DS.a[p.n];
     var h = '<article class="card" id="dq-' + p.n + '" data-dn="' + p.n + '">' +
-      '<div class="card-h"><span class="pnum">' + p.n + '</span><span class="mode' + (p.t === 'self' ? '' : ' auto') + '">' + DMODE[p.t] + '</span>' +
+      '<div class="card-h"><span class="pnum">' + p.n + '</span><span class="mode' + (p.t === 'mc' ? ' auto' : '') + '">' + DMODE[p.t] + '</span>' +
       '<span class="lv-chip"><i class="lvdot lv' + p.lv + '"></i>' + DLV[p.lv] + '</span>' +
       '<span class="status" data-st="' + st + '">' + (st ? DSTL[st] : '') + '</span></div>' +
       '<div class="q">' + p.q + (p.code ? '<pre class="code"><code>' + esc(p.code) + '</code></pre>' : '') + '</div>';
@@ -138,6 +143,12 @@
         return '<label class="choice"><input type="radio" name="dc-' + p.n + '" value="' + i + '"' + (saved === i ? ' checked' : '') + '><span><b class="cno">' + '①②③④⑤'[i] + '</b> ' + c + '</span></label>';
       }).join('') + '</div>';
       h += '<div class="actions"><button class="btn primary" type="button" data-dact="grade">채점하기</button><button class="btn ghost" type="button" data-dact="reveal">정답 보기</button></div>';
+    } else if (p.t === 'erd') {
+      h += ERD.editorHtml(p.n, dDesign(p));
+      h += '<div class="actions"><button class="btn primary" type="button" data-dact="check">구조 검사</button>' +
+        '<button class="btn" type="button" data-dact="aigrade" title="Claude가 내 설계를 읽고 채점해요">Claude에게 채점받기</button>' +
+        '<button class="btn ghost" type="button" data-dact="ddl">DDL로 보기</button>' +
+        '<button class="btn ghost" type="button" data-dact="reveal">모범 답안 보기</button></div>';
     } else {
       h += '<div class="editor"><span class="gut" aria-hidden="true">답&gt;</span><textarea id="dans-' + p.n + '" data-dn="' + p.n + '" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="' + p.n + '번 답안" placeholder="' + esc(p.ph || '생각한 답을 자유롭게 써 보세요. 엔티티는 엔티티명(PK | 속성, 속성) 처럼 써도 돼요.') + '">' + esc(typeof saved === 'string' ? saved : '') + '</textarea></div>';
       h += '<div class="actions"><button class="btn primary" type="button" data-dact="reveal">정답 확인 <kbd>Ctrl+Enter</kbd></button>' +
@@ -149,6 +160,12 @@
   function dSol(p, userText) {
     var h = '<h4>정답과 해설</h4>';
     if (p.t === 'mc') h += '<div class="exp"><p><b>정답: ' + '①②③④⑤'[p.ans] + '</b></p><p>' + p.exp + '</p></div>';
+    else if (p.t === 'erd') {
+      h += '<div class="res-label">모범 답안 ERD</div><div class="erd-prev" id="dmodel-' + p.n + '"></div>';
+      h += '<pre class="code dans">' + esc(ERD.toText(p.model)) + '</pre>';
+      if (p.exp) h += '<div class="exp"><p>' + p.exp + '</p></div>';
+      h += '<div class="selfmark"><span>내 설계는?</span><button class="btn small" type="button" data-dact="markok">맞았어요</button><button class="btn small" type="button" data-dact="markbad">틀렸어요</button></div>';
+    }
     else {
       var flat = dFlat(userText).toLowerCase();
       h += '<pre class="code dans">' + esc(p.answer) + '</pre>';
@@ -178,7 +195,7 @@
     var prev = DCH.filter(function (x) { return x.no === ch - 1; })[0], next = DCH.filter(function (x) { return x.no === ch + 1; })[0];
     h += '<div class="pager">' + (prev ? '<button class="btn" type="button" data-dgo="' + prev.no + '">← ' + prev.no + '장 ' + esc(prev.short) + '</button>' : '<span></span>') +
       (next ? '<button class="btn" type="button" data-dgo="' + next.no + '">' + next.no + '장 ' + esc(next.short) + ' →</button>' : '') + '</div>';
-    $('#dstage-view').innerHTML = h;
+    $('#dstage-view').innerHTML = h; dRenderPreviews($('#dstage-view'));
     $$('#dstages [data-dstage]').forEach(function (b) { b.setAttribute('aria-current', +b.dataset.dstage === ch ? 'true' : 'false'); });
     $$('#ddots details').forEach(function (d) { d.classList.toggle('cur', d.id === 'ddg-' + ch); });
     $$('#ddots .dot').forEach(function (d) { var p = dbyN[d.dataset.dn]; d.classList.toggle('dim', !!(DS.lv && p.ch === ch && p.lv !== DS.lv)); });
@@ -192,7 +209,7 @@
     setTimeout(function () { var el = $('#dq-' + n); if (el) { el.scrollIntoView({ block: 'start' }); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); } }, 60);
   }
   function dVerdict(n, cls, title, msg) { $('#dout-' + n).innerHTML = '<div class="verdict ' + cls + '"><b>' + title + '</b><span>' + msg + '</span></div>'; }
-  function dReveal(p, text) { var s = $('#dsol-' + p.n); s.innerHTML = dSol(p, text); s.hidden = false; }
+  function dReveal(p, text) { var s = $('#dsol-' + p.n); s.innerHTML = dSol(p, text); s.hidden = false; if (p.t === 'erd') ERD.render($('#dmodel-' + p.n), p.model); }
 
   function dGrade(p) {
     var card = $('#dq-' + p.n);
@@ -209,8 +226,8 @@
   var dSampleP = null, dGradeCtl = {};
   function dGetSample() { return WB.getSample(); } // claude.ai의 Claude, 또는 내가 넣은 API 키
   function dAiGrade(p, btn) {
-    var mine = $('#dans-' + p.n).value;
-    DS.a[p.n] = mine; dsave();
+    var isErd = p.t === 'erd', mine = isErd ? ERD.toText(dDesign(p)) : $('#dans-' + p.n).value;
+    if (!isErd) { DS.a[p.n] = mine; dsave(); }
     if (!mine.trim()) { dVerdict(p.n, 'info', '답을 먼저 써 주세요', '답을 쓴 뒤 채점받기를 눌러요.'); return; }
     if (dGradeCtl[p.n]) dGradeCtl[p.n].abort();
     var my = dGradeCtl[p.n] = new AbortController();
@@ -229,7 +246,8 @@
       '<2 to 4 short sentences IN KOREAN (해요체). Say what is right, and for PARTIAL/FAIL point to the exact gap and a hint to fix it. Do NOT paste the full model answer.>',
       '',
       'TASK:', dText(p.q) + (p.code ? '\n' + p.code : ''),
-      'MODEL ANSWER (for reference only):\n' + p.answer,
+      isErd ? 'The student built an ER design in an editor. Format: Entity(PK attributes | other attributes). "FK→X" means a foreign key referencing entity X; "(NULL)" means nullable.' : '',
+      'MODEL ANSWER (for reference only):\n' + (isErd ? ERD.toText(p.model) : p.answer),
       p.kw && p.kw.length ? 'KEY POINTS: ' + p.kw.join(', ') : '',
       'STUDENT ANSWER:\n<<<\n' + mine + '\n>>>'
     ].filter(Boolean).join('\n');
@@ -257,12 +275,33 @@
         var lb = e.target.closest('[data-dlevel]'); if (lb) { DS.lv = +lb.dataset.dlevel; dsave(); dShow(DS.ch); return; }
         var gb = e.target.closest('[data-dgo]'); if (gb) { dShow(+gb.dataset.dgo); window.scrollTo({ top: 0 }); return; }
         var cl = e.target.closest('[data-dconcept]'); if (cl) { e.preventDefault(); var ch = cl.dataset.dconcept; location.hash = 'db'; setTimeout(function () { var t = document.getElementById('d-ch-' + ch); if (t) t.scrollIntoView({ block: 'start' }); }, 80); return; }
+        var eb = e.target.closest('[data-eact]');
+        if (eb) {
+          var ecard = eb.closest('.card'), ep = dbyN[ecard.dataset.dn], dd = dDesign(ep);
+          if (eb.dataset.eact === 'reset') { delete DS.a[ep.n]; dDesigns[ep.n] = ERD.init(ep, null); dd = dDesigns[ep.n]; dsave(); }
+          else if (!ERD.applyAct(dd, eb)) return;
+          else { DS.a[ep.n] = dd; if (!DS.st[ep.n]) dSetSt(ep.n, 'draft'); else dsave(); }
+          $('#ded-' + ep.n).innerHTML = ERD.editorInner(dd); dPrev(ep.n, true);
+          return;
+        }
         var b = e.target.closest('[data-dact]'); if (!b) return;
         var card = b.closest('.card'), p = dbyN[card.dataset.dn], act = b.dataset.dact;
         if (act === 'grade') dGrade(p);
+        else if (act === 'check') {
+          var res = ERD.check(p, dDesign(p)), pass = res.filter(function (r) { return r.ok; }).length;
+          if (pass === res.length) { dVerdict(p.n, 'ok', '구조 검사를 모두 통과했어요', '모범 답안과 비교해 보고, 이름이나 속성도 더 다듬어 보세요.'); dSetSt(p.n, 'ok'); }
+          else dVerdict(p.n, 'info', res.length - pass + '개 항목을 다시 확인해 보세요', '아래 ✗ 항목이 힌트예요.');
+          $('#dout-' + p.n).insertAdjacentHTML('beforeend', ERD.checkHtml(res));
+        }
+        else if (act === 'ddl') {
+          var r = ERD.ddl(dDesign(p));
+          $('#dout-' + p.n).innerHTML = '<div class="erd-ddl"><div class="res-label">내 설계를 Oracle DDL로 바꾼 결과</div>' + (r.warn.length ? '<ul class="erd-warn">' + r.warn.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' : '') +
+            '<pre class="code"><code>' + esc(r.sql || '-- 엔티티를 먼저 입력해 주세요') + '</code></pre><button class="btn small ghost" type="button" data-dact="copyddl">복사하기</button></div>';
+        }
+        else if (act === 'copyddl') { var t = $('#dout-' + p.n + ' pre').textContent; if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { b.textContent = '복사했어요'; }, function () { b.textContent = '직접 선택해 복사해 주세요'; }); }
         else if (act === 'reveal') {
-          var text = p.t === 'mc' ? '' : $('#dans-' + p.n).value;
-          if (p.t !== 'mc') { DS.a[p.n] = text; }
+          var text = p.t === 'self' ? $('#dans-' + p.n).value : '';
+          if (p.t === 'self') { DS.a[p.n] = text; }
           if (p.t === 'mc') $$('.choice', card).forEach(function (l, i) { l.classList.toggle('right', i === p.ans); });
           dReveal(p, text);
           if (DS.st[p.n] !== 'ok' && DS.st[p.n] !== 'bad') dSetSt(p.n, 'seen');
@@ -272,6 +311,17 @@
         else if (act === 'markok') { dSetSt(p.n, 'ok'); dVerdict(p.n, 'ok', '맞았어요로 기록했어요', '다음 문제로 넘어가 보세요.'); }
         else if (act === 'markbad') { dSetSt(p.n, 'bad'); dVerdict(p.n, 'bad', '틀렸어요로 기록했어요', '해설을 다시 읽고 개념 정리 탭도 확인해 보세요.'); }
       });
+      function erdEdit(e) {
+        var el = e.target.closest('.erd [data-f]'); if (!el) return false;
+        var card = el.closest('.card'), p = dbyN[card.dataset.dn], d = dDesign(p);
+        var kind = ERD.applyInput(d, el); if (!kind) return true;
+        DS.a[p.n] = d; if (!DS.st[p.n]) dSetSt(p.n, 'draft'); else dsave();
+        if (kind === 'name') ERD.refreshFk($('#ded-' + p.n), d);
+        dPrev(p.n);
+        return true;
+      }
+      view.addEventListener('input', function (e) { if (e.target.matches('input:not([type])')) erdEdit(e); });
+      view.addEventListener('change', function (e) { if (e.target.matches('input[type="checkbox"], select')) erdEdit(e); });
       view.addEventListener('input', function (e) {
         var ta = e.target.closest('textarea[data-dn]'); if (!ta) return;
         var n = +ta.dataset.dn; DS.a[n] = ta.value;
@@ -355,7 +405,7 @@
       });
       h += '</div>';
     }
-    v.innerHTML = h;
+    v.innerHTML = h; dRenderPreviews(v);
   }
   document.addEventListener('click', function (e) {
     var f = e.target.closest('[data-dwf]'); if (f) { DS.wf = f.dataset.dwf; dsave(); dRenderWrong(); return; }
@@ -366,7 +416,7 @@
   WB.onView = function (v) {
     if (prevOnView) prevOnView(v);
     if (v === 'dwrong') dRenderWrong();
-    else if (v === 'dproblems' && !$('#dstage-view').children.length) dShow(DS.ch);
+    else if (v === 'dproblems') { var wv = $('#dwrong-view'); if (wv) wv.innerHTML = ''; if (!$('#dstage-view').children.length) dShow(DS.ch); }
   };
 
   // ---------- 기록 저장·불러오기 ----------
@@ -392,7 +442,7 @@
     var a = {}, st = {};
     Object.keys(o.a || {}).forEach(function (k) { if (dbyN[k]) a[k] = o.a[k]; });
     Object.keys(o.st || {}).forEach(function (k) { if (dbyN[k] && DSTL[o.st[k]]) st[k] = o.st[k]; });
-    DS.a = a; DS.st = st; DS.ch = o.ch || 1; DS.lv = o.lv || 0;
+    DS.a = a; DS.st = st; DS.ch = o.ch || 1; DS.lv = o.lv || 0; dDesigns = {};
     DS.wrong = {}; Object.keys(o.wrong || {}).forEach(function (k) { if (dbyN[k]) DS.wrong[k] = o.wrong[k]; });
     Object.keys(st).forEach(function (k) { if (st[k] === 'bad' && !DS.wrong[k]) DS.wrong[k] = { c: 1, t: null }; });
     dsave(); dMsg('불러왔어요. ' + dCount(DS) + '이 들어왔어요.');
