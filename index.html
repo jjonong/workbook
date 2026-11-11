@@ -12,7 +12,7 @@
 <script src="js/theme-init.js"></script>
 <header class="top">
   <div class="top-in">
-    <div class="brand"><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
+    <div class="brand"><button type="button" class="lnb-btn" id="lnb-btn" aria-pressed="false" aria-label="왼쪽 메뉴 접기" title="왼쪽 메뉴 접기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path class="i-l" d="m16 15-3-3 3-3"/><path class="i-r" d="m14 9 3 3-3 3"/></svg></button><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
     <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a><a href="#tproblems" data-cat="tune">튜닝</a></nav>
     <nav class="tabs" id="tabs-sql" aria-label="SQL 보기">
       <a href="#problems" data-view="problems">실습 문제</a>
@@ -175,7 +175,7 @@
       <div class="pmain" style="min-width:0">
         <div class="intro">
           <p><b>객관식과 출력 결과 문제</b>는 답을 고르거나 쓰고 ‘채점하기’를 누르면 바로 채점돼요. 출력 결과는 실행했을 때 화면에 나오는 그대로 한 줄씩 쓰면 되고, 띄어쓰기만 다르면 정답으로 쳐요. 모든 출력 정답은 Java 21로 실제 실행해서 확인한 결과예요.</p>
-          <p><b>모두 520문제</b>이고 장마다 기초·응용·심화가 고루 있어요. 그중 <b>직접 코드를 짜는 문제</b>는 사용 예와 실행 결과가 함께 나와요. ‘Claude에게 채점받기’로 내 코드를 채점받거나, ‘연습장에서 실행’으로 직접 돌려 볼 수 있어요(import 문은 생략해도 돼요). 위의 난이도 버튼으로 골라 풀 수 있어요. 오른쪽 아래 <b>{ } 버튼</b>을 누르면 Java 코드를 자유롭게 써 보고 실행 결과를 확인할 수 있는 연습장이 열려요.</p>
+          <p><b>모두 520문제</b>이고 장마다 기초·응용·심화가 고루 있어요. 그중 <b>직접 코드를 짜는 문제</b>는 사용 예와 실행 결과가 함께 나와요. ‘Claude에게 채점받기’로 내 코드를 채점받거나, ‘연습장에서 실행’으로 직접 돌려 볼 수 있어요(import 문은 생략해도 돼요). 위의 난이도 버튼으로 골라 풀 수 있어요. 오른쪽 아래 <b>{ } 버튼</b>을 누르고 <b>‘연습 코드 입력’</b>을 고르면 Java 코드를 자유롭게 써 보고 실행 결과를 확인할 수 있는 연습장이 열려요. ‘메모장’을 고르면 필기장이 열려요.</p>
           <p><b>직접 작성 문제</b>는 코드를 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나와요. 비교해 보고 ‘맞았어요/틀렸어요’로 스스로 채점해요. 7~13장 문제는 목차 기반 개념 정리를 바탕으로 만들었어요.</p>
         </div>
         <div id="jstage-view"></div>
@@ -382,7 +382,7 @@
     <li>새 문제는 Claude Haiku, 채점과 연습장은 Claude Sonnet을 써요. 쓴 금액은 콘솔의 사용량(Usage) 화면에서 볼 수 있어요.</li>
   </ul>
 </section>
-<button type="button" class="fab jfab" id="jfab" aria-expanded="false" aria-controls="jscratch" aria-label="Java 연습장" title="Java 연습장 열기 (끌어서 옮길 수 있어요)">
+<button type="button" class="fab jfab" id="jfab" aria-expanded="false" aria-controls="jscratch" aria-haspopup="menu" aria-label="메모장·Java 연습장" title="메모장·Java 연습장 (끌어서 옮길 수 있어요)">
   <span class="fab-t" aria-hidden="true">{ }</span>
   <svg class="fab-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
 </button>
@@ -399,7 +399,7 @@
 실행하면 Claude가 Java 21 기준으로 출력·컴파일 에러·예외를 예측해서 보여줘요. 실제 JVM은 아니에요.
 처음 실행할 때 Claude 사용 허락을 한 번 물어봐요."></div>
 </section>
-<button type="button" class="fab" id="fab" aria-expanded="false" aria-controls="scratch" aria-label="SQL 연습장" title="SQL 연습장 열기 (끌어서 옮길 수 있어요)">
+<button type="button" class="fab" id="fab" aria-expanded="false" aria-controls="scratch" aria-haspopup="menu" aria-label="메모장·SQL 연습장" title="메모장·SQL 연습장 (끌어서 옮길 수 있어요)">
   <svg class="fab-t" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4M2 10h4M2 14h4M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
   <svg class="fab-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
 </button>
@@ -416,8 +416,11 @@
 실습 문제의 '실행'과 같은 데이터를 써요. 채점은 항상 처음 상태로 하니 마음껏 바꿔 봐도 돼요."></div>
 </section>
 
-<button type="button" class="nt-tab" id="nt-tab" aria-expanded="false" aria-controls="notes" title="내 필기 열기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"/><path d="m15 5 4 4"/></svg><span>필</span><span>기</span></button>
-<aside class="notes" id="notes" aria-label="내 필기" inert>
+<div class="fab-pick" id="fab-pick" role="menu" aria-label="열 창 고르기" hidden>
+  <button type="button" role="menuitem" data-pick="notes"><span class="pk-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"/><path d="m15 5 4 4"/></svg></span><span><b>메모장</b><small>글자·펜으로 필기해요</small></span></button>
+  <button type="button" role="menuitem" data-pick="code"><span class="pk-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></span><span><b>연습 코드 입력</b><small id="fab-pick-sub">SQL 연습장</small></span></button>
+</div>
+<aside class="notes" id="notes" role="dialog" aria-label="내 필기" inert>
   <div class="nt-head">
     <b>내 필기</b>
     <select id="nt-page" aria-label="필기 페이지 고르기"></select>
