@@ -1,0 +1,7 @@
+/* 디자인 패턴 탭: SQL 실행기·SQL 연습장은 숨기고 Java 연습장은 보여요 */
+.cat-gof .engine-pill, .cat-gof .fab:not(.jfab), .cat-gof .scratch:not(.jscratch) { display: none !important; }
+#view-gproblems .q pre.code, #view-gwrong .q pre.code { white-space: pre; overflow-x: auto; font-size: 12.5px; margin-top: 10px; }
+#view-gproblems .sol pre.dans, #view-gwrong .sol pre.dans { white-space: pre; overflow-x: auto; font-size: 12.5px; }
+#view-gproblems .editor textarea, #view-gwrong .editor textarea { min-height: 140px; tab-size: 4; }
+#doc-gof pre, #doc-gcheat pre { white-space: pre; }
+#doc-gof h2 small { font-weight: 500; font-size: .7em; color: var(--muted); margin-left: 4px; }
