@@ -1,5 +1,5 @@
 /* JAVA 화면 전용 스타일 (객관식 보기, 기록 패널, Java 연습장, 코드 작성 문제) */
-html:not(.cat-java) .jfab, html:not(.cat-java) .jscratch { display: none !important; }
+html:not(.cat-java):not(.cat-gof) .jfab, html:not(.cat-java):not(.cat-gof) .jscratch { display: none !important; }
 .jfab { font-size: 12px; }
 .scratch.jscratch .editor textarea { min-height: 170px; max-height: 42vh; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 4; }
 .jscratch .scratch-h b { white-space: nowrap; }

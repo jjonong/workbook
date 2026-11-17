@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>SQL·Java·DB 정석 워크북</title>
+<title>SQL·Java·DB·패턴 정석 워크북</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -9,11 +9,12 @@
 <link rel="stylesheet" href="css/notes.css">
 <link rel="stylesheet" href="css/db.css">
 <link rel="stylesheet" href="css/tune.css">
+<link rel="stylesheet" href="css/gof.css">
 <script src="js/theme-init.js"></script>
 <header class="top">
   <div class="top-in">
     <div class="brand"><button type="button" class="lnb-btn" id="lnb-btn" aria-pressed="false" aria-label="왼쪽 메뉴 접기" title="왼쪽 메뉴 접기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path class="i-l" d="m16 15-3-3 3-3"/><path class="i-r" d="m14 9 3 3-3 3"/></svg></button><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
-    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a><a href="#tproblems" data-cat="tune">튜닝</a></nav>
+    <nav class="cat" aria-label="과목"><a href="#problems" data-cat="sql">SQL</a><a href="#jproblems" data-cat="java">JAVA</a><a href="#dproblems" data-cat="db">DB</a><a href="#tproblems" data-cat="tune">튜닝</a><a href="#gproblems" data-cat="gof">패턴</a></nav>
     <nav class="tabs" id="tabs-sql" aria-label="SQL 보기">
       <a href="#problems" data-view="problems">실습 문제</a>
       <a href="#concepts" data-view="concepts">개념 정리</a>
@@ -37,6 +38,12 @@
       <a href="#tune" data-view="tune">개념 정리</a>
       <a href="#tcheat" data-view="tcheat">핵심 정리</a>
       <a href="#twrong" data-view="twrong">오답노트<span class="tab-n" id="twrong-n" hidden></span></a>
+    </nav>
+    <nav class="tabs" id="tabs-gof" aria-label="디자인 패턴 보기" hidden>
+      <a href="#gproblems" data-view="gproblems">실습 문제</a>
+      <a href="#gof" data-view="gof">개념 정리</a>
+      <a href="#gcheat" data-view="gcheat">핵심 정리</a>
+      <a href="#gwrong" data-view="gwrong">오답노트<span class="tab-n" id="gwrong-n" hidden></span></a>
     </nav>
     <div class="spacer"></div>
     <div class="engine-pill" id="engine-pill" title="브라우저 안에서 SQL을 실행하는 실행기 상태"><i></i><span id="engine-text">실행기 불러오는 중…</span></div>
@@ -367,6 +374,83 @@
   <section class="view" id="view-twrong" hidden>
     <div class="wn" id="twrong-view"></div>
   </section>
+  <section class="view" id="view-gproblems" hidden>
+    <div class="pgrid">
+      <aside class="rail" aria-label="디자인 패턴 진행 상황">
+        <div class="panel collapsible open" id="gpanel-progress">
+          <h3>진행 상황</h3>
+          <div class="stats">
+            <div class="stat"><b id="gst-ok">0</b><span>맞힌 문제</span></div>
+            <div class="stat"><b id="gst-done">0</b><span id="gst-total">푼 문제</span></div>
+          </div>
+          <div class="body">
+            <div class="dg-tools"><button type="button" class="to-sync" id="gto-sync"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>기록 저장하기</button><button type="button" id="gdg-open">모두 펼치기</button><span>·</span><button type="button" id="gdg-close">모두 접기</button></div>
+            <div class="dgrps" id="gdots"></div>
+            <div class="legend"><span class="l-ok">정답</span><span class="l-bad">오답</span><span class="l-seen">답만 확인</span><span class="l-draft">작성 중</span></div>
+          </div>
+        </div>
+        <div class="panel collapsible" id="gpanel-sync">
+          <h3>기록 저장·불러오기</h3>
+          <div class="body">
+            <p class="note-sm" style="margin-top:0">디자인 패턴 기록은 이 브라우저에만 저장돼요. 다른 기기에서 이어서 풀려면 여기서 저장하고, 그 기기에서 불러오세요. 다른 과목 기록과는 따로 저장돼요.</p>
+            <div class="sync-row"><button class="btn small" id="gsync-save" type="button">파일로 저장</button><button class="btn small" id="gsync-load" type="button">파일 불러오기</button><input type="file" id="gsync-file" accept=".json,.txt,application/json,text/plain" hidden></div>
+            <div class="sync-row"><button class="btn small" id="gsync-code" type="button">코드 만들기</button><button class="btn small" id="gsync-paste" type="button">코드 붙여넣기</button></div>
+            <div id="gsync-box" hidden>
+              <textarea id="gsync-text" class="sync-text" spellcheck="false" autocomplete="off"></textarea>
+              <div class="sync-row" id="gsync-box-act"></div>
+            </div>
+            <p class="note-sm" id="gsync-msg" role="status"></p>
+          </div>
+        </div>
+        <div class="panel collapsible open" id="gpanel-stages">
+          <h3>교안 Part</h3>
+          <div class="body"><ul class="stages" id="gstages"></ul></div>
+        </div>
+        <div class="panel collapsible open" id="gpanel-data">
+          <h3>내 기록</h3>
+          <div class="body">
+            <button class="btn ghost small" id="gclear" type="button">디자인 패턴 답과 기록 모두 지우기</button>
+            <div id="gclear-confirm" hidden class="note-sm">정말 지울까요? 이 기기에 저장된 디자인 패턴 답이 모두 사라져요.
+              <div style="display:flex;gap:6px;margin-top:6px"><button class="btn small" id="gclear-yes" type="button">지우기</button><button class="btn small ghost" id="gclear-no" type="button">취소</button></div></div>
+          </div>
+        </div>
+      </aside>
+      <div class="pmain" style="min-width:0">
+        <div class="intro">
+          <p><b>『Java 언어로 배우는 디자인 패턴 입문』 교안</b>의 Part 5 Singleton, Part 6 Prototype, Part 20 Flyweight를 정리한 <b>89문제</b>예요. 세 패턴을 비교하는 종합 문제도 있고, 장마다 기초·응용·심화가 고루 있어요. <b>객관식</b>은 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요. 출력 결과를 묻는 문제는 모두 Java 21로 실제 실행해서 확인했어요.</p>
+          <p><b>서술·코드 문제</b>는 교안 연습 문제(5-1~5-3, 6-1~6-2, 20-1~20-3)와 응용 코딩 문제예요. 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나오고, ‘맞았어요/틀렸어요’로 스스로 채점하거나 ‘Claude에게 채점받기’를 쓸 수 있어요. 오른쪽 아래 <b>{ } 버튼</b>을 누르고 <b>‘연습 코드 입력’</b>을 고르면 Java 연습장에서 코드를 직접 돌려 볼 수 있어요. ‘메모장’을 고르면 필기장이 열려요.</p>
+        </div>
+        <div id="gstage-view"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-gof" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-gof">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-gof" aria-label="디자인 패턴 개념 정리 목차"></nav>
+      <article class="doc" id="doc-gof"></article>
+    </div>
+  </section>
+
+  <section class="view" id="view-gcheat" hidden>
+    <button class="btn toggle-toc" type="button" data-toc="toc-gcheat">목차 보기</button>
+    <div class="dgrid">
+      <nav class="toc" id="toc-gcheat" aria-label="디자인 패턴 핵심 정리 목차"></nav>
+      <div style="min-width:0">
+        <label class="search" for="gcheat-q">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input id="gcheat-q" type="search" placeholder="용어나 코드로 찾기 (예: private, clone, 얕은 복사, intrinsic, pool, synchronized)" autocomplete="off">
+          <span class="cnt" id="gcheat-cnt"></span>
+        </label>
+        <article class="doc" id="doc-gcheat"></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-gwrong" hidden>
+    <div class="wn" id="gwrong-view"></div>
+  </section>
 </main>
 
 <section class="keybox" id="keybox" role="dialog" aria-label="Claude 연결" hidden>
@@ -484,12 +568,16 @@
 <script src="data/tune-problems.js"></script>
 <script src="data/tune-concepts.js"></script>
 <script src="data/tune-cheatsheet.js"></script>
+<script src="data/gof-problems.js"></script>
+<script src="data/gof-concepts.js"></script>
+<script src="data/gof-cheatsheet.js"></script>
 <script src="js/oralite.js"></script>
 <script src="js/app.js"></script>
 <script src="js/java.js"></script>
 <script src="js/db-erd.js"></script>
 <script src="js/db.js"></script>
 <script src="js/tune.js"></script>
+<script src="js/gof.js"></script>
 <script src="js/notes.js"></script>
 <script src="js/main.js"></script>
 </body></html>

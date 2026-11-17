@@ -718,4 +718,5 @@
 
   WB.initJava = initJava;
   WB.onCategory = function (isJava) { if (jScratchPlace) jScratchPlace(isJava); };
+  WB.jScratchOpen = function (code, run) { if (jScratchOpen) jScratchOpen(code, run); };
 })();
