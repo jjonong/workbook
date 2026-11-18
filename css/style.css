@@ -429,3 +429,6 @@ mark { background: var(--marker-soft); color: inherit; border-radius: 2px; }
 .gen-sim > summary:hover { color: var(--accent); }
 .gen-sim .rec-list { margin-top: 6px; }
 @media (max-width: 560px) { .rec { margin: 0 14px; } .rec-t { white-space: normal; } .wn-sort { margin-left: 0; } }
+
+/* 선지 안의 굵은 글씨는 보통 굵기로 보여요(정답이 미리 드러나지 않게). 보기 번호(.cno)는 그대로 */
+.choice span b:not(.cno), .choice span strong { font-weight: inherit; }

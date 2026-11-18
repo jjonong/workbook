@@ -39,7 +39,7 @@ WGF.problems = [
    "어떤 클래스의 인스턴스를 복사해서 새 인스턴스를 만드는 것",
    "인스턴스를 만들 때마다 서로 다른 클래스를 고를 수 있게 하는 것",
    "같은 내용의 인스턴스를 여러 곳에서 공유해 메모리를 아끼는 것",
-   "어떤 클래스의 인스턴스가 <b>반드시 1개만</b> 존재하는 것"
+   "어떤 클래스의 인스턴스가 반드시 1개만 존재하는 것"
   ],
   "ans": 3,
   "exp": "Singleton은 '지정한 클래스의 인스턴스가 반드시 1개만 존재한다'는 것을 보장하고, 그 사실을 프로그램 상에서 표현하는 패턴이에요. ②는 Prototype, ③은 Flyweight 이야기예요."
@@ -81,7 +81,7 @@ WGF.problems = [
   "t": "mc",
   "q": "Singleton 클래스에서 생성자를 <code>private</code>으로 만드는 이유는?",
   "choices": [
-   "클래스 <b>외부에서 <code>new</code>로 인스턴스를 만들지 못하게</b> 하려고",
+   "클래스 외부에서 <code>new</code>로 인스턴스를 만들지 못하게 하려고",
    "생성자를 더 빨리 실행하려고",
    "하위 클래스에서 생성자를 오버라이드하게 하려고",
    "가비지 컬렉션이 인스턴스를 지우지 못하게 하려고"
@@ -113,7 +113,7 @@ WGF.problems = [
   "choices": [
    "static이 아니면 다른 스레드에서 호출할 수 없기 때문에",
    "static 메서드만 private 생성자를 호출할 수 있기 때문에",
-   "인스턴스를 아직 얻지 못한 상태에서도 <b>클래스 이름으로</b> 호출해야 하기 때문에",
+   "인스턴스를 아직 얻지 못한 상태에서도 클래스 이름으로 호출해야 하기 때문에",
    "static 메서드가 아니면 반환형을 Singleton으로 쓸 수 없기 때문에"
   ],
   "ans": 2,
@@ -145,7 +145,7 @@ WGF.problems = [
    "컴파일 에러가 나서 클래스를 쓸 수 없다",
    "생성자가 없으니 아무도 인스턴스를 만들 수 없다",
    "자동으로 private 생성자가 만들어져서 Singleton이 유지된다",
-   "컴파일러가 <b>public 기본 생성자</b>를 자동으로 만들어서 바깥에서도 <code>new</code>가 가능해진다"
+   "컴파일러가 public 기본 생성자를 자동으로 만들어서 바깥에서도 <code>new</code>가 가능해진다"
   ],
   "ans": 3,
   "exp": "자바는 생성자가 하나도 없으면 매개변수 없는 기본 생성자를 자동으로 넣어 줘요. 그래서 내용이 비어 있어도 <code>private Singleton() { }</code>을 <b>직접 써 두는 것 자체가 목적</b>이에요. (수업 필기: ‘왜 비어 있을까? 목적은 private을 붙이는 것 자체’)"
@@ -191,7 +191,7 @@ WGF.problems = [
    "두 인스턴스의 클래스 이름이 같은지 확인하려고",
    "두 인스턴스의 필드 값이 같은지 확인하려고",
    "equals를 오버라이드하지 않았기 때문에 어쩔 수 없이",
-   "두 변수가 <b>같은 인스턴스를 가리키는지</b>(참조가 같은지) 확인하려고"
+   "두 변수가 같은 인스턴스를 가리키는지(참조가 같은지) 확인하려고"
   ],
   "ans": 3,
   "exp": "<code>==</code>는 참조 비교라서 true면 <b>정말 같은 객체 하나</b>라는 뜻이에요. Singleton이 제대로 동작하는지 확인하는 가장 직접적인 방법이에요."
@@ -206,7 +206,7 @@ WGF.problems = [
    "getInstance를 부를 때마다 새 인스턴스를 만들어야 한다",
    "자바 언어 규칙상 Singleton은 반드시 getInstance라는 이름을 써야 한다",
    "getInstance는 java.lang.Object에 정의된 메서드를 오버라이드한 것이다",
-   "반드시 이 이름이어야 하는 것은 아니지만, <b>유일한 인스턴스를 얻을 방법</b>은 꼭 필요하다"
+   "반드시 이 이름이어야 하는 것은 아니지만, 유일한 인스턴스를 얻을 방법은 꼭 필요하다"
   ],
   "ans": 3,
   "exp": "교안에서 getInstance는 <b>static Factory Method</b>의 일종이라고 설명해요. 이름은 자유지만 유일한 인스턴스를 얻을 통로가 있어야 해요."
@@ -253,7 +253,7 @@ WGF.problems = [
    "Prototype 역과 ConcretePrototype 역이 등장한다",
    "Singleton 역과 Client 역, Factory 역이 함께 등장한다",
    "Flyweight 역과 FlyweightFactory 역이 등장한다",
-   "<b>Singleton 역만</b> 등장하며, 유일한 인스턴스를 얻기 위한 static 메서드를 가진다"
+   "Singleton 역만 등장하며, 유일한 인스턴스를 얻기 위한 static 메서드를 가진다"
   ],
   "ans": 3,
   "exp": "Singleton 패턴에는 Singleton 역만 등장해요. 이 역은 유일한 인스턴스를 얻는 static 메서드를 갖고, 이 메서드는 <b>항상 같은 인스턴스</b>를 반환해요."
@@ -267,7 +267,7 @@ WGF.problems = [
   "choices": [
    "제한은 메모리를 아끼기 위한 것일 뿐 버그와는 관계없다",
    "인스턴스 수를 제한하면 무조건 실행 속도가 빨라진다",
-   "제한을 둔다는 것은 <b>전제 조건을 늘린다</b>는 뜻이고, 인스턴스가 하나뿐이라는 보장이 있으면 그 전제 아래서 프로그래밍할 수 있다",
+   "제한을 둔다는 것은 전제 조건을 늘린다는 뜻이고, 인스턴스가 하나뿐이라는 보장이 있으면 그 전제 아래서 프로그래밍할 수 있다",
    "인스턴스가 여러 개 있으면 컴파일 에러가 나기 때문에 제한한다"
   ],
   "ans": 2,
@@ -426,7 +426,7 @@ WGF.problems = [
   "q": "enum으로 Singleton을 만드는 방식의 특징으로 옳은 것은?",
   "choices": [
    "enum Singleton은 반드시 getInstance 메서드를 직접 만들어야 한다",
-   "enum 상수는 JVM이 하나만 만들어 주므로 <b>유일성이 언어 차원에서 보장</b>된다",
+   "enum 상수는 JVM이 하나만 만들어 주므로 유일성이 언어 차원에서 보장된다",
    "enum Singleton은 메서드를 가질 수 없다",
    "enum은 new로 원하는 만큼 인스턴스를 더 만들 수 있다"
   ],
@@ -440,7 +440,7 @@ WGF.problems = [
   "t": "mc",
   "q": "Prototype 패턴의 핵심으로 알맞은 것은?",
   "choices": [
-   "클래스에서 인스턴스를 만드는 대신 <b>인스턴스를 복사해서</b> 새 인스턴스를 만든다",
+   "클래스에서 인스턴스를 만드는 대신 인스턴스를 복사해서 새 인스턴스를 만든다",
    "인스턴스를 만드는 일을 하위 클래스에 맡긴다",
    "클래스의 인스턴스를 하나만 만든다",
    "같은 인스턴스를 여러 곳에서 공유한다"
@@ -503,7 +503,7 @@ WGF.problems = [
    "<code>clone()</code> 하나",
    "<code>createCopy()</code>",
    "<code>clone()</code>과 <code>equals()</code>",
-   "하나도 없다. ‘clone으로 복제를 허용한다’는 표시로만 쓰는 <b>마커 인터페이스</b>다"
+   "하나도 없다. ‘clone으로 복제를 허용한다’는 표시로만 쓰는 마커 인터페이스다"
   ],
   "ans": 3,
   "exp": "Cloneable 안에는 메서드가 하나도 없어요. 이렇게 표시만 하는 인터페이스를 <b>마커 인터페이스(marker interface)</b>라고 해요. 이름 때문에 clone이 들어 있을 거라 착각하기 쉬워요."
@@ -531,7 +531,7 @@ WGF.problems = [
   "t": "mc",
   "q": "교안의 <code>Product</code> 인터페이스가 <code>extends Cloneable</code>로 선언된 이유는?",
   "choices": [
-   "Product를 구현한 클래스(MessageBox 등)가 <b>자동으로 Cloneable을 구현</b>하게 되어 clone으로 복제할 수 있게 하려고",
+   "Product를 구현한 클래스(MessageBox 등)가 자동으로 Cloneable을 구현하게 되어 clone으로 복제할 수 있게 하려고",
    "Cloneable에 선언된 clone 메서드를 Product에서 다시 쓰려고",
    "Product를 추상 클래스로 만들려고",
    "Manager가 Cloneable 타입만 받도록 하려고"
@@ -564,7 +564,7 @@ WGF.problems = [
   "choices": [
    "클래스 이름을 쓰면 clone이 동작하지 않기 때문에",
    "Manager가 framework 패키지라서 다른 패키지의 클래스를 쓸 수 없기 때문에",
-   "Product·Manager가 그 클래스들과 <b>독립적으로 수정·재사용</b>될 수 있기 때문에",
+   "Product·Manager가 그 클래스들과 독립적으로 수정·재사용될 수 있기 때문에",
    "클래스 이름을 쓰면 컴파일 속도가 느려지기 때문에"
   ],
   "ans": 2,
@@ -703,7 +703,7 @@ WGF.problems = [
   "q": "교안 예제에서 <code>clone()</code>을 바로 쓰지 않고 <code>createCopy()</code>라는 메서드로 감싼 이유로 가장 알맞은 것은?",
   "choices": [
    "clone은 private이라서 아무도 호출할 수 없기 때문에",
-   "Object의 clone은 <b>protected</b>라서 다른 클래스(Manager)의 요청으로 복제하려면 public 메서드로 감싸야 하기 때문에",
+   "Object의 clone은 protected라서 다른 클래스(Manager)의 요청으로 복제하려면 public 메서드로 감싸야 하기 때문에",
    "createCopy가 clone보다 깊은 복사를 해 주기 때문에",
    "clone은 Cloneable을 구현한 클래스에서만 호출할 수 있기 때문에"
   ],
@@ -717,7 +717,7 @@ WGF.problems = [
   "t": "mc",
   "q": "교안 보강 ‘clone은 사용하기 어렵다’에서 실제 Java 프로그램으로 복제 클래스를 설계할 때 권하는 방법은?",
   "choices": [
-   "clone 메커니즘에 의존하지 않고 <b>복사 생성자</b>나 <b>복사 팩토리</b>를 사용한다",
+   "clone 메커니즘에 의존하지 않고 복사 생성자나 복사 팩토리를 사용한다",
    "복제가 필요하면 직렬화(Serializable)만 사용한다",
    "모든 클래스에 Cloneable을 붙이고 clone을 public으로 만든다",
    "복제 대신 Singleton으로 인스턴스를 하나만 쓴다"
@@ -781,7 +781,7 @@ WGF.problems = [
   "q": "Prototype 패턴과 Flyweight 패턴을 비교한 설명으로 옳은 것은?",
   "choices": [
    "Prototype은 공유하고, Flyweight는 복사한다",
-   "Prototype은 현재 인스턴스와 같은 상태의 <b>별도 인스턴스</b>를 만들고, Flyweight는 <b>하나의 인스턴스를 여러 곳에서 공유</b>한다",
+   "Prototype은 현재 인스턴스와 같은 상태의 별도 인스턴스를 만들고, Flyweight는 하나의 인스턴스를 여러 곳에서 공유한다",
    "둘 다 인스턴스를 복사해서 새로 만든다",
    "둘 다 인스턴스를 하나만 만든다"
   ],
@@ -811,7 +811,7 @@ WGF.problems = [
   "q": "교안 ‘클래스 이름은 속박인가’의 요점으로 알맞은 것은?",
   "choices": [
    "클래스 이름은 길수록 재사용하기 좋다",
-   "소스 안에 이용할 클래스 이름이 쓰여 있으면 그 클래스와 분리해 재사용할 수 없고, <b>소스(.java) 없이 .class만으로 재사용할 수 있는지</b>가 포인트다",
+   "소스 안에 이용할 클래스 이름이 쓰여 있으면 그 클래스와 분리해 재사용할 수 없고, 소스(.java) 없이 .class만으로 재사용할 수 있는지가 포인트다",
    "소스 코드에 클래스 이름을 쓰는 것은 항상 나쁘므로 절대 쓰면 안 된다",
    "소스를 수정해서 클래스 이름을 바꿀 수 있으면 재사용에는 아무 문제가 없다"
   ],
@@ -858,7 +858,7 @@ WGF.problems = [
    "가벼운 클래스 · 소스 코드 줄 수",
    "가벼운 날개 · 실행 속도",
    "파리 무게 · 파일 크기",
-   "복싱에서 가장 가벼운 체급 · <b>메모리 사용량</b>"
+   "복싱에서 가장 가벼운 체급 · 메모리 사용량"
   ],
   "ans": 3,
   "exp": "flyweight는 복싱에서 가장 체중이 가벼운 체급(플라이급)이에요. 객체를 ‘가볍게’ 만드는 패턴이고, 여기서 무게는 <b>메모리 사용량</b>이에요. 메모리를 많이 쓰면 ‘무겁다’, 적게 쓰면 ‘가볍다’고 해요."
@@ -872,7 +872,7 @@ WGF.problems = [
   "choices": [
    "인스턴스를 만들 때마다 파일을 새로 읽는다",
    "인스턴스를 복사해서 만든다",
-   "인스턴스를 최대한 <b>공유</b>하고 쓸데없이 <b>new하지 않는다</b>",
+   "인스턴스를 최대한 공유하고 쓸데없이 new하지 않는다",
    "인스턴스를 하나만 만든다"
   ],
   "ans": 2,
@@ -931,7 +931,7 @@ WGF.problems = [
   "q": "다음 <code>getBigChar</code>의 동작 설명으로 옳은 것은?",
   "choices": [
    "pool에 있으면 복사본을 만들어 돌려준다",
-   "pool에 그 문자의 BigChar가 <b>없을 때만</b> new로 만들어 등록하고, 있으면 기존 것을 돌려준다",
+   "pool에 그 문자의 BigChar가 없을 때만 new로 만들어 등록하고, 있으면 기존 것을 돌려준다",
    "부를 때마다 새 BigChar를 만들어 pool에 덮어쓴다",
    "pool에 없으면 null을 돌려준다"
   ],
@@ -947,7 +947,7 @@ WGF.problems = [
   "q": "BigCharFactory 자체를 Singleton 패턴으로 구현한 이유는?",
   "choices": [
    "getBigChar를 static으로 만들기 위해서",
-   "BigCharFactory의 인스턴스(즉 pool)는 <b>하나만 존재하면 되기</b> 때문에",
+   "BigCharFactory의 인스턴스(즉 pool)는 하나만 존재하면 되기 때문에",
    "BigChar를 하나만 만들기 위해서",
    "BigString이 BigCharFactory를 상속하기 위해서"
   ],
@@ -993,7 +993,7 @@ WGF.problems = [
   "t": "mc",
   "q": "BigString 생성자의 for문을 다음처럼 바꾸면 어떻게 되나요?",
   "choices": [
-   "BigChar가 <b>공유되지 않아</b> 같은 문자라도 매번 새 인스턴스가 생긴다",
+   "BigChar가 공유되지 않아 같은 문자라도 매번 새 인스턴스가 생긴다",
    "컴파일 에러가 난다",
    "같은 문자를 출력하지 못한다",
    "결과도 메모리 사용량도 전혀 달라지지 않는다"
@@ -1027,7 +1027,7 @@ WGF.problems = [
    "intrinsic = 공유 불가능, extrinsic = 공유 가능",
    "intrinsic = 외부에서 온 정보, extrinsic = 본래 갖춰진 정보",
    "둘 다 Flyweight 역이 반드시 가져야 하는 정보다",
-   "intrinsic = 장소나 상황에 <b>의존하지 않아 공유 가능</b>, extrinsic = 장소나 상황에 <b>의존해서 공유 불가능</b>"
+   "intrinsic = 장소나 상황에 의존하지 않아 공유 가능, extrinsic = 장소나 상황에 의존해서 공유 불가능"
   ],
   "ans": 3,
   "exp": "intrinsic은 ‘본래 갖춰진, 본질적인’이라는 뜻으로 어디에 가져가도 변하지 않는 정보예요(공유 가능). extrinsic은 ‘외부에서 온, 비본질적인’이라는 뜻으로 배치 장소·상황에 따라 바뀌는 정보예요(공유 불가능). 표 20-2를 기억하세요."
@@ -1040,7 +1040,7 @@ WGF.problems = [
   "q": "교안 예제에서 <b>extrinsic</b>한 정보에 해당하는 것은?",
   "choices": [
    "BigChar의 폰트 데이터(fontdata)",
-   "그 BigChar가 BigString의 <b>몇 번째 문자인가</b>",
+   "그 BigChar가 BigString의 몇 번째 문자인가",
    "'3'이라는 문자의 # 모양",
    "BigChar가 나타내는 문자(charname)"
   ],
@@ -1057,7 +1057,7 @@ WGF.problems = [
    "새 BigChar가 자동으로 복사되어 원래 것은 그대로다",
    "바꾼 BigString 하나의 '3'만 바뀐다",
    "pool에서 자동으로 지워진다",
-   "그 BigChar를 쓰는 모든 BigString의 '3' 글꼴이 <b>한꺼번에</b> 바뀐다"
+   "그 BigChar를 쓰는 모든 BigString의 '3' 글꼴이 한꺼번에 바뀐다"
   ],
   "ans": 3,
   "exp": "공유에는 ‘하나를 변경한 것만으로 그것을 사용하는 모든 곳에 영향을 미친다’는 특성이 있어요. 이게 항상 나쁜 건 아니고 문제에 따라 좋을 수도 있어요. 그래서 Flyweight 역이 가질 정보는 <b>정말 여러 곳에서 공유해야 할 것만</b> 고르세요."
@@ -1072,7 +1072,7 @@ WGF.problems = [
    "색은 무조건 BigString에 둬야 한다",
    "색은 무조건 BigChar에 둬야 한다",
    "색 정보를 넣으면 Flyweight 패턴을 쓸 수 없다",
-   "BigChar에 두면 같은 문자는 반드시 같은 색이 되고, BigString에 두면 같은 BigChar라도 위치마다 다른 색을 줄 수 있다. 어느 쪽이 옳은지는 <b>사용 목적에 달려 있다</b>"
+   "BigChar에 두면 같은 문자는 반드시 같은 색이 되고, BigString에 두면 같은 BigChar라도 위치마다 다른 색을 줄 수 있다. 어느 쪽이 옳은지는 사용 목적에 달려 있다"
   ],
   "ans": 3,
   "exp": "BigChar에 두면 색도 intrinsic(공유)이 되고, BigString에 두면 extrinsic(위치별)이 돼요. 이 두 방식 중 어느 쪽이 옳다고 단언할 수 없고, 무엇을 공유할지는 설계자가 잘 생각해야 해요."
@@ -1084,7 +1084,7 @@ WGF.problems = [
   "t": "mc",
   "q": "‘관리되는 인스턴스는 가비지 컬렉션되지 않는다’는 말이 나오는 이유는?",
   "choices": [
-   "pool(HashMap)이 BigChar를 계속 <b>참조</b>하고 있어서 BigString에서 안 쓰더라도 ‘사용 중’으로 간주되기 때문에",
+   "pool(HashMap)이 BigChar를 계속 참조하고 있어서 BigString에서 안 쓰더라도 ‘사용 중’으로 간주되기 때문에",
    "synchronized 메서드로 만든 객체는 GC 대상이 아니기 때문에",
    "HashMap에 넣은 객체는 자바가 영원히 지우지 않도록 특별 취급하기 때문에",
    "BigChar가 static 클래스이기 때문에"
@@ -1101,7 +1101,7 @@ WGF.problems = [
   "choices": [
    "<code>delete bc;</code>로 명시적으로 지운다",
    "<code>bc.finalize()</code>를 직접 부른다",
-   "HashMap에서 그 인스턴스를 포함한 <b>엔트리를 삭제</b>해 참조를 없앤다",
+   "HashMap에서 그 인스턴스를 포함한 엔트리를 삭제해 참조를 없앤다",
    "<code>System.gc()</code>만 부르면 pool에 있어도 지워진다"
   ],
   "ans": 2,
@@ -1160,7 +1160,7 @@ WGF.problems = [
   "t": "mc",
   "q": "Flyweight의 관련 패턴 설명으로 옳은 것은?",
   "choices": [
-   "Singleton 역의 인스턴스는 모든 곳에서 공유되므로 <b>intrinsic한 정보만</b> 가진다",
+   "Singleton 역의 인스턴스는 모든 곳에서 공유되므로 intrinsic한 정보만 가진다",
    "Composite 패턴의 Composite 역만 공유할 수 있고 Leaf 역은 공유할 수 없다",
    "FlyweightFactory 역은 절대 Singleton이 되면 안 된다",
    "Proxy 패턴은 인스턴스를 복사해서 처리 속도를 높인다"
@@ -1175,7 +1175,7 @@ WGF.problems = [
   "t": "mc",
   "q": "교안 ‘주의’에서 설명한 GoF 책의 역할과의 관계로 옳은 것은?",
   "choices": [
-   "이 장의 Flyweight 역은 GoF 책의 <b>ConcreteFlyweight</b>에 해당하고, UnsharedConcreteFlyweight는 예제에 등장하지 않는다",
+   "이 장의 Flyweight 역은 GoF 책의 ConcreteFlyweight에 해당하고, UnsharedConcreteFlyweight는 예제에 등장하지 않는다",
    "이 장의 Flyweight 역은 GoF 책의 UnsharedConcreteFlyweight에 해당한다",
    "이 장의 Client 역은 GoF 책의 ConcreteFlyweight다",
    "GoF 책에는 Flyweight 패턴이 없다"
@@ -1241,7 +1241,7 @@ WGF.problems = [
   "q": "Flyweight를 적용하면 좋은 경우로 가장 알맞은 것은?",
   "choices": [
    "객체마다 상태가 모두 다르고 자주 바뀔 때",
-   "내용이 같은 <b>무거운 객체</b>가 아주 많이 필요하고, 그 내용이 장소에 따라 변하지 않을 때",
+   "내용이 같은 무거운 객체가 아주 많이 필요하고, 그 내용이 장소에 따라 변하지 않을 때",
    "원형을 복사해서 조금씩 다른 객체를 만들 때",
    "객체를 딱 하나만 만들어야 할 때"
   ],
@@ -1256,7 +1256,7 @@ WGF.problems = [
   "q": "GoF 분류에서 세 패턴을 바르게 나눈 것은?",
   "choices": [
    "세 패턴 모두 생성 패턴",
-   "Singleton·Prototype = <b>생성</b> 패턴, Flyweight = <b>구조</b> 패턴",
+   "Singleton·Prototype = 생성 패턴, Flyweight = 구조 패턴",
    "세 패턴 모두 행위 패턴",
    "Singleton = 구조 패턴, Prototype·Flyweight = 생성 패턴"
   ],
