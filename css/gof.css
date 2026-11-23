@@ -5,3 +5,4 @@
 #view-gproblems .editor textarea, #view-gwrong .editor textarea { min-height: 140px; tab-size: 4; }
 #doc-gof pre, #doc-gcheat pre { white-space: pre; }
 #doc-gof h2 small { font-weight: 500; font-size: .7em; color: var(--muted); margin-left: 4px; }
+#gstages .sn { min-width: 2.6em; }

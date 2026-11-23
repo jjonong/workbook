@@ -1,4 +1,4 @@
-/* 디자인 패턴(Singleton·Prototype·Flyweight): 실습 문제 · 핵심 정리 · 오답노트 · 기록 저장/불러오기 · Claude 채점 */
+/* 디자인 패턴(Singleton·Prototype·Observer·Memento·Flyweight): 실습 문제 · 핵심 정리 · 오답노트 · 기록 저장/불러오기 · Claude 채점 */
 (function () {
   'use strict';
   var $ = WB.$, $$ = WB.$$, esc = WB.esc, mark = WB.mark, buildToc = WB.buildToc, b64 = WB.b64, unb64 = WB.unb64,
@@ -49,7 +49,7 @@
     var model = p.t === 'mc' ? 'Correct choice: ' + dText(p.choices[p.ans]) : dText(p.answer || '');
     var said = p.t === 'mc' ? (typeof mine === 'number' && p.choices[mine] != null ? 'Student picked: ' + dText(p.choices[mine]) : '') : (typeof mine === 'string' && mine.trim() ? 'Student wrote:\n' + mine.slice(0, 1500) : '');
     return [
-      'You write ONE new short multiple-choice practice question on GoF DESIGN PATTERNS in Java for a Korean learner who just got a question wrong. The course follows the book "Java 언어로 배우는 디자인 패턴 입문" (유키 히로시): Part 5 Singleton, Part 6 Prototype (clone, Cloneable, 얕은 복사, Manager/Product/MessageBox/UnderlinePen), Part 20 Flyweight (BigChar/BigCharFactory/BigString, pool, intrinsic/extrinsic, 가비지 컬렉션).',
+      'You write ONE new short multiple-choice practice question on GoF DESIGN PATTERNS in Java for a Korean learner who just got a question wrong. The course follows the book "Java 언어로 배우는 디자인 패턴 입문" (유키 히로시): Part 5 Singleton, Part 6 Prototype (clone, Cloneable, 얕은 복사, Manager/Product/MessageBox/UnderlinePen), Part 17 Observer (Subject/ConcreteSubject/Observer/ConcreteObserver, NumberGenerator/RandomNumberGenerator/DigitObserver/GraphObserver, notifyObservers, update), Part 18 Memento (Originator/Memento/Caretaker, Gamer/Memento/Main, wide/narrow interface, 접근 제한자), Part 20 Flyweight (BigChar/BigCharFactory/BigString, pool, intrinsic/extrinsic, 가비지 컬렉션).',
       'Goal: practice the same concept the student missed, in a DIFFERENT situation than the original (different tables, columns, indexes or execution plan). Same level or a little easier.',
       'Rules:',
       '- Exactly 4 choices, exactly one clearly correct by standard Java 21 behavior and the book\'s definitions. Wrong choices should be mistakes a beginner would really make.',
@@ -115,7 +115,7 @@
       h += '<details class="dgrp" id="gdg-' + c.no + '"' + (c.no === DS.ch ? ' open' : '') + '><summary><span class="dg-n">' + chL(c.no) + '</span><span class="dg-t">' + esc(c.short) + '</span><span class="dg-c"></span><span class="dg-bar"></span></summary><div class="dots">' + dots + '</div></details>';
     });
     $('#gdots').innerHTML = h;
-    $('#gstages').innerHTML = DCH.map(function (c) { return '<li><button type="button" data-gstage="' + c.no + '"><span class="sn">' + c.no + '</span>' + esc(c.short) + '<span class="sc"></span></button></li>'; }).join('');
+    $('#gstages').innerHTML = DCH.map(function (c) { return '<li><button type="button" data-gstage="' + c.no + '"><span class="sn">' + esc(chL(c.no)) + '</span>' + esc(c.short) + '<span class="sc"></span></button></li>'; }).join('');
     $('#gdots').addEventListener('click', function (e) { var b = e.target.closest('.dot'); if (b) dGoto(+b.dataset.gn); });
     $('#gstages').addEventListener('click', function (e) { var b = e.target.closest('[data-gstage]'); if (b) { dShow(+b.dataset.gstage); window.scrollTo({ top: 0 }); } });
     $('#gdg-open').addEventListener('click', function () { $$('#gdots details').forEach(function (d) { d.open = true; }); });
@@ -220,7 +220,7 @@
     btn.disabled = true;
     dVerdict(p.n, 'info', 'Claude가 채점하는 중…', '답을 읽고 문제의 요구사항과 비교하고 있어요.');
     var task = [
-      'You are grading a Korean student\'s answer to a GoF design pattern practice question in Java (Singleton, Prototype, Flyweight), following the book "Java 언어로 배우는 디자인 패턴 입문".',
+      'You are grading a Korean student\'s answer to a GoF design pattern practice question in Java (Singleton, Prototype, Observer, Memento, Flyweight), following the book "Java 언어로 배우는 디자인 패턴 입문".',
       'Rules:',
       '- Judge whether the STUDENT ANSWER satisfies what the TASK asks. Use the MODEL ANSWER and KEY POINTS as reference, not as the only acceptable wording.',
       '- Different but valid Java code, class names or wording are fine and must PASS if they correctly apply the pattern and would compile and run correctly in Java 21 (ignore missing imports).',

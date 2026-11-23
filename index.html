@@ -4,13 +4,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261118">
-<link rel="stylesheet" href="css/java.css?v=20261118">
-<link rel="stylesheet" href="css/notes.css?v=20261118">
-<link rel="stylesheet" href="css/db.css?v=20261118">
-<link rel="stylesheet" href="css/tune.css?v=20261118">
-<link rel="stylesheet" href="css/gof.css?v=20261118">
-<script src="js/theme-init.js?v=20261118"></script>
+<link rel="stylesheet" href="css/style.css?v=20261124">
+<link rel="stylesheet" href="css/java.css?v=20261124">
+<link rel="stylesheet" href="css/notes.css?v=20261124">
+<link rel="stylesheet" href="css/db.css?v=20261124">
+<link rel="stylesheet" href="css/tune.css?v=20261124">
+<link rel="stylesheet" href="css/gof.css?v=20261124">
+<script src="js/theme-init.js?v=20261124"></script>
 <header class="top">
   <div class="top-in">
     <div class="brand"><button type="button" class="lnb-btn" id="lnb-btn" aria-pressed="false" aria-label="왼쪽 메뉴 접기" title="왼쪽 메뉴 접기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path class="i-l" d="m16 15-3-3 3-3"/><path class="i-r" d="m14 9 3 3-3 3"/></svg></button><span class="prompt" id="brand-prompt">SQL&gt;</span> <span id="brand-name">SQL 정석 워크북</span> <small id="brand-sub">Oracle 실습 · 교안 1~14장</small></div>
@@ -417,8 +417,8 @@
       </aside>
       <div class="pmain" style="min-width:0">
         <div class="intro">
-          <p><b>『Java 언어로 배우는 디자인 패턴 입문』 교안</b>의 Part 5 Singleton, Part 6 Prototype, Part 20 Flyweight를 정리한 <b>89문제</b>예요. 세 패턴을 비교하는 종합 문제도 있고, 장마다 기초·응용·심화가 고루 있어요. <b>객관식</b>은 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요. 출력 결과를 묻는 문제는 모두 Java 21로 실제 실행해서 확인했어요.</p>
-          <p><b>서술·코드 문제</b>는 교안 연습 문제(5-1~5-3, 6-1~6-2, 20-1~20-3)와 응용 코딩 문제예요. 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나오고, ‘맞았어요/틀렸어요’로 스스로 채점하거나 ‘Claude에게 채점받기’를 쓸 수 있어요. 오른쪽 아래 <b>{ } 버튼</b>을 누르고 <b>‘연습 코드 입력’</b>을 고르면 Java 연습장에서 코드를 직접 돌려 볼 수 있어요. ‘메모장’을 고르면 필기장이 열려요.</p>
+          <p><b>『Java 언어로 배우는 디자인 패턴 입문』 교안</b>의 Part 5 Singleton, Part 6 Prototype, Part 17 Observer, Part 18 Memento, Part 20 Flyweight를 정리한 <b>148문제</b>예요. 패턴끼리 비교하는 종합 문제도 있고, 장마다 기초·응용·심화가 고루 있어요. <b>객관식</b>은 보기를 고르고 ‘채점하기’를 누르면 바로 채점돼요. 출력 결과를 묻는 문제는 모두 Java 21로 실제 실행해서 확인했어요.</p>
+          <p><b>서술·코드 문제</b>는 교안 연습 문제(5-1~5-3, 6-1~6-2, 17-1~17-2, 18-1~18-4, 20-1~20-3)와 응용 코딩 문제예요. 답을 쓰고 ‘정답 확인’을 누르면 모범 답안과 핵심 키워드가 나오고, ‘맞았어요/틀렸어요’로 스스로 채점하거나 ‘Claude에게 채점받기’를 쓸 수 있어요. 오른쪽 아래 <b>{ } 버튼</b>을 누르고 <b>‘연습 코드 입력’</b>을 고르면 Java 연습장에서 코드를 직접 돌려 볼 수 있어요. ‘메모장’을 고르면 필기장이 열려요.</p>
         </div>
         <div id="gstage-view"></div>
       </div>
@@ -440,7 +440,7 @@
       <div style="min-width:0">
         <label class="search" for="gcheat-q">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-          <input id="gcheat-q" type="search" placeholder="용어나 코드로 찾기 (예: private, clone, 얕은 복사, intrinsic, pool, synchronized)" autocomplete="off">
+          <input id="gcheat-q" type="search" placeholder="용어나 코드로 찾기 (예: private, clone, update, wide, intrinsic, pool)" autocomplete="off">
           <span class="cnt" id="gcheat-cnt"></span>
         </label>
         <article class="doc" id="doc-gcheat"></article>
@@ -553,31 +553,31 @@
   <div class="nt-foot"><span class="nt-st" id="nt-st" role="status">이 브라우저에 자동으로 저장돼요</span></div>
 </aside>
 
-<script src="data/sql-tables.js?v=20261118"></script>
-<script src="data/sql-problems.js?v=20261118"></script>
-<script src="data/sql-answers.js?v=20261118"></script>
-<script src="data/sql-migrate.js?v=20261118"></script>
-<script src="data/sql-concepts.js?v=20261118"></script>
-<script src="data/sql-cheatsheet.js?v=20261118"></script>
-<script src="data/java-problems.js?v=20261118"></script>
-<script src="data/java-concepts.js?v=20261118"></script>
-<script src="data/java-cheatsheet.js?v=20261118"></script>
-<script src="data/db-problems.js?v=20261118"></script>
-<script src="data/db-concepts.js?v=20261118"></script>
-<script src="data/db-cheatsheet.js?v=20261118"></script>
-<script src="data/tune-problems.js?v=20261118"></script>
-<script src="data/tune-concepts.js?v=20261118"></script>
-<script src="data/tune-cheatsheet.js?v=20261118"></script>
-<script src="data/gof-problems.js?v=20261118"></script>
-<script src="data/gof-concepts.js?v=20261118"></script>
-<script src="data/gof-cheatsheet.js?v=20261118"></script>
-<script src="js/oralite.js?v=20261118"></script>
-<script src="js/app.js?v=20261118"></script>
-<script src="js/java.js?v=20261118"></script>
-<script src="js/db-erd.js?v=20261118"></script>
-<script src="js/db.js?v=20261118"></script>
-<script src="js/tune.js?v=20261118"></script>
-<script src="js/gof.js?v=20261118"></script>
-<script src="js/notes.js?v=20261118"></script>
-<script src="js/main.js?v=20261118"></script>
+<script src="data/sql-tables.js?v=20261124"></script>
+<script src="data/sql-problems.js?v=20261124"></script>
+<script src="data/sql-answers.js?v=20261124"></script>
+<script src="data/sql-migrate.js?v=20261124"></script>
+<script src="data/sql-concepts.js?v=20261124"></script>
+<script src="data/sql-cheatsheet.js?v=20261124"></script>
+<script src="data/java-problems.js?v=20261124"></script>
+<script src="data/java-concepts.js?v=20261124"></script>
+<script src="data/java-cheatsheet.js?v=20261124"></script>
+<script src="data/db-problems.js?v=20261124"></script>
+<script src="data/db-concepts.js?v=20261124"></script>
+<script src="data/db-cheatsheet.js?v=20261124"></script>
+<script src="data/tune-problems.js?v=20261124"></script>
+<script src="data/tune-concepts.js?v=20261124"></script>
+<script src="data/tune-cheatsheet.js?v=20261124"></script>
+<script src="data/gof-problems.js?v=20261124"></script>
+<script src="data/gof-concepts.js?v=20261124"></script>
+<script src="data/gof-cheatsheet.js?v=20261124"></script>
+<script src="js/oralite.js?v=20261124"></script>
+<script src="js/app.js?v=20261124"></script>
+<script src="js/java.js?v=20261124"></script>
+<script src="js/db-erd.js?v=20261124"></script>
+<script src="js/db.js?v=20261124"></script>
+<script src="js/tune.js?v=20261124"></script>
+<script src="js/gof.js?v=20261124"></script>
+<script src="js/notes.js?v=20261124"></script>
+<script src="js/main.js?v=20261124"></script>
 </body></html>
