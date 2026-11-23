@@ -1,5 +1,5 @@
-// 디자인 패턴 실습 문제 (89문제) · Java 언어로 배우는 디자인 패턴 입문 Part 5 Singleton · Part 6 Prototype · Part 20 Flyweight
-// n: 번호(기록 저장에 쓰여요. 바꾸지 마세요), ch: 장(1 Singleton · 2 Prototype · 3 Flyweight · 4 종합), lv: 1 기초 · 2 응용 · 3 심화
+// 디자인 패턴 실습 문제 (148문제) · Java 언어로 배우는 디자인 패턴 입문 Part 5 Singleton · Part 6 Prototype · Part 17 Observer · Part 18 Memento · Part 20 Flyweight
+// n: 번호(기록 저장에 쓰여요. 바꾸지 마세요), ch: 장(1 Singleton · 2 Prototype · 3 Observer · 4 Memento · 5 Flyweight · 6 종합), lv: 1 기초 · 2 응용 · 3 심화
 // t: 'mc' 객관식(ans = 정답 보기 번호, 0부터) · 'self' 서술·코드(answer = 모범 답안, kw = 핵심 키워드)
 var WGF = window.WGF = window.WGF || {};
 WGF.chapters = [
@@ -17,14 +17,26 @@ WGF.chapters = [
  },
  {
   "no": 3,
+  "title": "Part 17 Observer: 상태 변화를 알려 준다",
+  "short": "Observer",
+  "part": "P17"
+ },
+ {
+  "no": 4,
+  "title": "Part 18 Memento: 상태를 저장한다",
+  "short": "Memento",
+  "part": "P18"
+ },
+ {
+  "no": 5,
   "title": "Part 20 Flyweight: 같은 것은 공유해서 낭비를 없앤다",
   "short": "Flyweight",
   "part": "P20"
  },
  {
-  "no": 4,
-  "title": "종합: 세 패턴 비교하기",
-  "short": "세 패턴 비교",
+  "no": 6,
+  "title": "종합: 패턴 비교하기",
+  "short": "패턴 비교",
   "part": "종합"
  }
 ];
@@ -850,7 +862,7 @@ WGF.problems = [
  },
  {
   "n": 54,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "flyweight라는 이름의 뜻과 이 패턴이 말하는 ‘무게’를 바르게 짝지은 것은?",
@@ -865,7 +877,7 @@ WGF.problems = [
  },
  {
   "n": 55,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "Flyweight 패턴에서 사용하는 기법을 한 줄로 요약한 것은?",
@@ -880,7 +892,7 @@ WGF.problems = [
  },
  {
   "n": 56,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "교안 예제의 네 클래스와 설명을 바르게 짝지은 것은?",
@@ -895,7 +907,7 @@ WGF.problems = [
  },
  {
   "n": 57,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "Flyweight 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
@@ -910,7 +922,7 @@ WGF.problems = [
  },
  {
   "n": 58,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "BigCharFactory에서 이미 만든 BigChar를 관리하는 <code>pool</code> 필드의 선언으로 알맞은 것은?",
@@ -925,7 +937,7 @@ WGF.problems = [
  },
  {
   "n": 59,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "다음 <code>getBigChar</code>의 동작 설명으로 옳은 것은?",
@@ -941,7 +953,7 @@ WGF.problems = [
  },
  {
   "n": 60,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "BigCharFactory 자체를 Singleton 패턴으로 구현한 이유는?",
@@ -956,7 +968,7 @@ WGF.problems = [
  },
  {
   "n": 61,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안 Flyweight 예제를 바탕으로 다음 코드를 실행했을 때 출력은? (BigChar는 생성자에서 created를 1 늘려요. 줄바꿈은 / 로 표시)",
@@ -972,7 +984,7 @@ WGF.problems = [
  },
  {
   "n": 62,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "앞 문제의 코드 뒤에 다음을 이어서 실행하면 마지막에 출력되는 <code>BigChar.created</code> 값은?",
@@ -988,7 +1000,7 @@ WGF.problems = [
  },
  {
   "n": 63,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "BigString 생성자의 for문을 다음처럼 바꾸면 어떻게 되나요?",
@@ -1004,7 +1016,7 @@ WGF.problems = [
  },
  {
   "n": 64,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "BigChar 생성자가 인수로 <code>'3'</code>을 받았을 때 읽는 파일 이름과, 파일이 없을 때 fontdata에 들어가는 값은?",
@@ -1019,7 +1031,7 @@ WGF.problems = [
  },
  {
   "n": 65,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "intrinsic한 정보와 extrinsic한 정보에 대한 설명으로 옳은 것은?",
@@ -1034,7 +1046,7 @@ WGF.problems = [
  },
  {
   "n": 66,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안 예제에서 <b>extrinsic</b>한 정보에 해당하는 것은?",
@@ -1049,7 +1061,7 @@ WGF.problems = [
  },
  {
   "n": 67,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "공유하고 있는 BigChar('3')의 fontdata를 프로그램 실행 중에 바꾸면 어떻게 되나요?",
@@ -1064,7 +1076,7 @@ WGF.problems = [
  },
  {
   "n": 68,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "‘색이 있는 큰 문자열’을 만들려고 해요. ‘색’ 정보를 둘 곳에 대한 설명으로 옳은 것은?",
@@ -1079,7 +1091,7 @@ WGF.problems = [
  },
  {
   "n": 69,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "‘관리되는 인스턴스는 가비지 컬렉션되지 않는다’는 말이 나오는 이유는?",
@@ -1094,7 +1106,7 @@ WGF.problems = [
  },
  {
   "n": 70,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "pool로 관리되는 BigChar를 가비지 컬렉션 대상으로 만들려면 어떻게 해야 하나요?",
@@ -1109,7 +1121,7 @@ WGF.problems = [
  },
  {
   "n": 71,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안 ‘메모리 이외의 리소스’에서 인스턴스 공유로 줄일 수 있다고 든 리소스가 <b>아닌</b> 것은?",
@@ -1124,7 +1136,7 @@ WGF.problems = [
  },
  {
   "n": 72,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안에서 <b>static Factory Method</b>의 예로 든 메서드를 모두 고른 것은?",
@@ -1139,7 +1151,7 @@ WGF.problems = [
  },
  {
   "n": 73,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "다음 코드의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시) 자바 표준 라이브러리 안의 Flyweight를 떠올려 보세요.",
@@ -1155,7 +1167,7 @@ WGF.problems = [
  },
  {
   "n": 74,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "Flyweight의 관련 패턴 설명으로 옳은 것은?",
@@ -1170,7 +1182,7 @@ WGF.problems = [
  },
  {
   "n": 75,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "교안 ‘주의’에서 설명한 GoF 책의 역할과의 관계로 옳은 것은?",
@@ -1185,7 +1197,7 @@ WGF.problems = [
  },
  {
   "n": 76,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 20-1] BigString 클래스에 다음 생성자를 추가하세요. <code>shared</code>가 true면 BigChar를 공유하고, false면 공유하지 않아요.",
@@ -1201,7 +1213,7 @@ WGF.problems = [
  },
  {
   "n": 77,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 20-2] 문제 20-1의 BigString으로 BigChar를 공유할 때와 공유하지 않을 때의 <b>메모리 소비량</b>을 비교하는 Main을 작성하세요. 참고: <code>Runtime.getRuntime().gc()</code>로 가비지 컬렉션을 요청한 뒤 <code>totalMemory() - freeMemory()</code>를 재요.",
@@ -1218,7 +1230,7 @@ WGF.problems = [
  },
  {
   "n": 78,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 20-3] BigCharFactory의 <code>getBigChar</code>는 <code>synchronized</code> 메서드예요. synchronized로 만든 경우와 그렇지 않은 경우의 차이는 무엇일까요?",
@@ -1235,7 +1247,7 @@ WGF.problems = [
  },
  {
   "n": 79,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "Flyweight를 적용하면 좋은 경우로 가장 알맞은 것은?",
@@ -1250,7 +1262,7 @@ WGF.problems = [
  },
  {
   "n": 80,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "GoF 분류에서 세 패턴을 바르게 나눈 것은?",
@@ -1265,7 +1277,7 @@ WGF.problems = [
  },
  {
   "n": 81,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“프로그램 전체에서 쓰는 <b>현재 시스템 설정</b> 객체가 둘 이상 생기면 설정 값이 어긋나는 버그가 생긴다.”",
@@ -1280,7 +1292,7 @@ WGF.problems = [
  },
  {
   "n": 82,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“그래픽 편집기에서 사용자가 마우스로 그린 도형과 <b>똑같은 도형</b>을 하나 더 만들고 싶다.”",
@@ -1295,7 +1307,7 @@ WGF.problems = [
  },
  {
   "n": 83,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“문서 편집기에서 수십만 개의 글자를 화면에 그리는데, 같은 글자의 글꼴 모양 데이터를 글자마다 따로 들고 있어 메모리가 부족하다.”",
@@ -1310,7 +1322,7 @@ WGF.problems = [
  },
  {
   "n": 84,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "세 패턴에서 ‘인스턴스가 몇 개 생기는가’를 바르게 정리한 것은?",
@@ -1325,7 +1337,7 @@ WGF.problems = [
  },
  {
   "n": 85,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "세 패턴에 대한 설명으로 <b>틀린</b> 것은?",
@@ -1340,7 +1352,7 @@ WGF.problems = [
  },
  {
   "n": 86,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "교안 Flyweight 예제 하나 안에 함께 쓰인 패턴을 모두 고른 것은?",
@@ -1355,7 +1367,7 @@ WGF.problems = [
  },
  {
   "n": 87,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "self",
   "q": "스터디 발표용으로 세 패턴을 각각 <b>한 문장</b>으로 설명하고, 교안 예제에서 그 패턴의 핵심이 되는 코드 한 줄을 쓰세요.",
@@ -1372,7 +1384,7 @@ WGF.problems = [
  },
  {
   "n": 88,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "self",
   "q": "도형 편집기를 만들어요. <code>Shape</code>(Cloneable, <code>Shape copy()</code> 메서드 보유)를 원형으로 등록·복제하는 <code>ShapeRegistry</code>를 만드세요. 조건: ① ShapeRegistry는 프로그램에 <b>하나만</b> 존재(Singleton) ② <code>register(String name, Shape s)</code>로 원형 등록 ③ <code>create(String name)</code>은 등록된 원형의 <b>복사본</b>을 반환(Prototype).",
@@ -1389,7 +1401,7 @@ WGF.problems = [
  },
  {
   "n": 89,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "다음 중 Flyweight로 공유하면 <b>위험한</b> 정보는?",
@@ -1401,5 +1413,910 @@ WGF.problems = [
   ],
   "ans": 1,
   "exp": "장바구니는 사용자(상황)마다 다른 <b>extrinsic</b> 정보라서 공유하면 한 사람의 변경이 다른 사람에게 퍼져요. 나머지는 어디에 쓰여도 변하지 않는 intrinsic 정보라 공유하기 좋아요."
+ },
+ {
+  "n": 90,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "Observer 패턴에 대한 설명으로 가장 알맞은 것은?",
+  "choices": [
+   "원형 인스턴스를 복사해서 새 인스턴스를 만든다",
+   "같은 인스턴스를 여러 곳에서 공유해 메모리를 아낀다",
+   "인스턴스의 상태를 저장해 두었다가 나중에 되돌린다",
+   "관찰 대상의 상태가 변하면 관찰자에게 알려 준다"
+  ],
+  "ans": 3,
+  "exp": "observer는 ‘관찰자’라는 뜻이에요. 관찰 대상의 상태가 변화하면 관찰자에게 알리므로, <b>상태 변화에 따른 처리</b>를 기술할 때 효과적이에요. ②는 Memento, ③은 Flyweight, ④는 Prototype이에요."
+ },
+ {
+  "n": 91,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제 프로그램(표 17-1)의 클래스와 설명을 바르게 짝지은 것은?",
+  "choices": [
+   "Observer: 수를 생성하는 추상 클래스 · NumberGenerator: 관찰자 인터페이스 · DigitObserver: 그래프로 표시",
+   "Observer: 동작 테스트용 · NumberGenerator: 랜덤하게 수 생성 · RandomNumberGenerator: 관찰자 인터페이스",
+   "Observer: 관찰자 인터페이스 · NumberGenerator: 수를 생성하는 추상 클래스 · RandomNumberGenerator: 랜덤하게 수 생성",
+   "Observer: 관찰자 추상 클래스 · NumberGenerator: 관찰자 인터페이스 · GraphObserver: 숫자로 표시"
+  ],
+  "ans": 2,
+  "exp": "Observer는 관찰자를 나타내는 <b>인터페이스</b>, NumberGenerator는 수를 생성하는 객체를 나타내는 <b>추상 클래스</b>, RandomNumberGenerator는 랜덤하게 수를 생성하는 클래스예요. DigitObserver는 숫자로, GraphObserver는 간이 그래프로 수를 표시해요."
+ },
+ {
+  "n": 92,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안의 <code>Observer</code> 인터페이스가 선언하는 메서드는?",
+  "choices": [
+   "<code>void notify(Observer observer)</code>",
+   "<code>void update(NumberGenerator generator)</code>",
+   "<code>void update(int number, Observer o)</code>",
+   "<code>void addObserver(Observer o)</code>"
+  ],
+  "ans": 1,
+  "exp": "Observer 인터페이스에는 <code>public abstract void update(NumberGenerator generator);</code> 하나만 있어요. update는 NumberGenerator가 ‘내용이 갱신되었어요. 표시하는 쪽도 갱신해 주세요’라고 Observer에 전달하기 위한 메서드예요.",
+  "code": "public interface Observer {\n    public abstract void update(NumberGenerator generator);\n}"
+ },
+ {
+  "n": 93,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안의 Observer 인터페이스와 <code>java.util.Observer</code>의 관계로 옳은 것은?",
+  "choices": [
+   "둘은 같은 인터페이스라 어느 쪽을 써도 결과가 완전히 똑같다",
+   "교안의 Observer는 java.util.Observer를 import해서 그대로 쓴 것이다",
+   "java.util.Observer는 최신 Java에 새로 추가된 권장 인터페이스다",
+   "서로 다르며, java.util.Observer는 비추천(deprecated)이다"
+  ],
+  "ans": 3,
+  "exp": "교안의 Observer 인터페이스는 예제용으로 직접 만든 것으로, Java 클래스 라이브러리의 <code>java.util.Observer</code>와는 달라요. java.util.Observer는 <b>비추천(deprecated)</b> 인터페이스라서 새 프로그램에는 사용하지 않아요. 📝 수업 필기에도 ‘deprecated’에 표시가 되어 있어요."
+ },
+ {
+  "n": 94,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "NumberGenerator의 <code>observers</code> 필드 선언으로 알맞은 것은?",
+  "choices": [
+   "<code>private List&lt;Observer&gt; observers = new ArrayList&lt;&gt;();</code>",
+   "<code>public static Observer[] observers;</code>",
+   "<code>private Observer observers = new Observer();</code>",
+   "<code>private Map&lt;String,Observer&gt; observers = new HashMap&lt;&gt;();</code>"
+  ],
+  "ans": 0,
+  "exp": "observers는 NumberGenerator를 관찰하는 Observer들을 저장하는 필드예요. 형은 <code>List&lt;Observer&gt;</code>(인터페이스), 실제 객체는 <code>ArrayList</code>(구현 클래스)예요. 📝 수업 필기: ‘구현체(ArrayList) 저장, List’. Observer는 인터페이스라 ②처럼 new할 수 없어요."
+ },
+ {
+  "n": 95,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "NumberGenerator의 <code>notifyObservers</code>가 하는 일로 알맞은 것은?",
+  "choices": [
+   "새 Observer를 observers 리스트에 추가하고, 추가된 순서대로 번호를 붙인다",
+   "난수를 하나 생성해 number 필드에 저장하고, 그 값을 반환한다",
+   "observers에 저장된 Observer 하나하나의 update를 호출해 알린다",
+   "등록된 Observer를 모두 지우고 리스트를 비워 처음 상태로 되돌린다"
+  ],
+  "ans": 2,
+  "exp": "<code>for (Observer o: observers) { o.update(this); }</code>처럼 저장된 Observer 모두에게 update를 호출해요. 인수로 <code>this</code>(자기 자신, 즉 관찰 대상)를 넘겨서 Observer가 필요한 정보를 꺼내 가게 해요.",
+  "code": "public void notifyObservers() {\n    for (Observer o: observers) {\n        o.update(this);\n    }\n}"
+ },
+ {
+  "n": 96,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "NumberGenerator에서 <code>getNumber</code>와 <code>execute</code>가 추상 메서드인 이유는?",
+  "choices": [
+   "추상 메서드로 두어야 Observer에게 자동으로 통지가 가기 때문에",
+   "추상 메서드만 다른 패키지에서 static으로 호출할 수 있어서",
+   "수를 만들고 얻는 방법은 하위 클래스가 정해야 하기 때문에",
+   "Observer 인터페이스가 두 메서드를 반드시 구현하라고 요구해서"
+  ],
+  "ans": 2,
+  "exp": "NumberGenerator는 관찰자 관리(add·delete·notify)만 맡고, 실제로 <b>수를 생성하는 부분(execute)</b>과 <b>수를 얻는 부분(getNumber)</b>은 하위 클래스에서 구현해야 하는 추상 메서드로 되어 있어요(하위 클래스의 책임)."
+ },
+ {
+  "n": 97,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "RandomNumberGenerator의 <code>execute</code>가 하는 일로 알맞은 것은?",
+  "choices": [
+   "0~50 범위의 난수를 하나 생성하고, 생성이 모두 끝난 뒤에 한 번만 통지한다",
+   "난수를 20개 생성해 리스트에 모두 저장한 뒤, 그 리스트를 반환한다",
+   "1~20 범위의 수를 차례로 생성하고, 관찰자를 하나씩 리스트에 추가한다",
+   "0~49 범위의 난수를 20개 만들고, 만들 때마다 관찰자에게 통지한다"
+  ],
+  "ans": 3,
+  "exp": "for문을 20번 돌며 <code>number = random.nextInt(50);</code>로 0 이상 50 미만의 정수를 만들고 바로 <code>notifyObservers();</code>를 호출해요. <code>nextInt(50)</code>은 0 이상, 인수로 지정한 수 <b>미만</b>의 정수를 반환해요.",
+  "code": "@Override\npublic void execute() {\n    for (int i = 0; i < 20; i++) {\n        number = random.nextInt(50);\n        notifyObservers();\n    }\n}"
+ },
+ {
+  "n": 98,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "GraphObserver의 update에 <code>getNumber()</code>가 3인 NumberGenerator가 넘어오면 출력은?",
+  "choices": [
+   "GraphObserver:333",
+   "***",
+   "GraphObserver:***",
+   "GraphObserver:3"
+  ],
+  "ans": 2,
+  "exp": "GraphObserver는 관찰한 수만큼 <code>*</code>를 찍어 ‘간이 그래프’로 표시해요. 3이면 <code>GraphObserver:***</code>예요. 숫자로 표시하는 건 DigitObserver(<code>DigitObserver:3</code>)예요.",
+  "code": "@Override\npublic void update(NumberGenerator generator) {\n    System.out.print(\"GraphObserver:\");\n    int count = generator.getNumber();\n    for (int i = 0; i < count; i++) {\n        System.out.print(\"*\");\n    }\n    System.out.println(\"\");\n}"
+ },
+ {
+  "n": 99,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "DigitObserver와 GraphObserver의 update 안에 있는 <code>Thread.sleep(100)</code>의 역할은?",
+  "choices": [
+   "InterruptedException이 반드시 발생하도록 한다",
+   "NumberGenerator가 다음 수를 만들지 못하게 막는다",
+   "표시되는 모습을 잘 알 수 있도록 속도를 느리게 한다",
+   "다른 Observer가 먼저 실행되도록 순서를 바꾼다"
+  ],
+  "ans": 2,
+  "exp": "교안: 표시되는 모습을 잘 알 수 있도록 <code>Thread.sleep</code>으로 속도를 느리게 했어요. sleep은 InterruptedException을 던질 수 있어서 try-catch로 감싸요."
+ },
+ {
+  "n": 100,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "Observer 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
+  "choices": [
+   "Subject = RandomNumberGenerator · ConcreteSubject = NumberGenerator · Observer = GraphObserver · ConcreteObserver = Main",
+   "Subject = Observer · ConcreteSubject = DigitObserver · Observer = NumberGenerator · ConcreteObserver = RandomNumberGenerator",
+   "Subject = NumberGenerator · ConcreteSubject = RandomNumberGenerator · Observer = Observer · ConcreteObserver = DigitObserver, GraphObserver",
+   "Subject = Main · ConcreteSubject = NumberGenerator · Observer = DigitObserver · ConcreteObserver = Observer"
+  ],
+  "ans": 2,
+  "exp": "<b>Subject(관찰 대상)</b>는 Observer를 등록·삭제하는 메서드와 ‘현재 상태를 가져오는’ 메서드를 가져요(NumberGenerator). <b>ConcreteSubject</b>는 상태가 바뀌면 등록된 Observer에 알려요(RandomNumberGenerator). <b>Observer(관찰자)</b>는 update로 전달받고(Observer 인터페이스), <b>ConcreteObserver</b>는 update에서 Subject의 현재 상태를 얻어요(DigitObserver, GraphObserver)."
+ },
+ {
+  "n": 101,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "Observer 패턴의 클래스 다이어그램(그림 17-3)에서 Subject 역이 가진 메서드로 <b>알맞지 않은</b> 것은?",
+  "choices": [
+   "getSubjectStatus",
+   "update",
+   "notifyObservers",
+   "addObserver"
+  ],
+  "ans": 1,
+  "exp": "Subject는 observers 필드와 addObserver, deleteObserver, notifyObservers, getSubjectStatus를 가져요. <code>update</code>는 Observer 역의 메서드예요(Subject → Observer 방향으로 Notifies)."
+ },
+ {
+  "n": 102,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시. FixedGenerator는 execute에서 3, 1을 차례로 number에 넣고 그때마다 notifyObservers를 불러요.)",
+  "choices": [
+   "GraphObserver:*** / GraphObserver:* / DigitObserver:3 / DigitObserver:1",
+   "DigitObserver:3 / GraphObserver:*** / DigitObserver:1 / GraphObserver:*",
+   "GraphObserver:*** / DigitObserver:3 / GraphObserver:* / DigitObserver:1",
+   "DigitObserver:3 / DigitObserver:1 / GraphObserver:*** / GraphObserver:*"
+  ],
+  "ans": 2,
+  "exp": "notifyObservers는 observers 리스트에 <b>먼저 등록한 Observer의 update를 먼저</b> 호출해요. graph를 먼저 add했으니 수가 하나 만들어질 때마다 Graph → Digit 순서로 출력돼요(Java 21로 실행해 확인).",
+  "code": "NumberGenerator generator = new FixedGenerator(3, 1);\nObserver digit = new DigitObserver();\nObserver graph = new GraphObserver();\ngenerator.addObserver(graph);\ngenerator.addObserver(digit);\ngenerator.execute();"
+ },
+ {
+  "n": 103,
+  "ch": 3,
+  "lv": 3,
+  "t": "mc",
+  "q": "앞 문제에 이어 다음 코드를 실행하면 출력은? (줄바꿈은 / 로 표시)",
+  "choices": [
+   "DigitObserver:3 / DigitObserver:3 / DigitObserver:1 / DigitObserver:1",
+   "GraphObserver:*** / DigitObserver:3 / GraphObserver:* / DigitObserver:1",
+   "컴파일 에러가 난다",
+   "DigitObserver:3 / DigitObserver:1"
+  ],
+  "ans": 0,
+  "exp": "graph는 지워지고, digit은 <b>이미 등록된 상태에서 한 번 더</b> add돼요. observers는 ArrayList라 같은 객체도 중복으로 들어가므로, 수 하나마다 DigitObserver의 update가 두 번 불려요(Java 21로 실행해 확인).",
+  "code": "generator.deleteObserver(graph);\ngenerator.addObserver(digit);\ngenerator.execute();"
+ },
+ {
+  "n": 104,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘Observer의 순서’에서 말하는, ConcreteObserver를 설계할 때 지켜야 할 것은?",
+  "choices": [
+   "Observer는 반드시 하나만 등록해서 순서 문제가 아예 생기지 않게 한다",
+   "DigitObserver의 update가 끝난 뒤에만 GraphObserver가 동작하도록 서로 의존하게 만든다",
+   "update가 호출되는 순서가 바뀌어도 문제가 생기지 않도록 각 클래스의 독립성을 유지한다",
+   "notifyObservers가 Observer를 무작위 순서로 부르도록 바꾼다"
+  ],
+  "ans": 2,
+  "exp": "예제에서는 먼저 등록한 Observer의 update가 먼저 호출되지만, 일반적으로 ConcreteObserver는 <b>호출 순서가 바뀌어도 문제가 없도록</b> 설계해야 해요. 각 클래스의 독립성이 유지되면 의존성의 혼란은 일어나지 않아요."
+ },
+ {
+  "n": 105,
+  "ch": 3,
+  "lv": 3,
+  "t": "mc",
+  "q": "교안 ‘Observer의 행위가 Subject에 영향을 미칠 때’에서 경고하는 상황은?",
+  "choices": [
+   "update 안에서 Subject의 상태를 바꾸면 통지가 끝없이 반복될 수 있다",
+   "update 안에서 getNumber를 부르면 NumberGenerator 인스턴스가 지워진다",
+   "Subject가 update를 부르면 Observer의 필드가 모두 자동으로 초기화된다",
+   "GUI에서 사용자가 버튼을 누르면 update가 절대 호출되지 않게 된다"
+  ],
+  "ans": 0,
+  "exp": "Subject가 update를 호출하는 계기가 해당 Observer인 경우도 있어요. 조심해서 설계하지 않으면 메서드 호출이 영원히 계속될 수 있어요. 대책: 현재 통지 처리 중인지를 Observer가 판단하거나, 통지 타이밍을 Subject가 고려해요."
+ },
+ {
+  "n": 106,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "update 메서드의 인수 형태 (1)~(3)에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "(1)~(3)은 어떤 프로그램에서든 항상 똑같이 동작하므로 고를 이유가 없다",
+   "(2)처럼 힌트 정보를 넘기면 Subject는 Observer의 처리를 의식할 필요가 없다",
+   "(1)처럼 Subject만 넘기면 Observer가 Subject에서 정보를 얻을 방법이 없다",
+   "(3)은 한 Observer가 여러 Subject를 관찰하면 어느 쪽 수인지 알 수 없다"
+  ],
+  "ans": 3,
+  "exp": "(1)은 Subject만 넘기고 Observer가 필요할 때 정보를 얻어요. (2)는 <b>힌트 정보</b>를 함께 넘겨 수고를 줄이지만, 그만큼 Subject가 Observer의 처리 내용을 의식하게 돼요. (3)은 Subject까지 생략해서, 하나의 Observer가 여러 Subject를 관찰하면 부적절해요.",
+  "code": "void update(NumberGenerator generator);               // (1)\nvoid update(NumberGenerator generator, int number);   // (2)\nvoid update(int number);                              // (3)"
+ },
+ {
+  "n": 107,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "‘관찰’하기보다 ‘전달’받기를 기다린다는 말과 관계있는 Observer 패턴의 다른 이름은?",
+  "choices": [
+   "Publish-Subscribe 패턴",
+   "Model-View 패턴",
+   "Chain of Responsibility 패턴",
+   "Template Method 패턴"
+  ],
+  "ans": 0,
+  "exp": "Observer 역은 능동적으로 관찰하는 게 아니라 Subject가 ‘알려 주는 것’을 수동적으로 기다려요. 그래서 publish(발행)와 subscribe(구독)라는 표현이 더 실체에 맞을지도 몰라 <b>Publish-Subscribe</b> 패턴으로도 불려요."
+ },
+ {
+  "n": 108,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "MVC 구조와 Observer 패턴의 관계로 옳은 것은?",
+  "choices": [
+   "Model이 Subject, View가 Observer이고, 보통 Model 하나에 View가 여럿이다",
+   "MVC의 세 부분은 서로 독립적이라 Observer 패턴과는 아무 관계가 없다",
+   "View가 Subject, Model이 Observer이고, 보통 View 하나에 Model이 여럿이다",
+   "Controller가 Subject이고, View는 상태를 저장하는 Memento 역을 맡는다"
+  ],
+  "ans": 0,
+  "exp": "Model은 ‘표시 형식에 의존하지 않는 내부 모델’을 조작하는 부분, View는 Model을 ‘어떻게 보여 줄지’ 관리하는 부분이에요. Model(Subject)이 바뀌면 여러 View(Observer)가 갱신돼요."
+ },
+ {
+  "n": 109,
+  "ch": 3,
+  "lv": 3,
+  "t": "mc",
+  "q": "교안 ‘여기에도 교환 가능성이 등장한다’의 요점으로 알맞은 것은?",
+  "choices": [
+   "구상 클래스를 쉽게 교환하려면 추상 클래스와 인터페이스를 먼저 모두 없애야 한다",
+   "Subject는 관찰자가 Observer를 구현했다는 것만 알면 되어, 구상 클래스를 쉽게 바꿀 수 있다",
+   "RandomNumberGenerator는 DigitObserver와 GraphObserver의 소스를 모두 알아야 통지할 수 있다",
+   "DigitObserver는 자신이 관찰하는 대상이 RandomNumberGenerator라는 것을 꼭 알아야 한다"
+  ],
+  "ans": 1,
+  "exp": "추상 클래스나 인터페이스로 구상 클래스에서 추상 메서드를 분리하고, 인수나 필드는 구상 클래스형이 아니라 추상 클래스·인터페이스형으로 두면 구상 클래스 부분을 쉽게 교환할 수 있어요. 📝 교안에 별표(★)로 표시된 부분이에요."
+ },
+ {
+  "n": 110,
+  "ch": 3,
+  "lv": 2,
+  "t": "mc",
+  "q": "Observer 패턴과 Mediator 패턴을 비교한 설명으로 옳은 것은?",
+  "choices": [
+   "Mediator 패턴 안에서는 Observer 패턴을 함께 사용할 수 없다",
+   "Observer는 상태 변화를 여러 관찰자에게 통지하고 동기화하는 것이 주안점이다",
+   "Mediator는 상태 변화를 전혀 알리지 않으므로 Observer와 공통점이 하나도 없다",
+   "Observer 패턴의 목적은 여러 Colleague 역의 동작을 조정하는 것이다"
+  ],
+  "ans": 1,
+  "exp": "Mediator에서는 Mediator와 Colleague의 통신에 Observer 패턴을 쓰기도 해요. 둘 다 ‘상태 변화를 알린다’는 점은 비슷하지만, Mediator의 통지는 Colleague를 조정하려는 목적의 일부이고, Observer는 <b>통지하고 동기화하는 것</b> 자체가 주안점이에요."
+ },
+ {
+  "n": 111,
+  "ch": 3,
+  "lv": 3,
+  "t": "mc",
+  "q": "IncrementalNumberGenerator(문제 17-1 방식)를 다음처럼 쓰면 출력은? (줄바꿈은 / 로 표시. 종료하는 수는 포함하지 않아요.)",
+  "choices": [
+   "D:10 / D:25 / D:40 / D:55 / end=55",
+   "D:25 / D:40 / end=55",
+   "D:10 / D:25 / D:40 / end=55",
+   "D:10 / D:25 / D:40 / end=40"
+  ],
+  "ans": 2,
+  "exp": "10에서 시작해 15씩 늘리며 50 <b>미만</b>일 동안 통지해요: 10, 25, 40. 40 다음 55가 되어 반복이 끝나므로 마지막 getNumber는 55예요(Java 21로 실행해 확인). 람다 <code>x -&gt; …</code>는 메서드가 하나뿐인 Observer 인터페이스를 짧게 구현한 거예요.",
+  "code": "class IncrementalNumberGenerator extends NumberGenerator {\n    private int number, end, inc;\n    public IncrementalNumberGenerator(int start, int end, int inc) {\n        this.number = start; this.end = end; this.inc = inc;\n    }\n    public int getNumber() { return number; }\n    public void execute() {\n        while (number < end) {\n            notifyObservers();\n            number += inc;\n        }\n    }\n}\n// Main\nNumberGenerator g = new IncrementalNumberGenerator(10, 50, 15);\ng.addObserver(x -> System.out.println(\"D:\" + x.getNumber()));\ng.execute();\nSystem.out.println(\"end=\" + g.getNumber());"
+ },
+ {
+  "n": 112,
+  "ch": 3,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 17-1] NumberGenerator를 확장해 수가 점점 증가하는 <code>IncrementalNumberGenerator</code>를 만드세요. 생성자 인수는 ① 시작하는 수 ② 종료하는 수(포함하지 않음) ③ 증갓값이에요. <code>new IncrementalNumberGenerator(10, 50, 5)</code>면 10, 15, …, 45가 차례로 관찰자에게 통지돼야 해요.",
+  "answer": "public class IncrementalNumberGenerator extends NumberGenerator {\n    private int number;     // 현재 수\n    private int end;        // 종료하는 수(이 수를 포함하지 않음)\n    private int inc;        // 증갓값\n\n    public IncrementalNumberGenerator(int start, int end, int inc) {\n        this.number = start;\n        this.end = end;\n        this.inc = inc;\n    }\n\n    @Override\n    public int getNumber() {\n        return number;\n    }\n\n    @Override\n    public void execute() {\n        while (number < end) {\n            notifyObservers();\n            number += inc;\n        }\n    }\n}",
+  "kw": [
+   "extends NumberGenerator",
+   "getNumber",
+   "execute",
+   "notifyObservers",
+   "< end",
+   "+= inc"
+  ],
+  "exp": "NumberGenerator의 추상 메서드 getNumber와 execute를 구현하면 돼요. 관찰자 관리(add·notify)는 상위 클래스가 이미 해 주니, execute에서는 수를 바꿀 때마다 <code>notifyObservers()</code>만 부르면 돼요. 종료하는 수를 포함하지 않으니 조건은 <code>&lt;</code>예요. Main은 생성 부분만 <code>new IncrementalNumberGenerator(10, 50, 5)</code>로 바꾸면 그대로 동작해요(교환 가능성).",
+  "code": "// 리스트 17-7 Main\nNumberGenerator generator = new IncrementalNumberGenerator(10, 50, 5);\nObserver observer1 = new DigitObserver();\nObserver observer2 = new GraphObserver();\ngenerator.addObserver(observer1);\ngenerator.addObserver(observer2);\ngenerator.execute();"
+ },
+ {
+  "n": 113,
+  "ch": 3,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 17-2] 예제 프로그램에 추가하는 형태로 새로운 ConcreteObserver 역을 자유롭게 만들고, Main을 바꿔 활용하세요. (예: 수가 짝수인지 홀수인지 표시하는 Observer)",
+  "answer": "public class EvenOddObserver implements Observer {\n    @Override\n    public void update(NumberGenerator generator) {\n        int n = generator.getNumber();\n        System.out.println(\"EvenOddObserver:\" + n + (n % 2 == 0 ? \" 짝수\" : \" 홀수\"));\n    }\n}\n\n// Main\nNumberGenerator generator = new RandomNumberGenerator();\ngenerator.addObserver(new DigitObserver());\ngenerator.addObserver(new GraphObserver());\ngenerator.addObserver(new EvenOddObserver());   // 새 ConcreteObserver 추가\ngenerator.execute();",
+  "kw": [
+   "implements Observer",
+   "update(NumberGenerator generator)",
+   "getNumber",
+   "addObserver"
+  ],
+  "exp": "Observer 인터페이스를 구현하고 update 안에서 <code>generator.getNumber()</code>로 현재 상태를 얻으면 돼요. NumberGenerator 쪽 코드는 하나도 고치지 않고 <code>addObserver</code>만 추가했다는 게 핵심이에요. 다른 아이디어(최댓값 기록, 합계 표시 등)도 정답이에요."
+ },
+ {
+  "n": 114,
+  "ch": 3,
+  "lv": 3,
+  "t": "self",
+  "q": "교안 ‘Observer의 행위가 Subject에 영향을 미칠 때’처럼, Observer가 update 안에서 Subject의 상태를 바꾸는 바람에 통지가 끝없이 반복되는 문제를 막는 방법을 한 가지 이상 쓰세요.",
+  "answer": "[문제]\nSubject 상태 변화 → Observer로 통지 → Observer가 Subject의 메서드 호출\n→ 그에 따라 Subject 상태 변화 → Observer로 통지 → … (무한 반복)\n\n[대책 예]\n① Subject가 '지금 통지 중' 플래그를 두고, 통지 중에 생긴 변경은 바로 다시 통지하지 않는다\n   private boolean notifying = false;\n   public void notifyObservers() {\n       if (notifying) return;\n       notifying = true;\n       try { for (Observer o : observers) o.update(this); }\n       finally { notifying = false; }\n   }\n② Observer가 현재 통지 처리 중인지 스스로 판단해, 처리 중이면 Subject를 다시 바꾸지 않는다\n③ 값이 실제로 바뀌었을 때만 통지한다(같은 값이면 notifyObservers를 부르지 않음)",
+  "kw": [
+   "무한",
+   "통지 중",
+   "플래그",
+   "판단",
+   "타이밍"
+  ],
+  "exp": "교안의 대책은 ‘현재 통지 처리 중인지 아닌지를 Observer가 판단하거나, 통지하는 타이밍을 Subject가 고려하는 것’이에요. 핵심 키워드만 들어가면 표현은 자유예요."
+ },
+ {
+  "n": 115,
+  "ch": 3,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 Main(리스트 17-6)에서 관찰자를 등록하는 메서드와 수 생성을 시작하는 메서드를 차례로 고른 것은?",
+  "choices": [
+   "notifyObservers · update",
+   "addObserver · execute",
+   "register · create",
+   "update · getNumber"
+  ],
+  "ans": 1,
+  "exp": "<code>generator.addObserver(observer1); generator.addObserver(observer2);</code>로 관찰자 2개를 등록한 뒤 <code>generator.execute();</code>로 수를 생성해요. 관찰자는 DigitObserver와 GraphObserver의 인스턴스예요."
+ },
+ {
+  "n": 116,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Memento 패턴에 대한 설명으로 가장 알맞은 것은?",
+  "choices": [
+   "캡슐화의 파괴에 빠지지 않고 인스턴스의 상태를 저장하고 복원한다",
+   "같은 상태의 인스턴스를 복사해서 별도의 인스턴스를 만든다",
+   "관찰 대상의 상태가 변하면 등록된 관찰자 모두에게 알린다",
+   "인스턴스가 하나만 존재하도록 생성자를 private으로 막는다"
+  ],
+  "ans": 0,
+  "exp": "인스턴스의 상태를 나타내는 역할을 도입해, <b>캡슐화의 파괴에 빠지지 않고</b> 저장과 복원을 하는 것이 Memento 패턴이에요. 어느 시점의 인스턴스 상태를 확실하게 기록해 두고, 나중에 그 시점의 상태로 되돌려 줘요."
+ },
+ {
+  "n": 117,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "memento라는 낱말의 뜻으로 알맞은 것은?",
+  "choices": [
+   "원형·모범·견본",
+   "관찰자·감시자·구독자",
+   "기념품·유품·추억거리",
+   "가장 가벼운 체급"
+  ],
+  "ans": 2,
+  "exp": "memento는 ‘기념품’, ‘유품’, ‘추억거리’라는 뜻이에요. 서랍 속에서 찾은 추억의 사진을 보면 그 시절로 돌아간 것 같은 기분이 드는 것처럼, 저장해 둔 시점으로 인스턴스를 되돌려요."
+ },
+ {
+  "n": 118,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안이 말하는 ‘캡슐화의 파괴’란?",
+  "choices": [
+   "내부 정보에 함부로 접근을 허락해, 내부 구조에 의존하는 코드가 흩어지는 것",
+   "Memento 인스턴스를 너무 많이 만들어 메모리와 디스크가 부족해지는 것",
+   "클래스를 여러 패키지로 나누는 바람에 import 문이 복잡해지는 것",
+   "필드를 모두 private으로 막아서 아무도 상태를 저장하지 못하게 되는 것"
+  ],
+  "ans": 0,
+  "exp": "인스턴스를 복원하려면 내부 정보에 자유롭게 접근할 수 있어야 해요. 그런데 부주의하게 접근을 허락하면 그 클래스의 내부 구조에 의존하는 코드가 프로그램 곳곳에 흩어져 <b>클래스를 수정하기가 곤란</b>해져요. 이것을 캡슐화의 파괴라고 해요."
+ },
+ {
+  "n": 119,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안에서 Memento 패턴으로 할 수 있는 일로 든 것이 <b>아닌</b> 것은?",
+  "choices": [
+   "인스턴스 공유(share)",
+   "실행 취소(undo)",
+   "작업 이력 작성(history)",
+   "다시 실행(redo)"
+  ],
+  "ans": 0,
+  "exp": "교안은 실행 취소(undo), 다시 실행(redo), 작업 이력 작성(history), 현재 상태 저장(snapshot)을 들어요. 인스턴스 공유는 Flyweight 이야기예요."
+ },
+ {
+  "n": 120,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제 ‘과일 모으기 주사위 게임’의 규칙으로 옳지 <b>않은</b> 것은?",
+  "choices": [
+   "나쁜 수가 나오면 돈이 줄어든다",
+   "좋은 수가 나오면 주인공의 돈이 늘어난다",
+   "돈이 없어져도 과일이 남아 있으면 게임을 계속한다",
+   "특히 좋은 수가 나오면 주인공은 과일을 받는다"
+  ],
+  "ans": 2,
+  "exp": "게임은 자동으로 진행되고, 주사위 수가 다음 상태를 결정해요. 좋은 수 → 돈 증가, 나쁜 수 → 돈 감소, 특히 좋은 수 → 과일, 그리고 <b>돈이 없어지면 종료</b>해요."
+ },
+ {
+  "n": 121,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Gamer의 bet에서 주사위 눈에 따른 변화로 옳은 것은?",
+  "choices": [
+   "6의 눈 → 소지금 +100 · 1의 눈 → 과일을 받음 · 2의 눈 → 소지금 0 · 그 밖 → 변동 없음",
+   "모든 눈에서 소지금이 눈의 수 × 100만큼 늘어난다",
+   "1의 눈 → 소지금 절반 · 2의 눈 → 소지금 +100 · 6의 눈 → 과일을 잃음 · 그 밖 → 과일을 받음",
+   "1의 눈 → 소지금 +100 · 2의 눈 → 소지금 절반 · 6의 눈 → 과일을 받음 · 그 밖 → 변동 없음"
+  ],
+  "ans": 3,
+  "exp": "<code>int dice = random.nextInt(6) + 1;</code>로 1~6을 만들어요. 1이면 <code>money += 100</code>, 2면 <code>money /= 2</code>, 6이면 <code>getFruit()</code>으로 과일을 받아요. 나머지는 ‘변동 사항이 없습니다.’예요."
+ },
+ {
+  "n": 122,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제의 클래스 배치로 옳은 것은?",
+  "choices": [
+   "세 클래스 모두 game 패키지에 있다",
+   "Main이 game 패키지에 있고, Memento와 Gamer는 이름 없는 패키지에 있다",
+   "Memento와 Gamer는 game 패키지, Main은 이름 없는 패키지에 있다",
+   "Memento만 game 패키지에 있고, Gamer와 Main은 이름 없는 패키지에 있다"
+  ],
+  "ans": 2,
+  "exp": "Memento 클래스와 Gamer 클래스는 공통 패키지 <code>game</code>에 넣었어요. Main은 이름 없는 패키지에 있어서 game 패키지 밖이에요. 이 배치가 접근 제어의 핵심이에요."
+ },
+ {
+  "n": 123,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Memento 클래스의 필드와 메서드 중 <code>public</code>이 붙은 것은?",
+  "choices": [
+   "getMoney 하나뿐이다",
+   "생성자 Memento와 getMoney",
+   "addFruit와 getFruits",
+   "money, fruits 필드와 모든 메서드"
+  ],
+  "ans": 0,
+  "exp": "money, fruits는 private, 생성자 Memento·addFruit·getFruits는 접근 제한자가 없는 default, <b>getMoney만 public</b>이에요. 그래서 game 패키지 밖의 Main은 getMoney만 쓸 수 있어요(표 18-3)."
+ },
+ {
+  "n": 124,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "game 패키지 밖에 있는 Main에서 다음 코드를 쓰면 어떻게 되나요?",
+  "choices": [
+   "컴파일 에러가 난다",
+   "소지금이 100인 Memento가 정상적으로 만들어진다",
+   "실행 중에 IllegalAccessException이 발생한다",
+   "Gamer 인스턴스의 소지금이 100원으로 바뀐다"
+  ],
+  "ans": 0,
+  "exp": "Memento의 생성자에는 public이 없어서 같은 패키지(game) 안에서만 쓸 수 있어요. Main에서 쓰면 ‘Memento(int) is not public in Memento; cannot be accessed from outside package’ 에러가 나요(Java 21로 컴파일해 확인). Main은 Memento가 필요하면 Gamer의 createMemento에 부탁해야 해요.",
+  "code": "import game.Memento;\n\npublic class Main {\n    public static void main(String[] args) {\n        Memento m = new Memento(100);\n    }\n}"
+ },
+ {
+  "n": 125,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "자바의 네 가지 접근 제한자(표 18-2)를 바르게 설명한 것은?",
+  "choices": [
+   "public: 모든 클래스 · protected: 그 패키지 및 하위 클래스 · default(없음): 그 패키지에서만 · private: 그 클래스에서만",
+   "public: 모든 클래스 · protected: 그 클래스에서만 · default(없음): 모든 클래스 · private: 그 패키지에서만",
+   "public: 하위 클래스에서만 · protected: 그 패키지에서만 · default(없음): 그 클래스에서만 · private: 모든 클래스",
+   "public: 그 패키지에서만 · protected: 모든 클래스 · default(없음): 그 클래스에서만 · private: 하위 클래스에서만"
+  ],
+  "ans": 0,
+  "exp": "public은 어디서나, protected는 같은 패키지와 하위 클래스, 아무것도 안 붙인 default는 <b>같은 패키지에서만</b>, private은 그 클래스 안에서만 접근할 수 있어요."
+ },
+ {
+  "n": 126,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Memento의 <code>getFruits()</code>가 <code>return new ArrayList&lt;&gt;(fruits);</code>처럼 새 리스트를 만들어 반환하는 이유로 가장 알맞은 것은?",
+  "choices": [
+   "ArrayList는 return문 뒤에 변수 이름을 직접 쓸 수 없어서",
+   "받은 쪽이 리스트를 바꿔도 저장된 목록이 그대로이게 하려고",
+   "fruits 필드가 private이라 그대로는 반환할 수 없기 때문에",
+   "새 리스트를 만들어야 과일이 가나다순으로 정렬되기 때문에"
+  ],
+  "ans": 1,
+  "exp": "fruits 자체를 돌려주면 받은 쪽(Gamer)이 그 리스트에 과일을 추가할 때 Memento 안의 기록까지 바뀌어요. 복사본을 돌려주면 저장해 둔 스냅샷이 보호돼서 몇 번이고 같은 상태로 복원할 수 있어요. (③ private 필드도 같은 클래스의 메서드에서는 그대로 반환할 수 있어요.)"
+ },
+ {
+  "n": 127,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Gamer의 createMemento에서 과일에 대해 하는 일은?",
+  "choices": [
+   "과일은 하나도 저장하지 않고 소지금만 저장한다",
+   "‘맛있는 ’으로 시작하는 과일만 Memento에 저장한다",
+   "과일을 저장한 뒤 Gamer의 과일 목록을 비운다",
+   "가진 과일을 모두 저장한다"
+  ],
+  "ans": 1,
+  "exp": "<code>if (f.startsWith(\"맛있는 \")) { m.addFruit(f); }</code>처럼 ‘맛있는’ 것만 저장해요. 그래서 복원하면 맛있지 않은 과일은 사라져요.",
+  "code": "public Memento createMemento() {\n    Memento m = new Memento(money);\n    for (String f: fruits) {\n        if (f.startsWith(\"맛있는 \")) {\n            m.addFruit(f);\n        }\n    }\n    return m;\n}"
+ },
+ {
+  "n": 128,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시. 테스트를 위해 bet에 주사위 눈과 받을 과일을 직접 넣도록 바꾼 Gamer예요.)",
+  "choices": [
+   "[money = 200, fruits = [맛있는 사과, 바나나, 맛있는 포도]] / [money = 100, fruits = [맛있는 사과]] / [money = 100, fruits = [맛있는 사과, 맛있는 오렌지]]",
+   "[money = 200, fruits = [맛있는 사과, 바나나, 맛있는 포도]] / [money = 100, fruits = [맛있는 사과, 바나나]] / [money = 100, fruits = [맛있는 사과, 바나나]]",
+   "[money = 200, fruits = [맛있는 사과, 맛있는 포도]] / [money = 200, fruits = [맛있는 사과]] / [money = 100, fruits = [맛있는 사과]]",
+   "[money = 200, fruits = [맛있는 사과, 바나나, 맛있는 포도]] / [money = 100, fruits = [맛있는 사과]] / [money = 100, fruits = [맛있는 사과]]"
+  ],
+  "ans": 3,
+  "exp": "스냅샷을 찍을 때 ‘맛있는’ 과일만 저장되므로 바나나는 빠져요. 복원하면 돈 100, [맛있는 사과]. getFruits가 <b>복사본</b>을 돌려주므로, 복원 뒤 오렌지를 받아도 Memento 속 목록은 그대로라 다시 복원하면 또 [맛있는 사과]예요(Java 21로 실행해 확인).",
+  "code": "Gamer gamer = new Gamer(100);\ngamer.bet(6, \"맛있는 사과\");      // 6의 눈: 과일을 받는다\ngamer.bet(6, \"바나나\");\nMemento m = gamer.createMemento();\ngamer.bet(1, null);               // 1의 눈: 소지금 +100\ngamer.bet(6, \"맛있는 포도\");\nSystem.out.println(gamer);\ngamer.restoreMemento(m);\nSystem.out.println(gamer);\ngamer.bet(6, \"맛있는 오렌지\");\ngamer.restoreMemento(m);\nSystem.out.println(gamer);"
+ },
+ {
+  "n": 129,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "교안 Main의 Memento 취급 규칙을 따르는 다음 코드의 출력은? (줄바꿈은 / 로 표시. 주사위 눈 1은 +100, 2는 절반이에요.)",
+  "choices": [
+   "200 저장 / 300 저장 / 150 / 75 복원 / 175 / 최종 175",
+   "200 저장 / 300 저장 / 150 / 75 복원 / 400 저장 / 최종 400",
+   "200 / 300 / 150 / 75 / 175 / 최종 175",
+   "200 저장 / 300 저장 / 150 복원 / 400 저장 / 500 저장 / 최종 500"
+  ],
+  "ans": 1,
+  "exp": "많이 늘면(현재 &gt; 저장된 돈) 저장, 저장된 돈의 절반 <b>미만</b>으로 줄면 복원해요. 100→200(저장)→300(저장)→150(150 &lt; 150이 아니라 그대로)→75(복원해서 300)→400(저장)이에요(Java 21로 실행해 확인).",
+  "code": "Gamer gamer = new Gamer(100);\nMemento memento = gamer.createMemento();\nint[] dice = {1, 1, 2, 2, 1};\nfor (int d : dice) {\n    gamer.bet(d, null);\n    if (gamer.getMoney() > memento.getMoney()) {\n        System.out.println(gamer.getMoney() + \" 저장\");\n        memento = gamer.createMemento();\n    } else if (gamer.getMoney() < memento.getMoney() / 2) {\n        System.out.println(gamer.getMoney() + \" 복원\");\n        gamer.restoreMemento(memento);\n    } else {\n        System.out.println(gamer.getMoney());\n    }\n}\nSystem.out.println(\"최종 \" + gamer.getMoney());"
+ },
+ {
+  "n": 130,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Memento 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
+  "choices": [
+   "Originator = Memento · Memento = Main · Caretaker = Gamer",
+   "Originator = Gamer · Memento = Main · Caretaker = Memento",
+   "Originator = Main · Memento = Gamer · Caretaker = Memento",
+   "Originator = Gamer · Memento = Memento · Caretaker = Main"
+  ],
+  "ans": 3,
+  "exp": "<b>Originator(작성자)</b>는 Memento를 만들고 Memento로 상태를 되돌려요(Gamer). <b>Memento(기념품)</b>는 Originator의 내부 정보를 정리해요(Memento). <b>Caretaker(관리인)</b>는 언제 저장·복원할지 정하고 Memento를 보관해요(Main)."
+ },
+ {
+  "n": 131,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Memento 역이 가진 두 종류의 인터페이스(API)에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "narrow interface만 있으면 Caretaker가 Memento의 내부 상태를 모두 바꿀 수 있다",
+   "wide interface와 narrow interface는 이름만 다를 뿐, 공개되는 범위는 똑같다",
+   "wide는 복원에 필요한 정보를 모두 얻는 API로 Originator만 쓰고, narrow는 Caretaker에 보여 준다",
+   "wide는 Caretaker만 쓰는 API이고, narrow는 Originator만 쓰는 API라서 서로 바꿔 쓸 수 없다"
+  ],
+  "ans": 2,
+  "exp": "넓은 인터페이스(wide)는 내부 상태를 드러내므로 Originator만 써요. 좁은 인터페이스(narrow)는 할 수 있는 일에 한계가 있어 내부 상태가 외부에 공개되는 걸 막아요. 이 둘을 구별해 <b>캡슐화의 파괴를 막아요</b>."
+ },
+ {
+  "n": 132,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 예제의 Memento 메서드를 wide와 narrow로 바르게 나눈 것은?",
+  "choices": [
+   "narrow: getMoney · wide: 생성자 Memento, addFruit, getFruits",
+   "narrow: 생성자 Memento · wide: getMoney, addFruit, getFruits",
+   "narrow: addFruit · wide: getMoney, getFruits, 생성자 Memento",
+   "narrow: getMoney, getFruits · wide: 생성자 Memento, addFruit"
+  ],
+  "ans": 0,
+  "exp": "리스트 18-1의 주석 그대로예요. 소지금을 얻는 getMoney만 narrow interface(public), 생성자·addFruit·getFruits는 wide interface(default)예요."
+ },
+ {
+  "n": 133,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "public이 붙은 getMoney를 ‘좁은’ 인터페이스라고 부르는 까닭은?",
+  "choices": [
+   "getMoney가 같은 game 패키지 안에서만 보이는 메서드이기 때문에",
+   "getMoney는 다른 메서드보다 이름과 몸통 코드가 짧기 때문에",
+   "할 수 있는 일이 소지금을 얻는 것뿐이라 조작 범위가 적기 때문에",
+   "getMoney의 반환형이 int라서 담을 수 있는 값의 범위가 작기 때문에"
+  ],
+  "ans": 2,
+  "exp": "public이 붙어 있는데 ‘좁다’고 하니 이상하게 들리지만, 여기서 ‘좁다’는 <b>할 수 있는 일이 적다</b>는 뜻이에요. Memento에서 public인 것은 getMoney 하나뿐이고, 할 수 있는 일은 소지금을 얻는 것뿐이에요."
+ },
+ {
+  "n": 134,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Caretaker 역(Main)이 Memento에 대해 할 수 있는 일로 옳은 것은?",
+  "choices": [
+   "addFruit로 과일을 추가해 Gamer의 상태를 미리 바꿔 둘 수 있다",
+   "getMoney로 소지금을 얻고, Memento 인스턴스를 변수 등에 저장해 두는 것뿐이다",
+   "getFruits로 과일 목록을 얻어 마음대로 고칠 수 있다",
+   "new Memento(100)으로 원하는 상태의 Memento를 직접 만들 수 있다"
+  ],
+  "ans": 1,
+  "exp": "Main은 game 패키지 밖이라 public인 getMoney밖에 못 써요. 만들어 준 Memento를 <b>한 덩어리의 블랙박스로 통째로 보관</b>해 두기만 해요. Memento는 Caretaker에 대해 정보를 은폐하고 있어요."
+ },
+ {
+  "n": 135,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Memento 패턴의 클래스 다이어그램(그림 18-4)에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "Caretaker가 Memento를 Creates하고, Originator는 Memento를 보관만 한다",
+   "Originator–Memento는 같은 package에서 넓게, Caretaker–Memento는 좁게 연결된다",
+   "Caretaker–Memento가 같은 package에 있고, 넓은 인터페이스로 연결된다",
+   "Memento는 Caretaker와만 연결되고, Originator와는 아무 관계도 없다"
+  ],
+  "ans": 1,
+  "exp": "Caretaker → Originator로 Requests, Originator → Memento로 Creates예요. Originator와 Memento는 매우 친밀한 관계(같은 package, wide), Caretaker는 Memento를 보관만 해요(narrow)."
+ },
+ {
+  "n": 136,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "교안 ‘Caretaker 역할과 Originator 역할을 나누는 이유’로 가장 알맞은 것은?",
+  "choices": [
+   "여러 단계 undo나 파일 저장으로 바꿔도 Originator는 고치지 않아도 된다",
+   "두 역할을 한 클래스에 합치면 언어 규칙상 컴파일 에러가 나기 때문이다",
+   "Originator 혼자서는 자기 상태를 담은 Memento를 만들 수 없기 때문이다",
+   "Caretaker가 Memento의 내부 정보를 직접 읽고 고쳐야 하기 때문이다"
+  ],
+  "ans": 0,
+  "exp": "Caretaker는 <b>언제</b> 스냅샷을 찍을지·undo할지 정하고 Memento를 저장해요. Originator는 Memento를 <b>만들고</b> 주어진 Memento로 자신을 되돌려요. 이렇게 나누면 ‘여러 단계 실행 취소’나 ‘현재 상태를 파일에 저장’처럼 바꿀 때 Originator는 그대로 둘 수 있어요."
+ },
+ {
+  "n": 137,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘Memento를 몇 개 가질까?’와 ‘Memento의 유효기한은?’에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "Memento는 언어 규칙상 한 프로그램에 하나만 가질 수 있고 배열에 넣을 수 없다",
+   "파일로 저장한 Memento는 프로그램 버전이 바뀌어도 언제나 그대로 쓸 수 있다",
+   "메모리에만 보관하는 Memento는 일정 시간이 지나면 JVM이 자동으로 지운다",
+   "여러 개 가지면 여러 시점을 저장할 수 있고, 파일 저장은 버전 업 뒤 안 맞을 수 있다"
+  ],
+  "ans": 3,
+  "exp": "예제의 Main은 Memento를 하나만 가졌지만, 여러 개 가지면 여러 시점으로 돌아갈 수 있어요. 메모리에서만 보관하면 큰 문제가 없지만, 파일로 영속 저장하면 버전 업 후 예전 Memento와 맞지 않을 우려가 있어요(유효기한)."
+ },
+ {
+  "n": 138,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Memento의 관련 패턴 설명으로 옳은 것은?",
+  "choices": [
+   "Command 패턴으로 명령을 처리할 때는 Memento 패턴을 함께 쓸 수 없다",
+   "Memento는 인스턴스의 내용을 모두 복사하고, Prototype은 필요한 정보만 저장한다",
+   "Memento에서는 클래스가 ‘상태’를 나타내고, State에서는 인스턴스가 나타낸다",
+   "Memento는 복원에 필요한 정보만, Prototype은 인스턴스의 내용을 모두 복사한다"
+  ],
+  "ans": 3,
+  "exp": "Prototype과의 차이가 핵심이에요. 또 Memento에서는 <b>인스턴스</b>가 ‘상태’를 나타내고, State 패턴에서는 <b>클래스</b>가 ‘상태’를 나타내요. Command 패턴으로 명령을 처리할 때 Memento로 undo·redo를 할 수 있어요."
+ },
+ {
+  "n": 139,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "<code>java.io.Serializable</code> 직렬화로 Memento를 파일에 저장하는 것에 대한 교안의 주의로 옳은 것은?",
+  "choices": [
+   "직렬화를 쓰면 프로그램 버전이 바뀌어도 유효기한 문제가 없다",
+   "신뢰할 수 없는 데이터를 복원하면 보안상 큰 문제가 될 수 있다",
+   "직렬화한 파일은 사람이 읽을 수 없으므로 보안 문제가 전혀 없다",
+   "직렬화는 Memento를 파일에 저장하는 유일한 방법이라 꼭 써야 한다"
+  ],
+  "ans": 1,
+  "exp": "Java의 인스턴스를 파일에 보존하는 방법으로 직렬화가 자주 쓰이지만, 신뢰할 수 없는 데이터를 복원할 때 보안상 큰 문제가 될 수 있어요. 『Effective Java』에는 ‘새로운 시스템에서 Java 직렬화를 사용할 이유는 없다’라고까지 적혀 있어요."
+ },
+ {
+  "n": 140,
+  "ch": 4,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 18-1] Caretaker 역은 좁은 인터페이스(API)를 통해서만 Memento 역을 조작할 수 있어요. Caretaker 역이 Memento 역을 자유롭게 조작할 수 있다면 어떤 단점이 있을까요?",
+  "answer": "- Caretaker가 Memento의 내부 정보(소지금, 과일 등)를 마음대로 바꿀 수 있게 되어,\n  Originator가 만든 '그 시점의 상태'가 망가질 수 있다. 엉뚱한 상태로 복원될 위험이 생긴다.\n- Caretaker의 코드가 Memento(=Originator)의 내부 구조에 의존하게 된다(캡슐화의 파괴).\n  그러면 Originator나 Memento의 내부 구조(필드 등)를 바꿀 때 Caretaker까지 고쳐야 한다.\n- 결국 Caretaker와 Originator의 역할 분담이 무너져, 각자 독립적으로 수정·재사용하기 어려워진다.",
+  "kw": [
+   "캡슐화",
+   "내부",
+   "의존",
+   "수정",
+   "역할 분담"
+  ],
+  "exp": "핵심은 ‘캡슐화의 파괴’예요. 내부를 아는 코드가 흩어지면 Originator를 바꿀 때 Caretaker도 바꿔야 해요. 좁은 인터페이스는 이걸 막기 위한 장치예요."
+ },
+ {
+  "n": 141,
+  "ch": 4,
+  "lv": 3,
+  "t": "self",
+  "q": "[교안 문제 18-2] 예제에서는 소지금과 과일만이 상태를 결정하는 정보였어요. 그러나 저장해야 할 정보가 많으면 Memento 인스턴스를 저장하려고 큰 메모리 공간과 디스크 공간이 필요해요. 이 문제를 해결할 방법을 생각해 보세요.",
+  "answer": "[아이디어] 전체 상태를 매번 통째로 저장하지 않고, '직전 상태와 달라진 부분(차분, 증분)'만 Memento에 저장한다.\n- 예) 처음 한 번만 전체 상태를 저장하고, 이후에는 바뀐 필드·추가된 과일만 기록한다.\n- 복원할 때는 기준 상태에 차분을 차례로 적용(또는 거꾸로 되돌림)한다.\n- 실행 취소처럼 '바로 전으로 되돌리기'가 목적이라면, 바꾸기 전 값만 기록해도 된다.\n\n[그 밖의 방법]\n- 꼭 필요한 정보만 저장하고 다시 계산할 수 있는 값은 저장하지 않는다.\n- 오래된 Memento는 버리거나 개수에 상한을 둔다.\n- 압축해서 저장한다.",
+  "kw": [
+   "차분",
+   "증분",
+   "달라진 부분",
+   "필요한 정보만"
+  ],
+  "exp": "GoF 책에서도 소개하는 방법이에요. 상태가 크면 <b>변화한 부분(증분)만</b> 저장하는 Memento를 생각할 수 있어요. 대신 복원 순서가 중요해지고 복원 처리가 조금 복잡해져요."
+ },
+ {
+  "n": 142,
+  "ch": 4,
+  "lv": 3,
+  "t": "self",
+  "q": "[교안 문제 18-3] Memento 클래스에 <code>int number;</code> 필드를 추가해요. 다음 제어를 하려면 어떻게 구현하면 될까요?<br>· Memento 클래스는 number의 값을 얻거나 변경할 수 있다<br>· Gamer 클래스는 number의 값을 얻을 수 있지만 변경할 수는 없다<br>· Main 클래스는 number의 값을 얻을 수도 변경할 수도 없다",
+  "answer": "package game;\n\npublic class Memento {\n    private int number;          // ① private → Memento 클래스만 직접 읽고 쓸 수 있다\n\n    // ② 접근 제한자 없음(default) → 같은 game 패키지의 Gamer만 얻을 수 있다\n    int getNumber() {\n        return number;\n    }\n\n    // 값을 바꾸는 setter는 만들지 않는다(만들더라도 private으로)\n    // → Gamer는 변경할 수 없고, Main(game 패키지 밖)은 getNumber도 보이지 않는다\n}",
+  "kw": [
+   "private int number",
+   "default",
+   "getNumber",
+   "setter",
+   "game 패키지"
+  ],
+  "exp": "필드는 <b>private</b>(Memento만 읽고 씀), 읽기 메서드는 <b>default</b>(같은 패키지의 Gamer만 읽음), 쓰기 메서드는 두지 않거나 private으로 해요. Main은 game 패키지 밖이라 default 메서드가 보이지 않아요. 접근 제한자로 ‘누구에게 보여 줄지’를 표현하는 연습이에요."
+ },
+ {
+  "n": 143,
+  "ch": 4,
+  "lv": 3,
+  "t": "self",
+  "q": "[교안 문제 18-4] Memento를 파일에 저장해 봅시다. Memento의 클래스 메서드로 다음 두 가지를 구현하세요. 직렬화(Serializable)는 쓰지 말고, Memento가 가진 정보를 줄 바꿈으로 구분한 문자열로 저장해요.<br>· <code>boolean saveToFile(String filename, Memento memento)</code>: 성공하면 true, 실패하면 false<br>· <code>Memento loadFromFile(String filename)</code>: 읽기에 실패하면 null",
+  "answer": "package game;\n\nimport java.io.IOException;\nimport java.nio.file.Files;\nimport java.nio.file.Path;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class Memento {\n    // ... 기존 필드·메서드 ...\n\n    // 1행: 소지금, 2행부터: 과일 하나씩\n    public static boolean saveToFile(String filename, Memento memento) {\n        List<String> lines = new ArrayList<>();\n        lines.add(String.valueOf(memento.money));\n        lines.addAll(memento.fruits);\n        try {\n            Files.write(Path.of(filename), lines);\n            return true;\n        } catch (IOException e) {\n            return false;\n        }\n    }\n\n    public static Memento loadFromFile(String filename) {\n        try {\n            List<String> lines = Files.readAllLines(Path.of(filename));\n            Memento memento = new Memento(Integer.parseInt(lines.get(0)));\n            for (int i = 1; i < lines.size(); i++) {\n                memento.addFruit(lines.get(i));\n            }\n            return memento;\n        } catch (IOException | NumberFormatException | IndexOutOfBoundsException e) {\n            return null;\n        }\n    }\n}\n\n// Main: 시작할 때 game.dat이 있으면 불러오고, 없으면 100원부터\nMemento memento = Memento.loadFromFile(\"game.dat\");\nGamer gamer = new Gamer(100);\nif (memento != null) gamer.restoreMemento(memento);\nelse memento = gamer.createMemento();\n// ... 소지금이 '상당히' 늘었을 때\nmemento = gamer.createMemento();\nMemento.saveToFile(\"game.dat\", memento);",
+  "kw": [
+   "static",
+   "saveToFile",
+   "loadFromFile",
+   "Files",
+   "null",
+   "줄 바꿈"
+  ],
+  "exp": "Memento의 static 메서드라서 private 필드(money, fruits)와 default 생성자를 직접 쓸 수 있어요. Main은 파일 이름만 넘기므로 내부 형식을 몰라도 돼요. 읽기에 실패하면 null을 돌려주고 Main은 100원부터 시작해요. Gamer에 restoreMemento가 public이라 Main에서 바로 복원할 수 있어요."
+ },
+ {
+  "n": 144,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Main(Caretaker)에서 Memento 인스턴스가 필요할 때 하는 방법으로 옳은 것은?",
+  "choices": [
+   "Gamer의 createMemento를 호출해 만들어 달라고 부탁한다",
+   "Gamer의 restoreMemento를 호출하면 새 Memento가 반환된다",
+   "Memento의 addFruit로 빈 Memento에 과일을 직접 채운다",
+   "new Memento(gamer.getMoney())로 Main에서 직접 만든다"
+  ],
+  "ans": 0,
+  "exp": "Main에는 Memento의 생성자가 보이지 않아요. 그래서 <code>gamer.createMemento()</code>로 Originator에게 부탁하는 수밖에 없어요. restoreMemento는 반대로 Memento로 상태를 되돌리는 메서드예요."
+ },
+ {
+  "n": 145,
+  "ch": 6,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 상황에 가장 알맞은 패턴은?<br>“그림판에서 사용자가 실수하면 Ctrl+Z로 몇 단계든 이전 상태로 되돌리고 싶다. 단, 그림 객체의 내부 필드를 바깥에 공개하고 싶지는 않다.”",
+  "choices": [
+   "Observer",
+   "Singleton",
+   "Prototype",
+   "Memento"
+  ],
+  "ans": 3,
+  "exp": "실행 취소(undo)를 위해 상태를 저장·복원하되 캡슐화를 지키는 게 Memento예요. Caretaker가 Memento를 여러 개(스택 등) 가지면 여러 단계 undo가 돼요. Prototype도 복사는 하지만 ‘내용을 모두 복사한 별도 인스턴스’를 만드는 것이 목적이에요."
+ },
+ {
+  "n": 146,
+  "ch": 6,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 상황에 가장 알맞은 패턴은?<br>“주가 데이터가 바뀔 때마다 표, 꺾은선 그래프, 알림 창이 모두 함께 갱신되어야 한다. 앞으로 표시 방법은 더 늘어날 수 있다.”",
+  "choices": [
+   "Observer",
+   "Prototype",
+   "Memento",
+   "Flyweight"
+  ],
+  "ans": 0,
+  "exp": "하나의 Subject(주가 데이터)에 여러 Observer(표, 그래프, 알림)가 등록되어 상태 변화를 통지받는 구조예요. 새 표시 방법은 Observer를 구현해 addObserver만 하면 되므로 Subject는 고칠 필요가 없어요. MVC의 Model–View 관계와 같아요."
+ },
+ {
+  "n": 147,
+  "ch": 6,
+  "lv": 3,
+  "t": "mc",
+  "q": "‘상태’를 다루는 방식에 대한 비교로 <b>틀린</b> 것은?",
+  "choices": [
+   "Prototype은 현재 인스턴스와 같은 상태의 별도 인스턴스를 만든다",
+   "Observer는 Subject를 능동적으로 계속 살펴보며 변화를 찾아낸다",
+   "Memento는 어느 시점의 상태를 기록했다가 나중에 그 상태로 되돌린다",
+   "Flyweight는 장소·상황에 의존하지 않는 intrinsic한 상태만 공유한다"
+  ],
+  "ans": 1,
+  "exp": "Observer는 이름과 달리 능동적으로 ‘관찰’하지 않고, Subject가 알려 주기를 <b>수동적으로 기다려요</b>. 그래서 Publish-Subscribe 패턴이라고도 불러요."
+ },
+ {
+  "n": 148,
+  "ch": 6,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 다섯 패턴의 등장인물을 바르게 짝지은 것은?",
+  "choices": [
+   "Observer: Singleton 하나뿐 / Memento: Subject·ConcreteSubject",
+   "Observer: Originator·Memento·Caretaker / Memento: Subject·Observer",
+   "Memento: Prototype·ConcretePrototype·Client / Observer: Flyweight·FlyweightFactory·Client",
+   "Observer: Subject·ConcreteSubject·Observer·ConcreteObserver / Memento: Originator·Memento·Caretaker"
+  ],
+  "ans": 3,
+  "exp": "Singleton(Singleton), Prototype(Prototype·ConcretePrototype·Client), Observer(Subject·ConcreteSubject·Observer·ConcreteObserver), Memento(Originator·Memento·Caretaker), Flyweight(Flyweight·FlyweightFactory·Client)예요."
  }
 ];

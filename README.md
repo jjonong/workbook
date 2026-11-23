@@ -1,6 +1,6 @@
 # 워크북
 
-Oracle SQL(교안 1~14장), 「자바의 정석 4판」(1~13장), DB 모델링(데이터 모델링 교안 1~3장), SQL 튜닝(「친절한 SQL 튜닝」 1~7장·부록), 디자인 패턴(「Java 언어로 배우는 디자인 패턴 입문」 Singleton·Prototype·Flyweight)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
+Oracle SQL(교안 1~14장), 「자바의 정석 4판」(1~13장), DB 모델링(데이터 모델링 교안 1~3장), SQL 튜닝(「친절한 SQL 튜닝」 1~7장·부록), 디자인 패턴(「Java 언어로 배우는 디자인 패턴 입문」 Singleton·Prototype·Observer·Memento·Flyweight)을 연습하는 웹 페이지예요. 실습 문제, 개념 정리, 핵심 정리 탭이 있어요. 빌드 과정 없이 `index.html`을 브라우저로 열면 바로 동작해요.
 
 ## 파일 구조
 
@@ -40,7 +40,7 @@ data/
   tune-problems.js      SQL 튜닝 문제 166개 (1~7장·부록)
   tune-concepts.js      SQL 튜닝 개념 정리 탭 (HTML, 책 목차 기준)
   tune-cheatsheet.js    SQL 튜닝 핵심 정리 탭 (HTML, 책 색인 기준 용어·힌트·파라미터)
-  gof-problems.js       디자인 패턴 문제 89개 (Part 5 Singleton·Part 6 Prototype·Part 20 Flyweight·종합)
+  gof-problems.js       디자인 패턴 문제 148개 (Part 5 Singleton·Part 6 Prototype·Part 17 Observer·Part 18 Memento·Part 20 Flyweight·종합)
   gof-concepts.js       디자인 패턴 개념 정리 탭 (HTML, 교안 절 순서·수업 필기 포함)
   gof-cheatsheet.js     디자인 패턴 핵심 정리 탭 (HTML)
 tools/
@@ -51,7 +51,7 @@ tools/
 
 ## 자주 하는 수정
 
-**올린 뒤에는 버전 올리기**: `index.html`이 불러오는 CSS·JS 주소 끝에 `?v=20261118` 같은 버전이 붙어 있어요. 파일을 고쳐서 올릴 때 이 숫자를 모두 새 날짜로 바꿔야 방문자 브라우저가 예전에 저장해 둔 파일 대신 새 파일을 받아요. 바꾸지 않으면 새 `index.html`이 예전 JS와 섞여서, 새로 만든 탭을 눌러도 SQL 화면이 열리는 일이 생겨요.
+**올린 뒤에는 버전 올리기**: `index.html`이 불러오는 CSS·JS 주소 끝에 `?v=20261124` 같은 버전이 붙어 있어요. 파일을 고쳐서 올릴 때 이 숫자를 모두 새 날짜로 바꿔야 방문자 브라우저가 예전에 저장해 둔 파일 대신 새 파일을 받아요. 바꾸지 않으면 새 `index.html`이 예전 JS와 섞여서, 새로 만든 탭을 눌러도 SQL 화면이 열리는 일이 생겨요.
 
 **JAVA 문제 고치기·추가하기**: `data/java-problems.js`에서 해당 번호(`n:`)를 찾아 고쳐요. 새 문제는 배열 끝에 다음 번호로 추가해요. 화면에서는 장(`ch`)과 난이도(`lv`)에 따라 자동으로 자리를 찾아가요.
 
