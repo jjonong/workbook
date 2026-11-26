@@ -1,40 +1,52 @@
-// 디자인 패턴 실습 문제 (148문제) · Java 언어로 배우는 디자인 패턴 입문 Part 5 Singleton · Part 6 Prototype · Part 17 Observer · Part 18 Memento · Part 20 Flyweight
-// n: 번호(기록 저장에 쓰여요. 바꾸지 마세요), ch: 장(1 Singleton · 2 Prototype · 3 Observer · 4 Memento · 5 Flyweight · 6 종합), lv: 1 기초 · 2 응용 · 3 심화
+// 디자인 패턴 실습 문제 (207문제) · Java 언어로 배우는 디자인 패턴 입문 Part 4 Factory Method · Part 5 Singleton · Part 6 Prototype · Part 7 Builder · Part 17 Observer · Part 18 Memento · Part 20 Flyweight
+// n: 번호(기록 저장에 쓰여요. 바꾸지 마세요), ch: 장(1 Factory Method · 2 Singleton · 3 Prototype · 4 Builder · 5 Observer · 6 Memento · 7 Flyweight · 8 종합), lv: 1 기초 · 2 응용 · 3 심화
 // t: 'mc' 객관식(ans = 정답 보기 번호, 0부터) · 'self' 서술·코드(answer = 모범 답안, kw = 핵심 키워드)
 var WGF = window.WGF = window.WGF || {};
 WGF.chapters = [
  {
   "no": 1,
+  "title": "Part 4 Factory Method: 하위 클래스에서 인스턴스를 만든다",
+  "short": "Factory Method",
+  "part": "P4"
+ },
+ {
+  "no": 2,
   "title": "Part 5 Singleton: 인스턴스를 단 하나만 만든다",
   "short": "Singleton",
   "part": "P5"
  },
  {
-  "no": 2,
+  "no": 3,
   "title": "Part 6 Prototype: 복사해서 인스턴스를 만든다",
   "short": "Prototype",
   "part": "P6"
  },
  {
-  "no": 3,
+  "no": 4,
+  "title": "Part 7 Builder: 복잡한 인스턴스를 조립한다",
+  "short": "Builder",
+  "part": "P7"
+ },
+ {
+  "no": 5,
   "title": "Part 17 Observer: 상태 변화를 알려 준다",
   "short": "Observer",
   "part": "P17"
  },
  {
-  "no": 4,
+  "no": 6,
   "title": "Part 18 Memento: 상태를 저장한다",
   "short": "Memento",
   "part": "P18"
  },
  {
-  "no": 5,
+  "no": 7,
   "title": "Part 20 Flyweight: 같은 것은 공유해서 낭비를 없앤다",
   "short": "Flyweight",
   "part": "P20"
  },
  {
-  "no": 6,
+  "no": 8,
   "title": "종합: 패턴 비교하기",
   "short": "패턴 비교",
   "part": "종합"
@@ -43,7 +55,7 @@ WGF.chapters = [
 WGF.problems = [
  {
   "n": 1,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "Singleton 패턴이 보장하려는 것으로 가장 알맞은 것은?",
@@ -58,7 +70,7 @@ WGF.problems = [
  },
  {
   "n": 2,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "singleton이라는 낱말의 원래 뜻으로 알맞은 것은?",
@@ -73,7 +85,7 @@ WGF.problems = [
  },
  {
   "n": 3,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "교안의 클래스 다이어그램에서 <code>-Singleton</code>, <code>+getInstance</code>처럼 앞에 붙은 기호와 밑줄의 뜻을 바르게 짝지은 것은?",
@@ -88,7 +100,7 @@ WGF.problems = [
  },
  {
   "n": 4,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "Singleton 클래스에서 생성자를 <code>private</code>으로 만드는 이유는?",
@@ -103,7 +115,7 @@ WGF.problems = [
  },
  {
   "n": 5,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "교안의 Singleton 클래스에서 유일한 인스턴스를 담는 필드 선언으로 알맞은 것은?",
@@ -118,7 +130,7 @@ WGF.problems = [
  },
  {
   "n": 6,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "<code>getInstance()</code> 메서드가 <code>static</code>이어야 하는 이유로 알맞은 것은?",
@@ -133,7 +145,7 @@ WGF.problems = [
  },
  {
   "n": 7,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "다음 코드를 Singleton 클래스 <b>바깥</b>(예: Main 클래스)에 쓰면 어떻게 되나요?",
@@ -149,7 +161,7 @@ WGF.problems = [
  },
  {
   "n": 8,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "Singleton 클래스에서 생성자를 <b>아예 쓰지 않고</b> 필드와 <code>getInstance()</code>만 두면 어떻게 되나요?",
@@ -164,7 +176,7 @@ WGF.problems = [
  },
  {
   "n": 9,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "<code>new Singleton()</code>이 실행될 때 일어나는 일을 순서대로 바르게 적은 것은? (수업 필기)",
@@ -179,7 +191,7 @@ WGF.problems = [
  },
  {
   "n": 10,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "다음 프로그램을 실행했을 때 출력 순서로 알맞은 것은? (Singleton은 교안 리스트 5-1과 같고, 생성자에서 \"인스턴스를 생성했습니다.\"를 출력해요.)",
@@ -195,7 +207,7 @@ WGF.problems = [
  },
  {
   "n": 11,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "Main에서 <code>obj1 == obj2</code>로 비교하는 이유는?",
@@ -210,7 +222,7 @@ WGF.problems = [
  },
  {
   "n": 12,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "<code>getInstance</code>라는 메서드 이름에 대한 설명으로 옳은 것은?",
@@ -225,7 +237,7 @@ WGF.problems = [
  },
  {
   "n": 13,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "다음 enum으로 만든 Singleton에서 hello 메서드를 호출하는 구문으로 알맞은 것은?",
@@ -241,7 +253,7 @@ WGF.problems = [
  },
  {
   "n": 14,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
@@ -257,7 +269,7 @@ WGF.problems = [
  },
  {
   "n": 15,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "mc",
   "q": "Singleton 패턴의 등장인물(역할)에 대한 설명으로 옳은 것은?",
@@ -272,7 +284,7 @@ WGF.problems = [
  },
  {
   "n": 16,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "교안 ‘어째서 제한할 필요가 있을까?’에서 말하는 인스턴스 수 제한의 의미로 알맞은 것은?",
@@ -287,7 +299,7 @@ WGF.problems = [
  },
  {
   "n": 17,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "교안에서 Singleton 패턴이 <b>사용될 수 있는 관련 패턴</b>으로 소개하지 <b>않은</b> 것은?",
@@ -302,7 +314,7 @@ WGF.problems = [
  },
  {
   "n": 18,
-  "ch": 1,
+  "ch": 2,
   "lv": 1,
   "t": "self",
   "q": "프로그램 설정을 담는 <code>Config</code> 클래스를 Singleton 패턴으로 작성하세요. 조건: 인스턴스를 처음부터(클래스 초기화 때) 만들어 두고, <code>getInstance()</code>로 얻으며, 바깥에서 <code>new</code>를 할 수 없어야 해요.",
@@ -318,7 +330,7 @@ WGF.problems = [
  },
  {
   "n": 19,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 5-1] 다음 <code>TicketMaker</code>는 지금 상태라면 인스턴스를 몇 개라도 만들 수 있어요. Singleton 패턴을 적용해 인스턴스가 하나만 만들어지도록 바꾸세요. <code>getNextTicketNumber()</code>는 호출할 때마다 1000, 1001, 1002, …를 돌려줘야 해요.",
@@ -334,7 +346,7 @@ WGF.problems = [
  },
  {
   "n": 20,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "Singleton으로 바꾼 TicketMaker를 다음처럼 사용했을 때 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
@@ -350,7 +362,7 @@ WGF.problems = [
  },
  {
   "n": 21,
-  "ch": 1,
+  "ch": 2,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 5-2] 인스턴스 수가 <b>3개로 제한</b>되는 클래스 <code>Triple</code>을 만드세요. 인스턴스에는 \"ALPHA\", \"BETA\", \"GAMMA\"라는 이름이 붙어 있고, <code>getInstance(String name)</code>으로 그 이름의 인스턴스를 얻을 수 있어요.",
@@ -368,7 +380,7 @@ WGF.problems = [
  },
  {
   "n": 22,
-  "ch": 1,
+  "ch": 2,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 5-3] 다음 Singleton은 <code>getInstance</code>가 여러 스레드에서 호출되면 Singleton 패턴이 되지 않아요. 그 이유를 설명하고, 고치는 방법을 한 가지 이상 쓰세요.",
@@ -385,7 +397,7 @@ WGF.problems = [
  },
  {
   "n": 23,
-  "ch": 1,
+  "ch": 2,
   "lv": 3,
   "t": "mc",
   "q": "문제 5-3의 lazy 초기화 Singleton을 여러 스레드에서도 안전하게 만드는 방법으로 <b>알맞지 않은</b> 것은?",
@@ -400,7 +412,7 @@ WGF.problems = [
  },
  {
   "n": 24,
-  "ch": 1,
+  "ch": 2,
   "lv": 3,
   "t": "mc",
   "q": "다음 ‘홀더(holder)’ 방식 Singleton의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
@@ -416,7 +428,7 @@ WGF.problems = [
  },
  {
   "n": 25,
-  "ch": 1,
+  "ch": 2,
   "lv": 3,
   "t": "mc",
   "q": "lazy 초기화에서 <code>synchronized</code> 비용을 줄이려고 ‘이중 검사 잠금(double-checked locking)’을 쓸 때, <code>singleton</code> 필드에 꼭 붙여야 하는 키워드는?",
@@ -432,7 +444,7 @@ WGF.problems = [
  },
  {
   "n": 26,
-  "ch": 1,
+  "ch": 2,
   "lv": 2,
   "t": "mc",
   "q": "enum으로 Singleton을 만드는 방식의 특징으로 옳은 것은?",
@@ -447,7 +459,7 @@ WGF.problems = [
  },
  {
   "n": 27,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "Prototype 패턴의 핵심으로 알맞은 것은?",
@@ -462,7 +474,7 @@ WGF.problems = [
  },
  {
   "n": 28,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "Java에서 인스턴스를 복제하는 조작을 무엇이라고 부르나요?",
@@ -477,7 +489,7 @@ WGF.problems = [
  },
  {
   "n": 29,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "교안에서 ‘클래스로부터 인스턴스를 만드는 대신 인스턴스를 복사해서 만드는’ 경우로 든 세 가지에 해당하지 <b>않는</b> 것은?",
@@ -492,7 +504,7 @@ WGF.problems = [
  },
  {
   "n": 30,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "<code>clone</code> 메서드는 어디에 정의되어 있나요?",
@@ -507,7 +519,7 @@ WGF.problems = [
  },
  {
   "n": 31,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "<code>Cloneable</code> 인터페이스가 요구하는(선언한) 메서드는?",
@@ -522,7 +534,7 @@ WGF.problems = [
  },
  {
   "n": 32,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "다음 코드를 실행하면 출력은?",
@@ -538,7 +550,7 @@ WGF.problems = [
  },
  {
   "n": 33,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "교안의 <code>Product</code> 인터페이스가 <code>extends Cloneable</code>로 선언된 이유는?",
@@ -554,7 +566,7 @@ WGF.problems = [
  },
  {
   "n": 34,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "Prototype 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
@@ -569,7 +581,7 @@ WGF.problems = [
  },
  {
   "n": 35,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "<code>Manager</code> 클래스 소스에 <code>MessageBox</code>나 <code>UnderlinePen</code>이라는 클래스 이름이 전혀 나오지 않는다는 점이 중요한 이유는?",
@@ -584,7 +596,7 @@ WGF.problems = [
  },
  {
   "n": 36,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "교안의 <code>Manager</code> 클래스에서 <code>showcase</code> 필드의 역할은?",
@@ -600,7 +612,7 @@ WGF.problems = [
  },
  {
   "n": 37,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "<code>new MessageBox('#')</code>로 만든 인스턴스에 <code>use(\"Hi\")</code>를 호출했을 때 출력은? (교안 리스트 6-3의 use와 같아요)",
@@ -616,7 +628,7 @@ WGF.problems = [
  },
  {
   "n": 38,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "<code>new UnderlinePen('~')</code>로 만든 인스턴스에 <code>use(\"Java\")</code>를 호출했을 때 출력은?",
@@ -631,7 +643,7 @@ WGF.problems = [
  },
  {
   "n": 39,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "교안 Main처럼 <code>\"warning box\"</code>를 등록한 뒤, 다음 코드의 출력은?",
@@ -647,7 +659,7 @@ WGF.problems = [
  },
  {
   "n": 40,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "mc",
   "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
@@ -663,7 +675,7 @@ WGF.problems = [
  },
  {
   "n": 41,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "mc",
   "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
@@ -679,7 +691,7 @@ WGF.problems = [
  },
  {
   "n": 42,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "‘clone 메서드는 얕은 복사를 한다’는 말의 뜻으로 옳은 것은?",
@@ -694,7 +706,7 @@ WGF.problems = [
  },
  {
   "n": 43,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "clone의 얕은 복사로 부족해 <code>clone</code>을 오버라이드할 때 잊지 말아야 할 것은?",
@@ -709,7 +721,7 @@ WGF.problems = [
  },
  {
   "n": 44,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "mc",
   "q": "교안 예제에서 <code>clone()</code>을 바로 쓰지 않고 <code>createCopy()</code>라는 메서드로 감싼 이유로 가장 알맞은 것은?",
@@ -724,7 +736,7 @@ WGF.problems = [
  },
  {
   "n": 45,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "mc",
   "q": "교안 보강 ‘clone은 사용하기 어렵다’에서 실제 Java 프로그램으로 복제 클래스를 설계할 때 권하는 방법은?",
@@ -739,7 +751,7 @@ WGF.problems = [
  },
  {
   "n": 46,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 6-1] MessageBox와 UnderlinePen에는 같은 동작을 하는 <code>createCopy</code> 메서드가 두 번 정의되어 있어요. 같은 코드가 여러 곳에 있는 건 관리상 좋지 않으니 이 메서드를 공유하고 싶어요. 어떻게 하면 될까요? 코드로 보여 주세요.",
@@ -755,7 +767,7 @@ WGF.problems = [
  },
  {
   "n": 47,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 6-2] 예제는 clone으로 복사했지만, <b>복사 생성자</b>로 인스턴스를 복사하는 방법도 있어요. 복사 생성자란 ‘같은 클래스의 인스턴스를 인수로 받아 필드를 복사하는 생성자’예요. MessageBox를 복사 생성자로 복사하도록 고쳐 쓰세요(UnderlinePen도 같은 방식이면 돼요).",
@@ -771,7 +783,7 @@ WGF.problems = [
  },
  {
   "n": 48,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "self",
   "q": "다음 Box의 clone은 얕은 복사라서 복사본의 배열을 바꾸면 원본도 바뀌어요. <b>깊은 복사</b>가 되도록 clone을 오버라이드하세요.",
@@ -787,7 +799,7 @@ WGF.problems = [
  },
  {
   "n": 49,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "Prototype 패턴과 Flyweight 패턴을 비교한 설명으로 옳은 것은?",
@@ -802,7 +814,7 @@ WGF.problems = [
  },
  {
   "n": 50,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "Prototype의 관련 패턴 설명으로 <b>틀린</b> 것은?",
@@ -817,7 +829,7 @@ WGF.problems = [
  },
  {
   "n": 51,
-  "ch": 2,
+  "ch": 3,
   "lv": 3,
   "t": "mc",
   "q": "교안 ‘클래스 이름은 속박인가’의 요점으로 알맞은 것은?",
@@ -832,7 +844,7 @@ WGF.problems = [
  },
  {
   "n": 52,
-  "ch": 2,
+  "ch": 3,
   "lv": 1,
   "t": "mc",
   "q": "소스 코드에서 <code>java.lang.Cloneable</code>을 <code>import</code> 없이 <code>Cloneable</code>로만 써도 되는 이유는?",
@@ -847,7 +859,7 @@ WGF.problems = [
  },
  {
   "n": 53,
-  "ch": 2,
+  "ch": 3,
   "lv": 2,
   "t": "mc",
   "q": "교안 Main에서 Manager에 등록한 내용과 결과를 바르게 짝지은 것은?",
@@ -862,7 +874,7 @@ WGF.problems = [
  },
  {
   "n": 54,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "flyweight라는 이름의 뜻과 이 패턴이 말하는 ‘무게’를 바르게 짝지은 것은?",
@@ -877,7 +889,7 @@ WGF.problems = [
  },
  {
   "n": 55,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "Flyweight 패턴에서 사용하는 기법을 한 줄로 요약한 것은?",
@@ -892,7 +904,7 @@ WGF.problems = [
  },
  {
   "n": 56,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "교안 예제의 네 클래스와 설명을 바르게 짝지은 것은?",
@@ -907,7 +919,7 @@ WGF.problems = [
  },
  {
   "n": 57,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "Flyweight 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
@@ -922,7 +934,7 @@ WGF.problems = [
  },
  {
   "n": 58,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "BigCharFactory에서 이미 만든 BigChar를 관리하는 <code>pool</code> 필드의 선언으로 알맞은 것은?",
@@ -937,7 +949,7 @@ WGF.problems = [
  },
  {
   "n": 59,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "다음 <code>getBigChar</code>의 동작 설명으로 옳은 것은?",
@@ -953,7 +965,7 @@ WGF.problems = [
  },
  {
   "n": 60,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "BigCharFactory 자체를 Singleton 패턴으로 구현한 이유는?",
@@ -968,7 +980,7 @@ WGF.problems = [
  },
  {
   "n": 61,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "교안 Flyweight 예제를 바탕으로 다음 코드를 실행했을 때 출력은? (BigChar는 생성자에서 created를 1 늘려요. 줄바꿈은 / 로 표시)",
@@ -984,7 +996,7 @@ WGF.problems = [
  },
  {
   "n": 62,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "mc",
   "q": "앞 문제의 코드 뒤에 다음을 이어서 실행하면 마지막에 출력되는 <code>BigChar.created</code> 값은?",
@@ -1000,7 +1012,7 @@ WGF.problems = [
  },
  {
   "n": 63,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "BigString 생성자의 for문을 다음처럼 바꾸면 어떻게 되나요?",
@@ -1016,7 +1028,7 @@ WGF.problems = [
  },
  {
   "n": 64,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "BigChar 생성자가 인수로 <code>'3'</code>을 받았을 때 읽는 파일 이름과, 파일이 없을 때 fontdata에 들어가는 값은?",
@@ -1031,7 +1043,7 @@ WGF.problems = [
  },
  {
   "n": 65,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "intrinsic한 정보와 extrinsic한 정보에 대한 설명으로 옳은 것은?",
@@ -1046,7 +1058,7 @@ WGF.problems = [
  },
  {
   "n": 66,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "교안 예제에서 <b>extrinsic</b>한 정보에 해당하는 것은?",
@@ -1061,7 +1073,7 @@ WGF.problems = [
  },
  {
   "n": 67,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "mc",
   "q": "공유하고 있는 BigChar('3')의 fontdata를 프로그램 실행 중에 바꾸면 어떻게 되나요?",
@@ -1076,7 +1088,7 @@ WGF.problems = [
  },
  {
   "n": 68,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "mc",
   "q": "‘색이 있는 큰 문자열’을 만들려고 해요. ‘색’ 정보를 둘 곳에 대한 설명으로 옳은 것은?",
@@ -1091,7 +1103,7 @@ WGF.problems = [
  },
  {
   "n": 69,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "‘관리되는 인스턴스는 가비지 컬렉션되지 않는다’는 말이 나오는 이유는?",
@@ -1106,7 +1118,7 @@ WGF.problems = [
  },
  {
   "n": 70,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "mc",
   "q": "pool로 관리되는 BigChar를 가비지 컬렉션 대상으로 만들려면 어떻게 해야 하나요?",
@@ -1121,7 +1133,7 @@ WGF.problems = [
  },
  {
   "n": 71,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "교안 ‘메모리 이외의 리소스’에서 인스턴스 공유로 줄일 수 있다고 든 리소스가 <b>아닌</b> 것은?",
@@ -1136,7 +1148,7 @@ WGF.problems = [
  },
  {
   "n": 72,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "교안에서 <b>static Factory Method</b>의 예로 든 메서드를 모두 고른 것은?",
@@ -1151,7 +1163,7 @@ WGF.problems = [
  },
  {
   "n": 73,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "mc",
   "q": "다음 코드의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시) 자바 표준 라이브러리 안의 Flyweight를 떠올려 보세요.",
@@ -1167,7 +1179,7 @@ WGF.problems = [
  },
  {
   "n": 74,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "Flyweight의 관련 패턴 설명으로 옳은 것은?",
@@ -1182,7 +1194,7 @@ WGF.problems = [
  },
  {
   "n": 75,
-  "ch": 5,
+  "ch": 7,
   "lv": 1,
   "t": "mc",
   "q": "교안 ‘주의’에서 설명한 GoF 책의 역할과의 관계로 옳은 것은?",
@@ -1197,7 +1209,7 @@ WGF.problems = [
  },
  {
   "n": 76,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 20-1] BigString 클래스에 다음 생성자를 추가하세요. <code>shared</code>가 true면 BigChar를 공유하고, false면 공유하지 않아요.",
@@ -1213,7 +1225,7 @@ WGF.problems = [
  },
  {
   "n": 77,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 20-2] 문제 20-1의 BigString으로 BigChar를 공유할 때와 공유하지 않을 때의 <b>메모리 소비량</b>을 비교하는 Main을 작성하세요. 참고: <code>Runtime.getRuntime().gc()</code>로 가비지 컬렉션을 요청한 뒤 <code>totalMemory() - freeMemory()</code>를 재요.",
@@ -1230,7 +1242,7 @@ WGF.problems = [
  },
  {
   "n": 78,
-  "ch": 5,
+  "ch": 7,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 20-3] BigCharFactory의 <code>getBigChar</code>는 <code>synchronized</code> 메서드예요. synchronized로 만든 경우와 그렇지 않은 경우의 차이는 무엇일까요?",
@@ -1247,7 +1259,7 @@ WGF.problems = [
  },
  {
   "n": 79,
-  "ch": 5,
+  "ch": 7,
   "lv": 2,
   "t": "mc",
   "q": "Flyweight를 적용하면 좋은 경우로 가장 알맞은 것은?",
@@ -1262,7 +1274,7 @@ WGF.problems = [
  },
  {
   "n": 80,
-  "ch": 6,
+  "ch": 8,
   "lv": 1,
   "t": "mc",
   "q": "GoF 분류에서 세 패턴을 바르게 나눈 것은?",
@@ -1277,7 +1289,7 @@ WGF.problems = [
  },
  {
   "n": 81,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“프로그램 전체에서 쓰는 <b>현재 시스템 설정</b> 객체가 둘 이상 생기면 설정 값이 어긋나는 버그가 생긴다.”",
@@ -1292,7 +1304,7 @@ WGF.problems = [
  },
  {
   "n": 82,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“그래픽 편집기에서 사용자가 마우스로 그린 도형과 <b>똑같은 도형</b>을 하나 더 만들고 싶다.”",
@@ -1307,7 +1319,7 @@ WGF.problems = [
  },
  {
   "n": 83,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“문서 편집기에서 수십만 개의 글자를 화면에 그리는데, 같은 글자의 글꼴 모양 데이터를 글자마다 따로 들고 있어 메모리가 부족하다.”",
@@ -1322,7 +1334,7 @@ WGF.problems = [
  },
  {
   "n": 84,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "세 패턴에서 ‘인스턴스가 몇 개 생기는가’를 바르게 정리한 것은?",
@@ -1337,7 +1349,7 @@ WGF.problems = [
  },
  {
   "n": 85,
-  "ch": 6,
+  "ch": 8,
   "lv": 3,
   "t": "mc",
   "q": "세 패턴에 대한 설명으로 <b>틀린</b> 것은?",
@@ -1352,7 +1364,7 @@ WGF.problems = [
  },
  {
   "n": 86,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "교안 Flyweight 예제 하나 안에 함께 쓰인 패턴을 모두 고른 것은?",
@@ -1367,7 +1379,7 @@ WGF.problems = [
  },
  {
   "n": 87,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "self",
   "q": "스터디 발표용으로 세 패턴을 각각 <b>한 문장</b>으로 설명하고, 교안 예제에서 그 패턴의 핵심이 되는 코드 한 줄을 쓰세요.",
@@ -1384,7 +1396,7 @@ WGF.problems = [
  },
  {
   "n": 88,
-  "ch": 6,
+  "ch": 8,
   "lv": 3,
   "t": "self",
   "q": "도형 편집기를 만들어요. <code>Shape</code>(Cloneable, <code>Shape copy()</code> 메서드 보유)를 원형으로 등록·복제하는 <code>ShapeRegistry</code>를 만드세요. 조건: ① ShapeRegistry는 프로그램에 <b>하나만</b> 존재(Singleton) ② <code>register(String name, Shape s)</code>로 원형 등록 ③ <code>create(String name)</code>은 등록된 원형의 <b>복사본</b>을 반환(Prototype).",
@@ -1401,7 +1413,7 @@ WGF.problems = [
  },
  {
   "n": 89,
-  "ch": 6,
+  "ch": 8,
   "lv": 3,
   "t": "mc",
   "q": "다음 중 Flyweight로 공유하면 <b>위험한</b> 정보는?",
@@ -1416,7 +1428,7 @@ WGF.problems = [
  },
  {
   "n": 90,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "Observer 패턴에 대한 설명으로 가장 알맞은 것은?",
@@ -1431,7 +1443,7 @@ WGF.problems = [
  },
  {
   "n": 91,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "교안 예제 프로그램(표 17-1)의 클래스와 설명을 바르게 짝지은 것은?",
@@ -1446,7 +1458,7 @@ WGF.problems = [
  },
  {
   "n": 92,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "교안의 <code>Observer</code> 인터페이스가 선언하는 메서드는?",
@@ -1462,7 +1474,7 @@ WGF.problems = [
  },
  {
   "n": 93,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안의 Observer 인터페이스와 <code>java.util.Observer</code>의 관계로 옳은 것은?",
@@ -1477,7 +1489,7 @@ WGF.problems = [
  },
  {
   "n": 94,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "NumberGenerator의 <code>observers</code> 필드 선언으로 알맞은 것은?",
@@ -1492,7 +1504,7 @@ WGF.problems = [
  },
  {
   "n": 95,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "NumberGenerator의 <code>notifyObservers</code>가 하는 일로 알맞은 것은?",
@@ -1508,7 +1520,7 @@ WGF.problems = [
  },
  {
   "n": 96,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "NumberGenerator에서 <code>getNumber</code>와 <code>execute</code>가 추상 메서드인 이유는?",
@@ -1523,7 +1535,7 @@ WGF.problems = [
  },
  {
   "n": 97,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "RandomNumberGenerator의 <code>execute</code>가 하는 일로 알맞은 것은?",
@@ -1539,7 +1551,7 @@ WGF.problems = [
  },
  {
   "n": 98,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "GraphObserver의 update에 <code>getNumber()</code>가 3인 NumberGenerator가 넘어오면 출력은?",
@@ -1555,7 +1567,7 @@ WGF.problems = [
  },
  {
   "n": 99,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "DigitObserver와 GraphObserver의 update 안에 있는 <code>Thread.sleep(100)</code>의 역할은?",
@@ -1570,7 +1582,7 @@ WGF.problems = [
  },
  {
   "n": 100,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "Observer 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
@@ -1585,7 +1597,7 @@ WGF.problems = [
  },
  {
   "n": 101,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "Observer 패턴의 클래스 다이어그램(그림 17-3)에서 Subject 역이 가진 메서드로 <b>알맞지 않은</b> 것은?",
@@ -1600,7 +1612,7 @@ WGF.problems = [
  },
  {
   "n": 102,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시. FixedGenerator는 execute에서 3, 1을 차례로 number에 넣고 그때마다 notifyObservers를 불러요.)",
@@ -1616,7 +1628,7 @@ WGF.problems = [
  },
  {
   "n": 103,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "앞 문제에 이어 다음 코드를 실행하면 출력은? (줄바꿈은 / 로 표시)",
@@ -1632,7 +1644,7 @@ WGF.problems = [
  },
  {
   "n": 104,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "교안 ‘Observer의 순서’에서 말하는, ConcreteObserver를 설계할 때 지켜야 할 것은?",
@@ -1647,7 +1659,7 @@ WGF.problems = [
  },
  {
   "n": 105,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "교안 ‘Observer의 행위가 Subject에 영향을 미칠 때’에서 경고하는 상황은?",
@@ -1662,7 +1674,7 @@ WGF.problems = [
  },
  {
   "n": 106,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "update 메서드의 인수 형태 (1)~(3)에 대한 설명으로 옳은 것은?",
@@ -1678,7 +1690,7 @@ WGF.problems = [
  },
  {
   "n": 107,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "‘관찰’하기보다 ‘전달’받기를 기다린다는 말과 관계있는 Observer 패턴의 다른 이름은?",
@@ -1693,7 +1705,7 @@ WGF.problems = [
  },
  {
   "n": 108,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "MVC 구조와 Observer 패턴의 관계로 옳은 것은?",
@@ -1708,7 +1720,7 @@ WGF.problems = [
  },
  {
   "n": 109,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "교안 ‘여기에도 교환 가능성이 등장한다’의 요점으로 알맞은 것은?",
@@ -1723,7 +1735,7 @@ WGF.problems = [
  },
  {
   "n": 110,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "mc",
   "q": "Observer 패턴과 Mediator 패턴을 비교한 설명으로 옳은 것은?",
@@ -1738,7 +1750,7 @@ WGF.problems = [
  },
  {
   "n": 111,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "mc",
   "q": "IncrementalNumberGenerator(문제 17-1 방식)를 다음처럼 쓰면 출력은? (줄바꿈은 / 로 표시. 종료하는 수는 포함하지 않아요.)",
@@ -1754,7 +1766,7 @@ WGF.problems = [
  },
  {
   "n": 112,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 17-1] NumberGenerator를 확장해 수가 점점 증가하는 <code>IncrementalNumberGenerator</code>를 만드세요. 생성자 인수는 ① 시작하는 수 ② 종료하는 수(포함하지 않음) ③ 증갓값이에요. <code>new IncrementalNumberGenerator(10, 50, 5)</code>면 10, 15, …, 45가 차례로 관찰자에게 통지돼야 해요.",
@@ -1772,7 +1784,7 @@ WGF.problems = [
  },
  {
   "n": 113,
-  "ch": 3,
+  "ch": 5,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 17-2] 예제 프로그램에 추가하는 형태로 새로운 ConcreteObserver 역을 자유롭게 만들고, Main을 바꿔 활용하세요. (예: 수가 짝수인지 홀수인지 표시하는 Observer)",
@@ -1787,7 +1799,7 @@ WGF.problems = [
  },
  {
   "n": 114,
-  "ch": 3,
+  "ch": 5,
   "lv": 3,
   "t": "self",
   "q": "교안 ‘Observer의 행위가 Subject에 영향을 미칠 때’처럼, Observer가 update 안에서 Subject의 상태를 바꾸는 바람에 통지가 끝없이 반복되는 문제를 막는 방법을 한 가지 이상 쓰세요.",
@@ -1803,7 +1815,7 @@ WGF.problems = [
  },
  {
   "n": 115,
-  "ch": 3,
+  "ch": 5,
   "lv": 1,
   "t": "mc",
   "q": "교안 Main(리스트 17-6)에서 관찰자를 등록하는 메서드와 수 생성을 시작하는 메서드를 차례로 고른 것은?",
@@ -1818,7 +1830,7 @@ WGF.problems = [
  },
  {
   "n": 116,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "Memento 패턴에 대한 설명으로 가장 알맞은 것은?",
@@ -1833,7 +1845,7 @@ WGF.problems = [
  },
  {
   "n": 117,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "memento라는 낱말의 뜻으로 알맞은 것은?",
@@ -1848,7 +1860,7 @@ WGF.problems = [
  },
  {
   "n": 118,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "교안이 말하는 ‘캡슐화의 파괴’란?",
@@ -1863,7 +1875,7 @@ WGF.problems = [
  },
  {
   "n": 119,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "교안에서 Memento 패턴으로 할 수 있는 일로 든 것이 <b>아닌</b> 것은?",
@@ -1878,7 +1890,7 @@ WGF.problems = [
  },
  {
   "n": 120,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "교안 예제 ‘과일 모으기 주사위 게임’의 규칙으로 옳지 <b>않은</b> 것은?",
@@ -1893,7 +1905,7 @@ WGF.problems = [
  },
  {
   "n": 121,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Gamer의 bet에서 주사위 눈에 따른 변화로 옳은 것은?",
@@ -1908,7 +1920,7 @@ WGF.problems = [
  },
  {
   "n": 122,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "교안 예제의 클래스 배치로 옳은 것은?",
@@ -1923,7 +1935,7 @@ WGF.problems = [
  },
  {
   "n": 123,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Memento 클래스의 필드와 메서드 중 <code>public</code>이 붙은 것은?",
@@ -1938,7 +1950,7 @@ WGF.problems = [
  },
  {
   "n": 124,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "game 패키지 밖에 있는 Main에서 다음 코드를 쓰면 어떻게 되나요?",
@@ -1954,7 +1966,7 @@ WGF.problems = [
  },
  {
   "n": 125,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "자바의 네 가지 접근 제한자(표 18-2)를 바르게 설명한 것은?",
@@ -1969,7 +1981,7 @@ WGF.problems = [
  },
  {
   "n": 126,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Memento의 <code>getFruits()</code>가 <code>return new ArrayList&lt;&gt;(fruits);</code>처럼 새 리스트를 만들어 반환하는 이유로 가장 알맞은 것은?",
@@ -1984,7 +1996,7 @@ WGF.problems = [
  },
  {
   "n": 127,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Gamer의 createMemento에서 과일에 대해 하는 일은?",
@@ -2000,7 +2012,7 @@ WGF.problems = [
  },
  {
   "n": 128,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "다음 프로그램의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시. 테스트를 위해 bet에 주사위 눈과 받을 과일을 직접 넣도록 바꾼 Gamer예요.)",
@@ -2016,7 +2028,7 @@ WGF.problems = [
  },
  {
   "n": 129,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "교안 Main의 Memento 취급 규칙을 따르는 다음 코드의 출력은? (줄바꿈은 / 로 표시. 주사위 눈 1은 +100, 2는 절반이에요.)",
@@ -2032,7 +2044,7 @@ WGF.problems = [
  },
  {
   "n": 130,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "Memento 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
@@ -2047,7 +2059,7 @@ WGF.problems = [
  },
  {
   "n": 131,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Memento 역이 가진 두 종류의 인터페이스(API)에 대한 설명으로 옳은 것은?",
@@ -2062,7 +2074,7 @@ WGF.problems = [
  },
  {
   "n": 132,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "교안 예제의 Memento 메서드를 wide와 narrow로 바르게 나눈 것은?",
@@ -2077,7 +2089,7 @@ WGF.problems = [
  },
  {
   "n": 133,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "public이 붙은 getMoney를 ‘좁은’ 인터페이스라고 부르는 까닭은?",
@@ -2092,7 +2104,7 @@ WGF.problems = [
  },
  {
   "n": 134,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Caretaker 역(Main)이 Memento에 대해 할 수 있는 일로 옳은 것은?",
@@ -2107,7 +2119,7 @@ WGF.problems = [
  },
  {
   "n": 135,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Memento 패턴의 클래스 다이어그램(그림 18-4)에 대한 설명으로 옳은 것은?",
@@ -2122,7 +2134,7 @@ WGF.problems = [
  },
  {
   "n": 136,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "교안 ‘Caretaker 역할과 Originator 역할을 나누는 이유’로 가장 알맞은 것은?",
@@ -2137,7 +2149,7 @@ WGF.problems = [
  },
  {
   "n": 137,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "교안 ‘Memento를 몇 개 가질까?’와 ‘Memento의 유효기한은?’에 대한 설명으로 옳은 것은?",
@@ -2152,7 +2164,7 @@ WGF.problems = [
  },
  {
   "n": 138,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "mc",
   "q": "Memento의 관련 패턴 설명으로 옳은 것은?",
@@ -2167,7 +2179,7 @@ WGF.problems = [
  },
  {
   "n": 139,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "mc",
   "q": "<code>java.io.Serializable</code> 직렬화로 Memento를 파일에 저장하는 것에 대한 교안의 주의로 옳은 것은?",
@@ -2182,7 +2194,7 @@ WGF.problems = [
  },
  {
   "n": 140,
-  "ch": 4,
+  "ch": 6,
   "lv": 2,
   "t": "self",
   "q": "[교안 문제 18-1] Caretaker 역은 좁은 인터페이스(API)를 통해서만 Memento 역을 조작할 수 있어요. Caretaker 역이 Memento 역을 자유롭게 조작할 수 있다면 어떤 단점이 있을까요?",
@@ -2198,7 +2210,7 @@ WGF.problems = [
  },
  {
   "n": 141,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 18-2] 예제에서는 소지금과 과일만이 상태를 결정하는 정보였어요. 그러나 저장해야 할 정보가 많으면 Memento 인스턴스를 저장하려고 큰 메모리 공간과 디스크 공간이 필요해요. 이 문제를 해결할 방법을 생각해 보세요.",
@@ -2213,7 +2225,7 @@ WGF.problems = [
  },
  {
   "n": 142,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 18-3] Memento 클래스에 <code>int number;</code> 필드를 추가해요. 다음 제어를 하려면 어떻게 구현하면 될까요?<br>· Memento 클래스는 number의 값을 얻거나 변경할 수 있다<br>· Gamer 클래스는 number의 값을 얻을 수 있지만 변경할 수는 없다<br>· Main 클래스는 number의 값을 얻을 수도 변경할 수도 없다",
@@ -2229,7 +2241,7 @@ WGF.problems = [
  },
  {
   "n": 143,
-  "ch": 4,
+  "ch": 6,
   "lv": 3,
   "t": "self",
   "q": "[교안 문제 18-4] Memento를 파일에 저장해 봅시다. Memento의 클래스 메서드로 다음 두 가지를 구현하세요. 직렬화(Serializable)는 쓰지 말고, Memento가 가진 정보를 줄 바꿈으로 구분한 문자열로 저장해요.<br>· <code>boolean saveToFile(String filename, Memento memento)</code>: 성공하면 true, 실패하면 false<br>· <code>Memento loadFromFile(String filename)</code>: 읽기에 실패하면 null",
@@ -2246,7 +2258,7 @@ WGF.problems = [
  },
  {
   "n": 144,
-  "ch": 4,
+  "ch": 6,
   "lv": 1,
   "t": "mc",
   "q": "Main(Caretaker)에서 Memento 인스턴스가 필요할 때 하는 방법으로 옳은 것은?",
@@ -2261,7 +2273,7 @@ WGF.problems = [
  },
  {
   "n": 145,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“그림판에서 사용자가 실수하면 Ctrl+Z로 몇 단계든 이전 상태로 되돌리고 싶다. 단, 그림 객체의 내부 필드를 바깥에 공개하고 싶지는 않다.”",
@@ -2276,7 +2288,7 @@ WGF.problems = [
  },
  {
   "n": 146,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "다음 상황에 가장 알맞은 패턴은?<br>“주가 데이터가 바뀔 때마다 표, 꺾은선 그래프, 알림 창이 모두 함께 갱신되어야 한다. 앞으로 표시 방법은 더 늘어날 수 있다.”",
@@ -2291,7 +2303,7 @@ WGF.problems = [
  },
  {
   "n": 147,
-  "ch": 6,
+  "ch": 8,
   "lv": 3,
   "t": "mc",
   "q": "‘상태’를 다루는 방식에 대한 비교로 <b>틀린</b> 것은?",
@@ -2306,7 +2318,7 @@ WGF.problems = [
  },
  {
   "n": 148,
-  "ch": 6,
+  "ch": 8,
   "lv": 2,
   "t": "mc",
   "q": "교안 다섯 패턴의 등장인물을 바르게 짝지은 것은?",
@@ -2318,5 +2330,909 @@ WGF.problems = [
   ],
   "ans": 3,
   "exp": "Singleton(Singleton), Prototype(Prototype·ConcretePrototype·Client), Observer(Subject·ConcreteSubject·Observer·ConcreteObserver), Memento(Originator·Memento·Caretaker), Flyweight(Flyweight·FlyweightFactory·Client)예요."
+ },
+ {
+  "n": 149,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "Factory Method 패턴을 가장 잘 설명한 것은?",
+  "choices": [
+   "생성자를 private으로 막아 인스턴스를 하나만 만든 것",
+   "인스턴스 생성 공장을 Template Method로 구성한 것",
+   "만든 인스턴스를 pool에 두고 같은 것을 공유하는 것",
+   "원형 인스턴스를 복사해서 새 인스턴스를 만드는 것"
+  ],
+  "ans": 1,
+  "exp": "factory는 ‘공장’이라는 뜻이에요. <b>인스턴스를 생성하는 공장을 Template Method 패턴으로 구성한 것</b>이 Factory Method 패턴이에요. Template Method(Part 3)를 인스턴스 생성 장면에 적용한 거예요."
+ },
+ {
+  "n": 150,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "Factory Method 패턴에서 상위 클래스와 하위 클래스가 맡는 일로 옳은 것은?",
+  "choices": [
+   "상위와 하위가 각자 독립적으로 인스턴스를 만들고 결과를 합친다",
+   "상위가 구체적인 클래스 이름까지 정하고, 하위는 그대로 물려받기만 한다",
+   "상위는 생성 방법(뼈대)만 정하고, 구체적인 클래스 이름은 하위가 정한다",
+   "하위가 생성 순서를 정하고, 상위는 만들어진 인스턴스를 보관만 한다"
+  ],
+  "ans": 2,
+  "exp": "인스턴스 생성 방법은 상위 클래스에서 결정하되, <b>구체적인 클래스 이름까지는 결정하지 않아요</b>. 구체적인 살은 모두 하위 클래스에서 붙여요. 그래서 인스턴스 생성을 위한 뼈대(프레임워크)와 실제 인스턴스를 만드는 클래스를 나누어 생각할 수 있어요."
+ },
+ {
+  "n": 151,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제의 패키지와 클래스를 바르게 짝지은 것은?",
+  "choices": [
+   "framework: Product, IDCard · idcard: Factory, IDCardFactory · 이름 없음: Main",
+   "framework: Product, Factory · idcard: IDCard, IDCardFactory · 이름 없음: Main",
+   "framework: IDCard, IDCardFactory · idcard: Product, Factory · 이름 없음: Main",
+   "framework: Factory, Main · idcard: Product, IDCard, IDCardFactory"
+  ],
+  "ans": 1,
+  "exp": "<b>인스턴스를 생성하는 프레임워크 쪽</b>(framework 패키지)은 Product, Factory이고, <b>구체적인 내용을 구현하는 쪽</b>(idcard 패키지)은 IDCard, IDCardFactory예요. Main은 동작 테스트용이에요. 📝 교안에도 이렇게 적혀 있어요."
+ },
+ {
+  "n": 152,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "framework 패키지의 <code>Product</code> 클래스에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "IDCard의 owner 필드와 getOwner를 미리 갖춘 구체 클래스다",
+   "추상 메서드 use만 선언된 추상 클래스로, ‘use할 수 있는 것’을 제품으로 규정한다",
+   "인스턴스를 하나만 만들 수 있도록 private 생성자를 가진 클래스다",
+   "create, createProduct, registerProduct를 모두 구현한 클래스다"
+  ],
+  "ans": 1,
+  "exp": "<code>public abstract class Product { public abstract void use(); }</code>예요. 구체적인 use의 구현은 모두 하위 클래스에 맡기고, 이 프레임워크에서는 ‘무엇이든 use할 수 있는(사용할 수 있는) 것’을 제품으로 규정해요."
+ },
+ {
+  "n": 153,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 Factory 클래스에서 <b>템플릿 메서드</b> 역할을 하는 것은?",
+  "choices": [
+   "createProduct",
+   "registerProduct",
+   "use",
+   "create"
+  ],
+  "ans": 3,
+  "exp": "<code>create</code>가 ‘createProduct로 제품을 만들고 registerProduct로 등록한다’는 <b>절차(뼈대)</b>를 정해 둔 템플릿 메서드예요. createProduct와 registerProduct는 하위 클래스가 구현하는 추상 메서드예요. 교안 관련 패턴: 예제의 create 메서드가 템플릿 메서드로 되어 있어요.",
+  "code": "public abstract class Factory {\n    public final Product create(String owner) {\n        Product p = createProduct(owner);\n        registerProduct(p);\n        return p;\n    }\n    protected abstract Product createProduct(String owner);\n    protected abstract void registerProduct(Product product);\n}"
+ },
+ {
+  "n": 154,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "Factory의 <code>create</code>에 <code>final</code>이 붙어 있어요. IDCardFactory에서 create를 오버라이드하면 어떻게 되나요?",
+  "choices": [
+   "IDCardFactory의 create가 대신 호출된다",
+   "실행할 때 예외가 발생한다",
+   "상위와 하위의 create가 차례로 둘 다 호출된다",
+   "컴파일 에러가 난다"
+  ],
+  "ans": 3,
+  "exp": "final 메서드는 하위 클래스에서 오버라이드할 수 없어요(‘create(String) in … cannot override create(String) in Factory’, Java 21로 컴파일해 확인). 덕분에 ‘만들고 → 등록한다’는 <b>생성 절차가 하위 클래스 때문에 바뀌지 않도록</b> 보장돼요."
+ },
+ {
+  "n": 155,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "Factory의 createProduct와 registerProduct가 <code>protected</code>인 이유로 가장 알맞은 것은?",
+  "choices": [
+   "protected여야 abstract로 선언할 수 있기 때문에",
+   "같은 패키지에서만 하위 클래스를 만들게 하려고",
+   "protected 메서드는 자동으로 final이 되기 때문에",
+   "하위에서 구현하되, 바깥은 create만 쓰게 하려고"
+  ],
+  "ans": 3,
+  "exp": "protected는 하위 클래스(다른 패키지의 IDCardFactory 포함)에서 구현·호출할 수 있지만, 상속 관계가 없는 다른 패키지의 Main에서는 부를 수 없어요(‘createProduct(String) has protected access in Factory’, Java 21로 확인). 그래서 바깥은 정해진 절차인 <code>create</code>만 쓰게 돼요."
+ },
+ {
+  "n": 156,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "IDCard 클래스의 <code>use</code>를 호출하면 출력되는 것은? (owner는 \"Kane\")",
+  "choices": [
+   "[IDCard:Kane]을 등록했습니다.",
+   "[IDCard:Kane]을 사용합니다.",
+   "Kane의 카드를 만듭니다.",
+   "Kane을 사용합니다."
+  ],
+  "ans": 1,
+  "exp": "use는 <code>System.out.println(this + \"을 사용합니다.\");</code>예요. <code>this</code>를 문자열과 더하면 toString()이 불려서 <code>[IDCard:Kane]</code>이 돼요. ②는 생성자, ③은 IDCardFactory의 registerProduct가 출력하는 문장이에요."
+ },
+ {
+  "n": 157,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "IDCardFactory의 두 메서드가 하는 일을 바르게 짝지은 것은?",
+  "choices": [
+   "createProduct: 만든 제품을 등록한다 · registerProduct: IDCard를 new로 만든다",
+   "createProduct: IDCard를 new로 만든다 · registerProduct: 만든 제품을 등록한다",
+   "createProduct: 제품을 사용(use)한다 · registerProduct: 제품의 소유자를 바꾼다",
+   "createProduct: 공장 인스턴스를 만든다 · registerProduct: 공장을 등록해 둔다"
+  ],
+  "ans": 1,
+  "exp": "createProduct는 IDCard 인스턴스를 생성해 실제로 ‘제품을 만들고’, registerProduct는 만들어진 제품을 등록해요. 원래라면 데이터베이스나 웹서비스에 등록하겠지만 예제에서는 ‘~을 등록했습니다.’라는 메시지만 출력해요."
+ },
+ {
+  "n": 158,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 코드의 출력 순서로 알맞은 것은? (줄바꿈은 / 로 표시)",
+  "choices": [
+   "Youngjin Kim의 카드를 만듭니다. / Heungmin Son의 카드를 만듭니다. / [IDCard:Youngjin Kim]을 등록했습니다. / [IDCard:Heungmin Son]을 등록했습니다. / [IDCard:Youngjin Kim]을 사용합니다. / [IDCard:Heungmin Son]을 사용합니다.",
+   "Youngjin Kim의 카드를 만듭니다. / [IDCard:Youngjin Kim]을 등록했습니다. / Heungmin Son의 카드를 만듭니다. / [IDCard:Heungmin Son]을 등록했습니다. / [IDCard:Youngjin Kim]을 사용합니다. / [IDCard:Heungmin Son]을 사용합니다.",
+   "[IDCard:Youngjin Kim]을 등록했습니다. / Youngjin Kim의 카드를 만듭니다. / [IDCard:Heungmin Son]을 등록했습니다. / Heungmin Son의 카드를 만듭니다. / [IDCard:Youngjin Kim]을 사용합니다. / [IDCard:Heungmin Son]을 사용합니다.",
+   "Youngjin Kim의 카드를 만듭니다. / [IDCard:Youngjin Kim]을 사용합니다. / [IDCard:Youngjin Kim]을 등록했습니다. / Heungmin Son의 카드를 만듭니다. / [IDCard:Heungmin Son]을 사용합니다. / [IDCard:Heungmin Son]을 등록했습니다."
+  ],
+  "ans": 1,
+  "exp": "create 한 번에 ‘만든다(생성자 출력) → 등록한다’가 차례로 일어나고, use는 create가 모두 끝난 뒤에 불려요(Java 21로 실행해 확인).",
+  "code": "Factory factory = new IDCardFactory();\nProduct card1 = factory.create(\"Youngjin Kim\");\nProduct card2 = factory.create(\"Heungmin Son\");\ncard1.use();\ncard2.use();"
+ },
+ {
+  "n": 159,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "Factory Method 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
+  "choices": [
+   "Product = Main · Creator = Factory · ConcreteProduct = IDCard · ConcreteCreator = Product",
+   "Product = Factory · Creator = Product · ConcreteProduct = IDCardFactory · ConcreteCreator = IDCard",
+   "Product = IDCard · Creator = IDCardFactory · ConcreteProduct = Product · ConcreteCreator = Factory",
+   "Product = Product · Creator = Factory · ConcreteProduct = IDCard · ConcreteCreator = IDCardFactory"
+  ],
+  "ans": 3,
+  "exp": "프레임워크 쪽의 <b>Product</b>(제품)·<b>Creator</b>(작성자)와, 구체적인 내용 쪽의 <b>ConcreteProduct</b>(구체적인 제품)·<b>ConcreteCreator</b>(구체적인 작성자)예요. 상위의 Creator–Product 관계가 하위의 ConcreteCreator–ConcreteProduct 관계와 <b>병행</b>해요."
+ },
+ {
+  "n": 160,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "Creator 역(Factory)이 알고 있는 것으로 옳은 것은?",
+  "choices": [
+   "실제로 생성될 ConcreteProduct가 IDCard라는 것까지",
+   "IDCardFactory의 소스 코드와 내부 필드 전부",
+   "Product와, 생성 메서드를 부르면 Product가 생긴다는 것",
+   "Main이 어떤 이름으로 카드를 만들지 미리 전부"
+  ],
+  "ans": 2,
+  "exp": "Creator는 실제로 생성할 ConcreteProduct에 대해서는 <b>아는 바가 없어요</b>. new로 실제 인스턴스를 만드는 대신 인스턴스 생성 메서드를 호출함으로써 <b>구체적인 클래스 이름에 의한 속박에서 상위 클래스를 자유롭게</b> 해요."
+ },
+ {
+  "n": 161,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "TV(Television)와 TV 공장(TelevisionFactory)을 같은 프레임워크로 새로 만들 때 필요한 일로 옳은 것은?",
+  "choices": [
+   "idcard 패키지를 지우고 그 자리에 TV 클래스를 넣는다",
+   "framework의 Factory에 Television용 if문을 추가한다",
+   "framework의 Product에 TV 전용 메서드를 추가한다",
+   "framework를 import한 새 패키지에 하위 클래스를 만든다"
+  ],
+  "ans": 3,
+  "exp": "framework 패키지 안에서는 idcard 패키지를 import하지 않았고, IDCard·IDCardFactory라는 이름도 쓰지 않아요. 그래서 새 제품과 공장을 만들어도 <b>framework 패키지를 수정할 필요가 전혀 없어요</b>. 이것을 ‘framework 패키지는 idcard 패키지에 <b>의존하지 않는다</b>’고 표현해요."
+ },
+ {
+  "n": 162,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "createProduct를 <b>추상 메서드</b>로 기술했을 때의 특징은?",
+  "choices": [
+   "하위가 꼭 구현해야 하고, 빠뜨리면 컴파일 때 검출된다",
+   "Product 클래스를 더 이상 추상 클래스로 둘 수 없게 된다",
+   "하위가 구현하지 않으면 상위의 기본 구현이 대신 쓰인다",
+   "실행 중에 구현이 없으면 예외 대신 null이 반환된다"
+  ],
+  "ans": 0,
+  "exp": "추상 메서드로 기술하면 하위 클래스에서는 반드시 이 메서드를 구현해야 하고, 구현하지 않으면 컴파일할 때 검출돼요. 예제는 이 방법을 썼어요."
+ },
+ {
+  "n": 163,
+  "ch": 1,
+  "lv": 3,
+  "t": "mc",
+  "q": "createProduct에 <b>디폴트 구현</b>을 준비해 두는 방법의 제약으로 옳은 것은?",
+  "choices": [
+   "하위 클래스에서 createProduct를 오버라이드할 수 없다",
+   "Product를 직접 new하므로 추상 클래스로 둘 수 없다",
+   "디폴트 구현은 반드시 static 메서드로 만들어야 한다",
+   "디폴트 구현을 두면 Factory 클래스를 상속할 수 없다"
+  ],
+  "ans": 1,
+  "exp": "하위 클래스에서 구현하지 않으면 디폴트 구현이 쓰여요. 단, 이 경우 Product 클래스에 대해 <b>직접 new를 실행</b>하므로 Product를 추상 클래스로 둘 수 없어요(추상 클래스는 new할 수 없으니까요).",
+  "code": "class Factory {\n    public Product createProduct(String name) {\n        return new Product(name);\n    }\n    ...\n}"
+ },
+ {
+  "n": 164,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘패턴 이용과 개발자 간의 의사소통’에서 권하는 것은?",
+  "choices": [
+   "패턴을 쓴 클래스는 하나의 파일에 모두 모아 둔다",
+   "쓴 패턴의 이름과 의도를 주석·문서로 전달한다",
+   "패턴은 코드를 복잡하게 하니 실무에서는 피한다",
+   "추상 메서드 없이 모든 처리를 상위 클래스에 적는다"
+  ],
+  "ans": 1,
+  "exp": "Template Method·Factory Method는 하나의 클래스만 읽어서는 동작을 이해하기 어려워요(상위의 뼈대 → 추상 메서드 → 하위의 구현을 차례로 봐야 해요). 그래서 설계자가 의도한 패턴을 잘 전달하지 않으면 처음 의도에서 벗어난 수정이 가해질 수 있어요."
+ },
+ {
+  "n": 165,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "GoF의 Factory Method 패턴과 <b>static Factory Method</b>의 관계로 옳은 것은?",
+  "choices": [
+   "static Factory Method는 하위 클래스가 꼭 오버라이드한다",
+   "static Factory Method가 GoF 패턴의 공식 이름이다",
+   "static Factory Method는 Java API에서 거의 쓰지 않는 기법이다",
+   "서로 다르지만, 생성용 static 메서드도 흔히 그렇게 부른다"
+  ],
+  "ans": 3,
+  "exp": "인스턴스 생성을 위한 클래스 메서드(static 메서드) 전반을 Factory Method라고 부르는 경우가 있어요. GoF의 Factory Method 패턴과는 다르지만 Java에서 아주 자주 쓰이는 기법이고, Java API 레퍼런스에서도 <b>static Factory Method</b>라고 표현해요."
+ },
+ {
+  "n": 166,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안에서 static Factory Method의 예로 든 것이 <b>아닌</b> 것은?",
+  "choices": [
+   "<code>new ArrayList&lt;&gt;()</code>",
+   "<code>String.valueOf('A')</code>",
+   "<code>List.of(\"Alice\", \"Bob\")</code>",
+   "<code>Instant.now()</code>"
+  ],
+  "ans": 0,
+  "exp": "<code>new</code>로 생성자를 직접 부르는 건 static Factory Method가 아니에요. 교안의 예: <code>SecureRandom.getInstance</code>, <code>List.of</code>, <code>Arrays.asList</code>, <code>String.valueOf</code>, <code>Instant.now</code>. 이름은 create, newInstance, getInstance 등이 자주 쓰이지만 다른 이름도 있어요."
+ },
+ {
+  "n": 167,
+  "ch": 1,
+  "lv": 3,
+  "t": "mc",
+  "q": "다음 코드의 출력으로 알맞은 것은? (줄바꿈은 / 로 표시)",
+  "choices": [
+   "[Z, B] / [Z, B, C] / of set: UnsupportedOperationException",
+   "[Z, B] / asList add: UnsupportedOperationException / of set: UnsupportedOperationException",
+   "[Z, B] / asList add: UnsupportedOperationException / [Z, B]",
+   "[A, B] / asList add: UnsupportedOperationException / [Z, B]"
+  ],
+  "ans": 1,
+  "exp": "<code>Arrays.asList</code>가 만든 리스트는 크기가 고정이라 set은 되지만 add는 안 돼요. <code>List.of</code>가 만든 리스트는 아예 <b>변경 불가</b>라서 set도 안 돼요. 같은 static Factory Method라도 만들어 주는 인스턴스의 성질이 달라서, API 레퍼런스를 꼭 읽어야 해요(Java 21로 실행해 확인).",
+  "code": "List<String> a = Arrays.asList(\"A\", \"B\");\na.set(0, \"Z\");\nSystem.out.println(a);\ntry { a.add(\"C\"); }\ncatch (UnsupportedOperationException e) { System.out.println(\"asList add: \" + e.getClass().getSimpleName()); }\nList<String> b = List.of(\"A\", \"B\");\ntry { b.set(0, \"Z\"); }\ncatch (UnsupportedOperationException e) { System.out.println(\"of set: \" + e.getClass().getSimpleName()); }"
+ },
+ {
+  "n": 168,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "Factory Method의 관련 패턴 설명으로 옳은 것은?",
+  "choices": [
+   "Iterator의 iterator 메서드와는 관계가 없다",
+   "Creator 역은 대부분 Singleton으로 만들 수 있다",
+   "Product 역에는 Composite를 적용할 수 없다",
+   "Template Method와는 관계없는 독립된 패턴이다"
+  ],
+  "ans": 1,
+  "exp": "프로그램 안에서 Creator 인스턴스가 여러 개 존재할 필요가 별로 없기 때문이에요. 또 Factory Method는 Template Method의 전형적인 응용이고, Product 역에 Composite를 적용할 수 있으며, Iterator 패턴의 iterator 메서드가 Iterator 인스턴스를 만들 때 Factory Method를 쓸 수 있어요."
+ },
+ {
+  "n": 169,
+  "ch": 1,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘이 장에서 학습한 내용’의 ‘백설공주’ 비유가 말하려는 것은?",
+  "choices": [
+   "디자인 패턴은 대부분 클래스 하나로 완성되는 일인극이다",
+   "클래스 이름은 동화 속 등장인물처럼 짓는 것이 좋다",
+   "클래스 하나가 아니라 클래스들의 상호 관계를 봐야 한다",
+   "상위 클래스 하나만 읽으면 전체 동작을 알 수 있다"
+  ],
+  "ans": 2,
+  "exp": "하나의 패턴 안에서 여러 클래스와 인터페이스가 각자 역할을 맡아 관련되어 동작해요. 백설공주 혼자 무대에 서 있는 것만으로는 백설공주 연극이 되지 않는 것과 같아요. (다음 장의 Singleton은 ‘일인극’에 가까운 패턴이에요.)"
+ },
+ {
+  "n": 170,
+  "ch": 1,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 주의에서 공개용 패키지 이름을 지을 때 추천하는 규칙은?",
+  "choices": [
+   "패키지 이름은 모두 대문자로 짓는다",
+   "짧을수록 좋으니 한 글자로 짓는다",
+   "도메인 이름을 뒤집어 앞에 붙인다",
+   "패키지 이름에 클래스 이름을 붙인다"
+  ],
+  "ans": 2,
+  "exp": "예를 들어 example.com이라는 도메인이면 <code>com.example</code>로 시작하는 패키지 이름을 만들어요. 예제는 설명을 간단히 하려고 이 규칙을 따르지 않았어요(framework, idcard). 📝 수업 필기에 ‘ex?’라고 물음표가 있던 부분이에요."
+ },
+ {
+  "n": 171,
+  "ch": 1,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 4-1] 예제 프로그램에서 IDCard 클래스의 생성자는 <code>public</code>으로 되어 있지 않아요. 이는 무엇을 나타내는 것일까요?",
+  "answer": "IDCard의 생성자는 접근 제한자가 없으므로(default) 같은 idcard 패키지 안에서만 호출할 수 있다.\n즉 idcard 패키지 밖(Main 등)에서는 new IDCard(\"…\")로 직접 만들 수 없다.\n(Main에서 쓰면 컴파일 에러: IDCard(String) is not public in IDCard; cannot be accessed from outside package)\n\n→ IDCard 인스턴스는 같은 패키지의 IDCardFactory를 통해서만, 즉\n  factory.create(\"…\")로만 만들어야 한다는 뜻이다.\n  이렇게 하면 '만들면 반드시 등록된다(createProduct → registerProduct)'는\n  Factory의 절차를 거치지 않고 카드를 만드는 일을 막을 수 있다.",
+  "kw": [
+   "default",
+   "같은 패키지",
+   "idcard",
+   "IDCardFactory",
+   "create",
+   "new"
+  ],
+  "exp": "‘IDCard는 IDCardFactory로만 만들라’는 설계 의도를 접근 제한자로 표현한 거예요. Memento의 생성자를 public으로 두지 않은 것과 같은 생각이에요.",
+  "code": "public class IDCard extends Product {\n    ...\n    IDCard(String owner) {\n        ...\n    }\n    ...\n}"
+ },
+ {
+  "n": 172,
+  "ch": 1,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 4-2] 예제 프로그램의 IDCard 클래스에 카드 일련번호를 매기고, IDCardFactory 클래스가 일련번호와 소지자의 대응표를 갖도록 수정하세요.",
+  "answer": "// IDCard: 일련번호 필드 추가\npublic class IDCard extends Product {\n    private String owner;\n    private int serial;\n\n    IDCard(String owner, int serial) {\n        System.out.println(owner + \"(\" + serial + \")의 카드를 만듭니다.\");\n        this.owner = owner;\n        this.serial = serial;\n    }\n\n    @Override\n    public void use() {\n        System.out.println(this + \"을 사용합니다.\");\n    }\n\n    @Override\n    public String toString() {\n        return \"[IDCard:\" + owner + \"(\" + serial + \")]\";\n    }\n\n    public String getOwner() { return owner; }\n    public int getSerial() { return serial; }\n}\n\n// IDCardFactory: 번호를 매기고 대응표를 가진다\npublic class IDCardFactory extends Factory {\n    private Map<Integer, String> owners = new HashMap<>();\n    private int serial = 100;\n\n    @Override\n    protected synchronized Product createProduct(String owner) {\n        return new IDCard(owner, serial++);\n    }\n\n    @Override\n    protected void registerProduct(Product product) {\n        IDCard card = (IDCard) product;\n        owners.put(card.getSerial(), card.getOwner());\n    }\n\n    public Map<Integer, String> getOwners() {\n        return owners;\n    }\n}\n// 실행 예: Kim(100), Son(101) → getOwners() = {100=Kim, 101=Son}",
+  "kw": [
+   "serial",
+   "createProduct",
+   "registerProduct",
+   "Map",
+   "put"
+  ],
+  "exp": "번호를 매기는 일은 <b>createProduct</b>, 대응표에 넣는 일은 <b>registerProduct</b>에 두면 Factory의 절차(만들고 → 등록)와 딱 맞아요. framework 패키지는 하나도 고치지 않았다는 점이 핵심이에요(Java 21로 실행해 확인). 여러 스레드가 동시에 만들 수 있으니 번호를 늘리는 곳에 synchronized를 붙이면 더 안전해요."
+ },
+ {
+  "n": 173,
+  "ch": 1,
+  "lv": 3,
+  "t": "mc",
+  "q": "[교안 문제 4-3] 하위 클래스가 생성자에 반드시 ‘제품명’을 인수로 받도록 강제하려고 다음처럼 Product를 정의했더니 컴파일 에러가 났어요. 이유는?",
+  "choices": [
+   "생성자의 인수는 String이 아니라 Object여야 하기 때문이다",
+   "추상 클래스에는 생성자를 아예 정의할 수 없기 때문이다",
+   "use 메서드가 abstract라서 생성자와 함께 쓸 수 없기 때문이다",
+   "생성자는 상속·오버라이드되지 않아 abstract를 붙일 수 없다"
+  ],
+  "ans": 3,
+  "exp": "abstract는 ‘하위 클래스가 오버라이드해서 구현하라’는 뜻인데, 생성자는 상속·오버라이드되지 않아요. 그래서 ‘modifier abstract not allowed here’ 에러가 나요(Java 21로 확인). 추상 클래스도 일반 생성자는 가질 수 있어요. 제품명을 강제하려면 <code>public Product(String name)</code>처럼 <b>인수 있는 일반 생성자만</b> 두면, 하위 클래스가 <code>super(name)</code>을 부를 수밖에 없어요.",
+  "code": "public abstract class Product {\n    public abstract Product(String name);\n    public abstract void use();\n}"
+ },
+ {
+  "n": 174,
+  "ch": 1,
+  "lv": 3,
+  "t": "self",
+  "q": "Factory Method 프레임워크(framework 패키지의 Product, Factory)를 그대로 써서, 쿠폰을 만드는 <code>Coupon</code>과 <code>CouponFactory</code>를 coupon 패키지에 만드세요. 조건: ① Coupon은 쿠폰 코드(String)를 가지고, use하면 \"쿠폰 코드를 사용합니다.\"를 출력 ② CouponFactory는 만든 쿠폰의 수를 세어 <code>getCount()</code>로 알려 줌 ③ framework 패키지는 고치지 않음",
+  "answer": "package coupon;\n\nimport framework.Product;\n\npublic class Coupon extends Product {\n    private String code;\n\n    Coupon(String code) {          // 같은 패키지(CouponFactory)에서만 생성\n        this.code = code;\n    }\n\n    @Override\n    public void use() {\n        System.out.println(code + \" 쿠폰을 사용합니다.\");\n    }\n}\n\npackage coupon;\n\nimport framework.Factory;\nimport framework.Product;\n\npublic class CouponFactory extends Factory {\n    private int count = 0;\n\n    @Override\n    protected Product createProduct(String code) {\n        return new Coupon(code);\n    }\n\n    @Override\n    protected void registerProduct(Product product) {\n        count++;\n    }\n\n    public int getCount() {\n        return count;\n    }\n}\n\n// Main\nFactory factory = new CouponFactory();\nProduct c = factory.create(\"WELCOME10\");\nc.use();",
+  "kw": [
+   "extends Product",
+   "extends Factory",
+   "createProduct",
+   "registerProduct",
+   "use"
+  ],
+  "exp": "IDCard 예제와 똑같은 모양이에요. 새 패키지에서 framework를 import해 Product·Factory를 상속하고, 추상 메서드만 구현하면 돼요. Main은 <code>factory.create(...)</code>만 쓰니 생성 절차도 그대로예요."
+ },
+ {
+  "n": 175,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Builder 패턴을 가장 잘 설명한 것은?",
+  "choices": [
+   "같은 인스턴스를 여러 곳에서 공유해 메모리 사용량을 줄인다",
+   "구조를 가진 복잡한 인스턴스를 부분부터 단계를 밟아 조립해 간다",
+   "어느 시점의 인스턴스 상태를 저장해 두었다가 나중에 되돌린다",
+   "인스턴스를 만드는 공장을 Template Method 패턴으로 구성한다"
+  ],
+  "ans": 1,
+  "exp": "빌딩을 지을 때 지반을 다지고, 뼈대를 만들고, 아래에서 위로 조금씩 만들어 가듯이, 복잡한 구조물은 단숨에 완성하기 어려워요. 전체를 구성하는 각 부분을 만들고 <b>단계를 밟아 가며</b> 만드는 것이 Builder 패턴이에요."
+ },
+ {
+  "n": 176,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제에서 Builder 패턴으로 만드는 ‘문서’의 구조로 옳은 것은?",
+  "choices": [
+   "문자열 한 개와 그림 몇 개를 포함한다",
+   "제목 없이 항목만 몇 개 포함한다",
+   "타이틀 몇 개, 문자열 한 개, 표 몇 개를 포함한다",
+   "타이틀 한 개, 문자열 몇 개, 항목 몇 개를 포함한다"
+  ],
+  "ans": 3,
+  "exp": "예제의 문서는 <b>타이틀을 한 개</b>, <b>문자열을 몇 개</b>, <b>항목을 몇 개</b> 포함해요. Director의 construct가 이 순서로 Builder의 메서드를 불러 문서를 만들어요."
+ },
+ {
+  "n": 177,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "교안 예제(표 7-1)의 클래스와 설명을 바르게 짝지은 것은?",
+  "choices": [
+   "Builder: 하나의 문서를 만드는 클래스 · Director: 문서를 구성하는 메서드를 규정한 추상 클래스",
+   "Builder: 동작 테스트용 클래스 · Director: 문서를 파일에 저장하는 클래스",
+   "Builder: 문서를 구성하는 메서드를 규정한 추상 클래스 · Director: 하나의 문서를 만드는 클래스",
+   "Builder: HTML 파일로 문서를 만드는 클래스 · Director: 텍스트로 문서를 만드는 클래스"
+  ],
+  "ans": 2,
+  "exp": "Builder는 문서를 구성하기 위한 메서드를 규정한 <b>추상 클래스</b>, Director는 그 메서드로 <b>하나의 문서를 만드는</b> 클래스예요. TextBuilder는 텍스트(일반 문자열), HTMLBuilder는 HTML 파일로 문서를 만들고, Main은 동작 테스트용이에요."
+ },
+ {
+  "n": 178,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Builder 추상 클래스(리스트 7-1)에 선언된 메서드가 <b>아닌</b> 것은?",
+  "choices": [
+   "close",
+   "makeTitle",
+   "makeItems",
+   "construct"
+  ],
+  "ans": 3,
+  "exp": "Builder에는 makeTitle, makeString, makeItems, close가 있어요. 각각 제목, 문자열, 항목을 문서 안에 구축하고, close는 문서를 완성해요. <code>construct</code>는 Director의 메서드예요(construct = ‘구축하다’).",
+  "code": "public abstract class Builder {\n    public abstract void makeTitle(String title);\n    public abstract void makeString(String str);\n    public abstract void makeItems(String[] items);\n    public abstract void close();\n}"
+ },
+ {
+  "n": 179,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Director 생성자의 인수는 Builder형이에요. 실제로 전달되는 것은?",
+  "choices": [
+   "TextBuilder 등 Builder 하위 클래스의 인스턴스",
+   "Builder 클래스가 저장된 소스 파일의 이름",
+   "new Builder()로 만든 Builder 자체의 인스턴스",
+   "construct 메서드가 미리 만든 문서 문자열"
+  ],
+  "ans": 0,
+  "exp": "Builder는 추상 클래스라서 인스턴스를 만들 수 없어요. 그래서 실제로는 하위 클래스의 인스턴스가 전달되고, <b>어떤 하위 클래스를 주느냐에 따라</b> Director가 만들 구체적인 문서 형식이 정해져요."
+ },
+ {
+  "n": 180,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Director의 construct 메서드가 사용하는 것은?",
+  "choices": [
+   "TextBuilder의 getTextResult와 HTMLBuilder의 getHTMLResult",
+   "Builder에서 선언된 메서드뿐이다",
+   "Main 클래스의 usage 메서드",
+   "StringBuilder의 append를 직접 호출한다"
+  ],
+  "ans": 1,
+  "exp": "construct는 builder.makeTitle → makeString → makeItems → … → close를 차례로 불러요. 쓰는 건 <b>Builder에서 선언된 메서드뿐</b>이에요. 그래서 Director는 실제로 동작하는 것이 TextBuilder인지 HTMLBuilder인지 의식하지 않아요."
+ },
+ {
+  "n": 181,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Builder의 메서드 호출을 출력하는 LogBuilder를 Director에 넘겼어요. 다음 construct를 실행하면 출력은? (줄바꿈은 / 로 표시)",
+  "choices": [
+   "T:Menu / S:Drink / I:2 / C",
+   "T:Menu / S:Drink / C",
+   "T:Menu / I:2 / S:Drink / C",
+   "C / I:2 / S:Drink / T:Menu"
+  ],
+  "ans": 0,
+  "exp": "Director가 정한 순서 그대로 Builder의 메서드가 불려요. 문서를 <b>어떤 순서로</b> 조립할지는 Director가, 각 부분을 <b>어떻게</b> 표현할지는 ConcreteBuilder가 정해요(Java 21로 실행해 확인).",
+  "code": "class LogBuilder extends Builder {\n    public void makeTitle(String t) { System.out.println(\"T:\" + t); }\n    public void makeString(String s) { System.out.println(\"S:\" + s); }\n    public void makeItems(String[] items) { System.out.println(\"I:\" + items.length); }\n    public void close() { System.out.println(\"C\"); }\n}\n// Director의 construct\nbuilder.makeTitle(\"Menu\");\nbuilder.makeString(\"Drink\");\nbuilder.makeItems(new String[]{\"Tea\", \"Coffee\"});\nbuilder.close();"
+ },
+ {
+  "n": 182,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "앞 문제와 같은 construct에 <b>TextBuilder</b>를 넘기고 getTextResult()를 출력하면 결과는? (빈 줄은 ∅, 줄바꿈은 / 로 표시)",
+  "choices": [
+   "==… / Menu / ∅ / Drink / ∅ / - Tea / - Coffee / ∅ / ==…",
+   "<h1>Menu</h1> / <p>Drink</p> / <li>Tea</li> / <li>Coffee</li>",
+   "==… / [Menu] / ■Drink /  ·Tea /  ·Coffee / ==… / ∅ / ∅ / ∅",
+   "==… / [Menu] / ∅ / ■Drink / ∅ /  ·Tea /  ·Coffee / ∅ / ==…"
+  ],
+  "ans": 3,
+  "exp": "makeTitle은 ‘=’ 줄 다음에 <code>[제목]</code>과 빈 줄, makeString은 <code>■문자열</code>과 빈 줄, makeItems는 항목마다 <code> ·항목</code>을 쓰고 마지막에 빈 줄, close는 ‘=’ 줄을 덧붙여요(Java 21로 실행해 확인). ④는 HTMLBuilder 쪽 모양이에요."
+ },
+ {
+  "n": 183,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "HTMLBuilder에서 <code>getHTMLResult()</code>가 돌려주는 것과, Director로 예제 문서를 만든 뒤의 값은?",
+  "choices": [
+   "HTML 문서 전체 문자열 · \"<!DOCTYPE html>…\"",
+   "만든 HTML 파일의 파일 이름 · \"Greeting.html\"",
+   "문서의 제목 · \"Greeting\"",
+   "만든 HTML 파일의 파일 이름 · \"untitled.html\""
+  ],
+  "ans": 1,
+  "exp": "HTMLBuilder는 makeTitle에서 <code>filename = title + \".html\";</code>로 파일 이름을 정하고(초깃값은 \"untitled.html\"), close에서 FileWriter로 파일을 써요. 작성한 결과는 HTML 파일의 <b>파일 이름</b>으로 돌려줘요. 그래서 Main은 ‘HTML파일 Greeting.html이 작성되었습니다.’를 출력해요(Java 21로 확인)."
+ },
+ {
+  "n": 184,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "TextBuilder와 HTMLBuilder가 결과를 돌려주는 메서드에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "둘 다 Builder에 선언된 getResult()를 오버라이드했다",
+   "둘 다 close()의 반환값으로 결과를 돌려준다",
+   "각자 다른 메서드이며, Builder에는 선언되어 있지 않다",
+   "Director의 construct가 결과를 직접 반환해 준다"
+  ],
+  "ans": 2,
+  "exp": "결과의 형태가 ConcreteBuilder마다 달라서(텍스트 문자열, 파일 이름) 각자 고유한 메서드를 가져요. 그래서 Main은 Director에 넘긴 <b>그 ConcreteBuilder 변수</b>(textbuilder, htmlbuilder)로 결과를 받아요. 이것이 Builder 역과 ConcreteBuilder 역의 getResult 차이예요."
+ },
+ {
+  "n": 185,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Main(리스트 7-5)에서 <code>java Main text</code>로 실행했을 때 일어나는 일로 옳은 것은?",
+  "choices": [
+   "TextBuilder를 Director에 넘겨 construct한다",
+   "HTMLBuilder를 Director에 넘겨 HTML 파일을 만든다",
+   "usage()로 사용 방법만 화면에 출력하고 끝낸다",
+   "Main이 TextBuilder의 메서드를 하나씩 직접 부른다"
+  ],
+  "ans": 0,
+  "exp": "커맨드 라인에서 text를 지정하면 TextBuilder를, html을 지정하면 HTMLBuilder를 Director 생성자에 전달해요. 인수 개수가 1이 아니거나 다른 값이면 usage()를 출력하고 종료해요."
+ },
+ {
+  "n": 186,
+  "ch": 4,
+  "lv": 1,
+  "t": "mc",
+  "q": "Builder 패턴의 역할과 교안 예제 클래스를 바르게 짝지은 것은?",
+  "choices": [
+   "Builder = Director · ConcreteBuilder = Builder · Director = Main · Client = TextBuilder",
+   "Builder = Main · ConcreteBuilder = Director · Director = Builder · Client = HTMLBuilder",
+   "Builder = TextBuilder · ConcreteBuilder = HTMLBuilder · Director = Main · Client = Director",
+   "Builder = Builder · ConcreteBuilder = TextBuilder, HTMLBuilder · Director = Director · Client = Main"
+  ],
+  "ans": 3,
+  "exp": "<b>Builder</b>(건축가)는 인스턴스의 각 부분을 만드는 인터페이스(API)를 정하고, <b>ConcreteBuilder</b>(구체적인 건축가)는 그것을 구현하며 최종 결과를 얻는 메서드를 가져요. <b>Director</b>(감독관)는 Builder의 API로 인스턴스를 만들고, <b>Client</b>(의뢰인)는 Builder 패턴을 이용해요."
+ },
+ {
+  "n": 187,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Director 역에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "ConcreteBuilder에 의존하지 않고 Builder의 메서드만 쓴다",
+   "Builder의 하위 클래스로서 문서의 각 부분을 직접 만들어 낸다",
+   "ConcreteBuilder마다 다른 if문을 두어 처리 방식을 바꿔 준다",
+   "최종 결과를 얻는 getResult 메서드를 자기가 직접 구현한다"
+  ],
+  "ans": 0,
+  "exp": "Director는 ConcreteBuilder가 무엇이든 잘 작동하도록 <b>Builder의 메서드만</b> 사용해요. 그래서 TextBuilder를 주든 HTMLBuilder를 주든 그대로 동작해요."
+ },
+ {
+  "n": 188,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "GoF 책과 교안의 Client 역에 대한 설명으로 옳은 것은?",
+  "choices": [
+   "GoF 책에는 포함되지 않지만, 교안에서는 Main이 맡는다",
+   "GoF 책에서는 Client 역이 Director 역을 대신 맡는다",
+   "교안 예제에는 Client 역을 맡는 클래스가 하나도 없다",
+   "Client 역은 반드시 Builder 역을 상속해서 만든다"
+  ],
+  "ans": 0,
+  "exp": "교안: Client(의뢰인) 역은 Builder 패턴을 이용해요(GoF 책에서는 Client 역이 Builder 패턴 안에 포함되지 않아요). 예제에서는 Main 클래스가 이 역할을 맡았어요."
+ },
+ {
+  "n": 189,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Builder 패턴의 시퀀스 다이어그램(그림 7-7)의 흐름으로 옳은 것은?",
+  "choices": [
+   "Director: new → Client: buildPart → Director: getResult로 출력",
+   "ConcreteBuilder: new Director → Director: Client 호출 → 반환",
+   "Client: new·construct → Director: buildPart → Client: getResult",
+   "Client: buildPart 직접 호출 → construct로 마무리 → 출력"
+  ],
+  "ans": 2,
+  "exp": "Client는 ConcreteBuilder를 만들어 Director에게 주고 construct만 불러요. 부분 조립(buildPart)은 Director가 하고, 다 만들어진 결과는 Client가 ConcreteBuilder의 getResult로 받아요."
+ },
+ {
+  "n": 190,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Builder 패턴과 Template Method 패턴의 차이로 옳은 것은?",
+  "choices": [
+   "Builder는 하위가 상위를, TM은 Director가 Builder를 제어한다",
+   "Builder는 인스턴스를 만들지 않고 TM만 인스턴스를 만든다",
+   "Builder는 Director가 Builder를, TM은 상위가 하위를 제어한다",
+   "두 패턴 모두 상위 클래스가 하위 클래스를 제어하므로 같다"
+  ],
+  "ans": 2,
+  "exp": "둘 다 ‘처리 순서(뼈대)’와 ‘구체적인 처리’를 나누지만, Template Method는 <b>상속</b>(상위 → 하위)으로, Builder는 <b>위임</b>(Director가 가진 builder 필드에게 맡김)으로 제어해요."
+ },
+ {
+  "n": 191,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "Builder의 관련 패턴 설명으로 <b>틀린</b> 것은?",
+  "choices": [
+   "Facade 패턴의 Facade 역은 Builder 역을 상속해서 만들어야 한다",
+   "Builder 패턴으로 만들어진 생성물은 Composite 패턴이 되는 경우가 있다",
+   "Director 역은 Builder의 복잡한 메서드를 조합해 간단한 API(construct)를 외부에 제공한다",
+   "Builder와 Abstract Factory는 모두 복잡한 인스턴스를 생성한다"
+  ],
+  "ans": 0,
+  "exp": "Facade와의 관계는 ‘비슷한 역할’이지 상속이 아니에요. Director가 Builder의 복잡한 메서드를 조합해 construct라는 간단한 API를 주는 것처럼, Facade 역은 내부 모듈을 조합해 간단한 API를 외부에 제공해요."
+ },
+ {
+  "n": 192,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘누가 무엇을 알고 있는가?’의 내용으로 옳은 것은?",
+  "choices": [
+   "Main은 Builder 메서드를, Director는 실제 Builder 하위 클래스를 모른다",
+   "Director는 Main이 어떤 커맨드 라인 인수를 받았는지 알고 있다",
+   "Main은 Builder 메서드를 직접 부르고, Director는 TextBuilder만 안다",
+   "Builder는 자신을 쓰는 Director의 construct 호출 순서를 알고 있다"
+  ],
+  "ans": 0,
+  "exp": "Main은 Director의 construct만 호출해요. Director는 Builder의 메서드로 문서를 만들지만 그게 TextBuilder인지 HTMLBuilder인지 몰라요. ‘<b>모르기에 교체할 수 있기 때문</b>’에 이게 좋은 일이에요. 모르기 때문에 교체가 가능하고, 교체되기 때문에 부품으로서의 가치가 높아요(교체 가능성)."
+ },
+ {
+  "n": 193,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "교안이 설명한 의존성 주입(Dependency Injection)에 해당하는 것은?",
+  "choices": [
+   "TextBuilder가 Director를 상속해 construct를 물려받는다",
+   "Director 안에서 new TextBuilder()로 직접 만들어 쓴다",
+   "Builder형 생성자 인수로 TextBuilder 인스턴스를 건넨다",
+   "Main이 Director 없이 Builder의 메서드를 직접 부른다"
+  ],
+  "ans": 2,
+  "exp": "‘소스 코드에는 쓰여 있지 않지만, 실제로는 이 인스턴스를 이용해(의존해) 동작해 주세요’라는 의미를 담아 인스턴스를 건네는 방법이 의존성 주입(DI)이에요. 글 쓰는 사람에게 ‘자, 이걸 써서 써 줘’라고 필기구(연필인지 볼펜인지는 건네는 시점에 결정)를 건네는 것과 비슷해요. 클래스 간 결합도를 낮추고 재사용성을 높여요."
+ },
+ {
+  "n": 194,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘설계 시 결정할 수 있는 것과 결정할 수 없는 것’에서 Builder 클래스에 요구하는 것은?",
+  "choices": [
+   "구축에 필요·충분한 메서드만, 형식 고유의 메서드는 빼고 선언한다",
+   "TextBuilder와 HTMLBuilder에만 필요한 메서드도 모두 Builder에 넣는다",
+   "앞으로 생길 모든 문서 형식을 예상해 메서드를 미리 수백 개 선언한다",
+   "메서드를 최소로 줄이려고 close 하나만 선언하고 나머지는 하위에 둔다"
+  ],
+  "ans": 0,
+  "exp": "Director에게 주어지는 도구는 Builder가 제공하므로 무엇을 준비하는지가 중요해요. 앞으로 늘어날지도 모르는 하위 클래스(XXXXBuilder)의 요구에도 대응해야 하지만, 설계자는 신이 아니라서 모든 미래를 예상할 수는 없어요. 가까운 미래에 예상되는 변화에 견딜 수 있도록 설계해요."
+ },
+ {
+  "n": 195,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 ‘소스를 읽고 수정하는 방법’에서 Builder 패턴 코드를 읽는 순서로 권하는 것은?",
+  "choices": [
+   "Main만 읽고 바로 HTMLBuilder의 파일 쓰기 부분만 고친다",
+   "Builder 추상 클래스 하나만 읽으면 전체를 충분히 이해한다",
+   "가장 긴 클래스부터 읽고 짧은 클래스는 모두 건너뛴다",
+   "Director로 사용법을 익힌 뒤 ConcreteBuilder를 읽는다"
+  ],
+  "ans": 3,
+  "exp": "추상 클래스만 살펴봐서는 정보가 많지 않아요(메서드 이름 등으로 단서는 얻지만요). Director의 소스로 Builder의 사용법(호출 방법)을 이해하고, 그다음 ConcreteBuilder를 읽어 추상 메서드에 어떤 동작이 기대되는지 알 수 있어요. @Override도 단서가 돼요."
+ },
+ {
+  "n": 196,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "Director가 실수로 TextBuilder 고유의 메서드를 직접 호출하도록 고치면 생기는 문제로 가장 알맞은 것은?",
+  "choices": [
+   "HTMLBuilder로 바꿨을 때 제대로 동작하지 않을 수 있다",
+   "TextBuilder의 출력 결과가 HTML 형식으로 바뀌어 버린다",
+   "Builder 추상 클래스를 더 이상 상속할 수 없게 된다",
+   "Main에서 Director의 construct를 호출할 수 없게 된다"
+  ],
+  "ans": 0,
+  "exp": "클래스의 역할을 이해하지 못하면 어느 클래스를 고칠지 판단을 잘못해요. Builder를 고치는 건 Director가 호출하는 메서드와 모든 하위 클래스에 영향을 미치는 일이고, Director가 TextBuilder에 의존하면 교체 가능성이 깨져요."
+ },
+ {
+  "n": 197,
+  "ch": 4,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 7-1] 예제 프로그램의 Builder 클래스(리스트 7-1)를 <b>인터페이스</b>로 변경하고, 그에 맞춰 다른 클래스를 수정하세요.",
+  "answer": "// Builder: 인터페이스로\npublic interface Builder {\n    void makeTitle(String title);       // 인터페이스 메서드는 자동으로 public abstract\n    void makeString(String str);\n    void makeItems(String[] items);\n    void close();\n}\n\n// TextBuilder: extends → implements\npublic class TextBuilder implements Builder {\n    private StringBuilder sb = new StringBuilder();\n\n    @Override\n    public void makeTitle(String title) { ... }   // public 그대로 유지\n    ...\n}\n\n// HTMLBuilder도 같은 방식으로 implements Builder\npublic class HTMLBuilder implements Builder { ... }\n\n// Director와 Main은 그대로(Builder형 변수·인수는 인터페이스형으로도 동작)",
+  "kw": [
+   "interface Builder",
+   "implements Builder",
+   "public",
+   "Director"
+  ],
+  "exp": "바꿀 곳은 Builder 선언과 하위 클래스의 <code>extends</code> → <code>implements</code>뿐이에요. 인터페이스의 메서드는 자동으로 public abstract라서, 구현 쪽 메서드에서 public을 빼면 ‘cannot implement … attempting to assign weaker access privileges’ 컴파일 에러가 나요(Java 21로 확인). Director·Main은 Builder라는 타입 이름만 쓰므로 고칠 필요가 없어요."
+ },
+ {
+  "n": 198,
+  "ch": 4,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 7-2] 예제 프로그램의 Director 클래스(리스트 7-2)의 construct 메서드를 자유롭게 수정하여 다른 문서를 만들어 보세요. 이때 TextBuilder나 HTMLBuilder를 수정할 필요가 전혀 없음을 확인해 보세요.",
+  "answer": "public void construct() {\n    builder.makeTitle(\"Menu\");\n    builder.makeString(\"음료\");\n    builder.makeItems(new String[]{\n        \"Tea\",\n        \"Coffee\",\n    });\n    builder.makeString(\"디저트\");\n    builder.makeItems(new String[]{\n        \"Cake\",\n        \"Cookie\",\n    });\n    builder.close();\n}\n// → java Main text 로 텍스트 메뉴판, java Main html 로 Menu.html이 만들어진다.\n//   TextBuilder, HTMLBuilder는 한 줄도 고치지 않았다.",
+  "kw": [
+   "construct",
+   "makeTitle",
+   "makeString",
+   "makeItems",
+   "close",
+   "수정하지 않"
+  ],
+  "exp": "문서의 <b>내용·순서</b>는 Director가, 각 부분의 <b>표현 형식</b>은 ConcreteBuilder가 맡기 때문이에요. 같은 construct로 텍스트와 HTML 두 형식이 동시에 바뀌는 것도 확인해 보세요."
+ },
+ {
+  "n": 199,
+  "ch": 4,
+  "lv": 3,
+  "t": "self",
+  "q": "[교안 문제 7-3] Builder 클래스(리스트 7-1)의 하위 클래스로서 ConcreteBuilder 역할을 할 수 있는 클래스를 작성하세요. 텍스트, HTML 파일 이외에 소재는 자유예요. (예: 마크다운 문서를 만드는 MarkdownBuilder)",
+  "answer": "public class MarkdownBuilder extends Builder {\n    private StringBuilder sb = new StringBuilder();\n\n    @Override\n    public void makeTitle(String title) {\n        sb.append(\"# \").append(title).append(\"\\n\\n\");\n    }\n\n    @Override\n    public void makeString(String str) {\n        sb.append(\"## \").append(str).append(\"\\n\\n\");\n    }\n\n    @Override\n    public void makeItems(String[] items) {\n        for (String s : items) {\n            sb.append(\"- \").append(s).append(\"\\n\");\n        }\n        sb.append(\"\\n\");\n    }\n\n    @Override\n    public void close() {\n    }\n\n    public String getMarkdownResult() {\n        return sb.toString();\n    }\n}\n\n// Main\nMarkdownBuilder mb = new MarkdownBuilder();\nDirector director = new Director(mb);\ndirector.construct();\nSystem.out.println(mb.getMarkdownResult());",
+  "kw": [
+   "extends Builder",
+   "makeTitle",
+   "makeString",
+   "makeItems",
+   "close",
+   "getResult"
+  ],
+  "exp": "Builder의 네 추상 메서드를 모두 구현하고, 결과를 얻는 메서드를 하나 더 두면 돼요. Director·Builder는 고치지 않아요. 마크다운, CSV, JSON, 콘솔 표 등 무엇이든 좋아요(마크다운 예는 Java 21로 실행해 확인)."
+ },
+ {
+  "n": 200,
+  "ch": 4,
+  "lv": 2,
+  "t": "self",
+  "q": "[교안 문제 7-4] TextBuilder 클래스(리스트 7-3)에서 문서를 구축해 가는 필드 sb가 String 클래스가 아니라 StringBuilder 클래스로 되어 있는 이유는 무엇일까요? 혹시 String을 사용하면 뭔가 곤란한 점이 있을까요?",
+  "answer": "String은 불변(immutable) 객체라 한 번 만들면 내용을 바꿀 수 없다.\n그래서 s = s + \"...\"; (또는 s += \"...\")를 할 때마다\n기존 문자열 + 덧붙일 문자열을 복사한 '새 String 인스턴스'가 만들어지고, 예전 것은 버려진다.\n\nTextBuilder는 makeTitle, makeString, makeItems, close에서 문자열을 계속 덧붙이므로\nString을 쓰면 덧붙일 때마다 새 인스턴스 생성·복사가 일어나\n문서가 길어질수록 시간과 메모리가 낭비된다.\n\nStringBuilder는 내부 버퍼를 직접 늘려 가며 append하므로(같은 인스턴스를 계속 수정)\n문자열을 조금씩 쌓아 가는 '구축' 작업에 적합하다. 결과는 마지막에 toString()으로 얻는다.\n(String으로 써도 결과는 같지만 효율이 나쁘다.)",
+  "kw": [
+   "불변",
+   "새",
+   "인스턴스",
+   "append",
+   "효율"
+  ],
+  "exp": "<code>s += \"a\"</code> 전후의 s는 서로 다른 인스턴스지만, <code>sb.append(\"a\")</code> 전후의 sb는 같은 인스턴스예요(Java 21로 실행해 확인). 이름부터 ‘StringBuilder’, 문자열판 Builder예요."
+ },
+ {
+  "n": 201,
+  "ch": 4,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 코드의 출력으로 알맞은 것은?",
+  "choices": [
+   "false true 0 a",
+   "false false 1 a",
+   "true true 0 a",
+   "true false 0 a"
+  ],
+  "ans": 0,
+  "exp": "String은 불변이라 <code>s += \"a\"</code>를 하면 <b>새 인스턴스</b>가 만들어지고 before는 여전히 빈 문자열(길이 0)을 가리켜요. StringBuilder의 append는 <b>같은 인스턴스</b>를 고쳐요(Java 21로 실행해 확인). 문제 7-4의 답이 여기 있어요.",
+  "code": "String s = \"\";\nStringBuilder sb = new StringBuilder();\nString before = s;\ns += \"a\";\nStringBuilder sbBefore = sb;\nsb.append(\"a\");\nSystem.out.println((before == s) + \" \" + (sbBefore == sb) + \" \" + before.length() + \" \" + sb);"
+ },
+ {
+  "n": 202,
+  "ch": 4,
+  "lv": 3,
+  "t": "mc",
+  "q": "(교안 밖) 실무 자바에서 자주 보는 다음 코드도 ‘Builder’라고 불러요. 교안 Builder 패턴과 비교한 설명으로 옳은 것은?",
+  "choices": [
+   "Director 없이 Client가 메서드를 이어 불러 직접 조립한다",
+   "생성자 인수가 적을 때만 쓰며 Builder와는 관계가 없다",
+   "build()를 부르기 전에 Pizza 인스턴스가 이미 완성돼 있다",
+   "교안 Builder처럼 Director가 반드시 있어야 동작한다"
+  ],
+  "ans": 0,
+  "exp": "『Effective Java』에서 소개하는 방식으로, 생성자 인수가 많을 때 ‘무엇을 어떤 값으로 넣는지’ 읽기 쉽게 조립해요. ‘복잡한 인스턴스를 단계적으로 조립한다’는 생각은 같지만, GoF의 Director·여러 ConcreteBuilder 구조와는 달리 <b>Client가 직접 조립 순서를 정해요</b>.",
+  "code": "Pizza pizza = new Pizza.Builder(\"L\")\n        .cheese(true)\n        .topping(\"bacon\")\n        .build();"
+ },
+ {
+  "n": 203,
+  "ch": 8,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 상황에 가장 알맞은 패턴은?<br>“주문서를 화면용 HTML, 이메일용 텍스트, 인쇄용 PDF로 만들어야 한다. 주문서에 들어갈 내용과 순서는 같고 표현 형식만 다르다.”",
+  "choices": [
+   "Factory Method",
+   "Singleton",
+   "Flyweight",
+   "Builder"
+  ],
+  "ans": 3,
+  "exp": "내용·순서(Director의 construct)는 하나로 두고, 표현 형식마다 ConcreteBuilder(HtmlBuilder, TextBuilder, PdfBuilder)를 바꿔 끼우면 돼요. 교안 예제의 TextBuilder·HTMLBuilder와 같은 구조예요."
+ },
+ {
+  "n": 204,
+  "ch": 8,
+  "lv": 2,
+  "t": "mc",
+  "q": "다음 상황에 가장 알맞은 패턴은?<br>“결제 프레임워크는 ‘결제 수단을 만들고 → 검증·등록한다’는 절차를 고정하고, 카드·계좌이체 등 실제 결제 수단 클래스는 앞으로 계속 늘어난다. 프레임워크 코드는 고치고 싶지 않다.”",
+  "choices": [
+   "Abstract Factory",
+   "Factory Method",
+   "Prototype",
+   "Memento"
+  ],
+  "ans": 1,
+  "exp": "생성 절차(create = createProduct → registerProduct)는 상위 클래스가 정하고, 실제로 어떤 클래스를 new할지는 하위 클래스(CardFactory 등)가 정해요. framework 패키지는 구체 클래스에 의존하지 않아요."
+ },
+ {
+  "n": 205,
+  "ch": 8,
+  "lv": 3,
+  "t": "mc",
+  "q": "Factory Method와 Builder의 비교로 옳은 것은?",
+  "choices": [
+   "FM은 상속으로 하위에 맡기고, Builder는 Director에 위임한다",
+   "Builder는 생성 패턴이고, Factory Method는 행위 패턴이다",
+   "두 패턴 모두 인스턴스가 하나만 존재하도록 보장해 준다",
+   "FM은 Director가 Builder를, Builder는 상위가 하위를 제어한다"
+  ],
+  "ans": 0,
+  "exp": "Factory Method는 Template Method를 생성에 응용한 것이라 <b>상위 클래스가 하위 클래스를 제어</b>해요. Builder는 Director가 builder 필드에 일을 시키는 <b>위임</b> 구조예요. 둘 다 GoF의 생성 패턴이에요."
+ },
+ {
+  "n": 206,
+  "ch": 8,
+  "lv": 2,
+  "t": "mc",
+  "q": "교안 일곱 패턴 중 GoF 분류가 <b>생성 패턴</b>인 것을 모두 고른 것은?",
+  "choices": [
+   "Builder, Flyweight, Observer, Factory Method",
+   "Factory Method, Builder, Observer, Memento",
+   "Factory Method, Singleton, Prototype, Builder",
+   "Singleton, Prototype, Flyweight, Memento"
+  ],
+  "ans": 2,
+  "exp": "생성 패턴: Factory Method, Singleton, Prototype, Builder(+Abstract Factory). 구조 패턴: Flyweight. 행위 패턴: Observer, Memento(+Template Method 등)."
+ },
+ {
+  "n": 207,
+  "ch": 8,
+  "lv": 3,
+  "t": "mc",
+  "q": "‘교체 가능성’이 드러난 장면으로 짝이 <b>맞지 않는</b> 것은?",
+  "choices": [
+   "Builder: Director는 TextBuilder 대신 HTMLBuilder를 받아도 그대로다",
+   "Observer: NumberGenerator는 새 ConcreteObserver를 추가해도 그대로다",
+   "Factory Method: framework는 IDCardFactory 대신 TelevisionFactory를 써도 그대로다",
+   "Singleton: getInstance가 부를 때마다 다른 하위 클래스 인스턴스를 돌려준다"
+  ],
+  "ans": 3,
+  "exp": "Singleton의 getInstance는 <b>항상 같은 인스턴스</b>를 돌려줘요. 나머지는 모두 ‘구체 클래스가 아니라 추상 클래스·인터페이스에 의존하므로 구체 클래스를 갈아 끼워도 그대로 동작한다’는 같은 원리예요."
  }
 ];
