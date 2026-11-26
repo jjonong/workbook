@@ -1,9 +1,63 @@
-// 디자인 패턴 핵심 정리 탭 (HTML) · Part 5 Singleton · Part 6 Prototype · Part 17 Observer · Part 18 Memento · Part 20 Flyweight
+// 디자인 패턴 핵심 정리 탭 (HTML) · Part 4 Factory Method · Part 5 Singleton · Part 6 Prototype · Part 7 Builder · Part 17 Observer · Part 18 Memento · Part 20 Flyweight
 var WGF = window.WGF = window.WGF || {};
 WGF.cheat = String.raw`
 <h1 id="gc-0">디자인 패턴 핵심 정리</h1>
-<p>스터디 직전에 훑어보는 용어·코드 모음이에요. 위 검색창에 낱말(예: private, clone, update, wide, intrinsic, pool, synchronized)을 넣으면 맞는 줄만 남아요. 자세한 설명은 <a href="#gof" data-goto="gof">개념 정리</a> 탭을 보세요.</p>
-<h1 id="gc-ch-1">Singleton</h1>
+<p>스터디 직전에 훑어보는 용어·코드 모음이에요. 위 검색창에 낱말(예: create, construct, private, clone, update, wide, pool)을 넣으면 맞는 줄만 남아요. 자세한 설명은 <a href="#gof" data-goto="gof">개념 정리</a> 탭을 보세요.</p>
+<h1 id="gc-ch-1">Factory Method</h1>
+<h2 id="gc-fm1">Factory Method 핵심</h2>
+<div class="tw"><table>
+<thead>
+<tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>정의</td><td>인스턴스를 생성하는 공장을 <strong>Template Method 패턴으로 구성</strong>한 것</td><td>p.88</td></tr>
+<tr><td>이름 뜻</td><td>factory = 공장</td><td></td></tr>
+<tr><td>핵심</td><td>생성 방법은 상위가 결정, <strong>구체적인 클래스 이름은 결정하지 않음</strong> → 살은 하위가</td><td></td></tr>
+<tr><td>framework 패키지</td><td>Product, Factory — 인스턴스를 생성하는 뼈대(프레임워크)</td><td>📝</td></tr>
+<tr><td>idcard 패키지</td><td>IDCard, IDCardFactory — 구체적인 내용</td><td>📝</td></tr>
+<tr><td>패키지 이름 규칙</td><td>공개용은 도메인을 뒤집어(com.example) 세상에 하나뿐인 이름으로</td><td>주의</td></tr>
+<tr><td>Product</td><td><code>public abstract class Product { public abstract void use(); }</code> ‘use할 수 있는 것’이 제품</td><td>리스트 4-1</td></tr>
+<tr><td>Factory.create</td><td><code>public final Product create(String owner) { Product p = createProduct(owner); registerProduct(p); return p; }</code></td><td>템플릿 메서드</td></tr>
+<tr><td>createProduct</td><td><code>protected abstract Product createProduct(String owner);</code> 제품을 만든다</td><td></td></tr>
+<tr><td>registerProduct</td><td><code>protected abstract void registerProduct(Product product);</code> 제품을 등록한다</td><td></td></tr>
+<tr><td>final create</td><td>하위 클래스에서 오버라이드 불가 → 생성 절차 보장</td><td>컴파일 에러</td></tr>
+<tr><td>protected</td><td>하위만 구현·호출. Main에서 createProduct를 부르면 컴파일 에러</td><td></td></tr>
+<tr><td>IDCard</td><td><code>IDCard(String owner)</code> 생성자 default, use: <code>this + "을 사용합니다."</code>, toString: <code>[IDCard:owner]</code></td><td>리스트 4-3</td></tr>
+<tr><td>IDCardFactory</td><td>createProduct: <code>return new IDCard(owner);</code> · registerProduct: <code>"을 등록했습니다."</code> 출력</td><td>리스트 4-4</td></tr>
+<tr><td>Main</td><td><code>Factory factory = new IDCardFactory(); Product card1 = factory.create("Youngjin Kim");</code></td><td>리스트 4-5</td></tr>
+<tr><td>출력 순서</td><td>만든다 → 등록했습니다 (create마다) → 모두 끝나고 사용합니다</td><td>그림 4-2</td></tr>
+<tr><td>Product 역</td><td>생성될 인스턴스의 API를 정하는 추상 클래스 → <code>Product</code></td><td>p.93</td></tr>
+<tr><td>Creator 역</td><td>Product를 생성하는 추상 클래스. ConcreteProduct는 모름 → <code>Factory</code></td><td></td></tr>
+<tr><td>ConcreteProduct 역</td><td>구체적인 제품 → <code>IDCard</code></td><td>p.94</td></tr>
+<tr><td>ConcreteCreator 역</td><td>구체적인 제품을 만들 클래스를 결정 → <code>IDCardFactory</code></td><td></td></tr>
+<tr><td>new 대신 메서드</td><td>인스턴스 생성 메서드를 호출 → 구체적인 클래스 이름의 속박에서 상위 클래스를 자유롭게</td><td>⭐</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="gc-fm2">Factory Method 설계 힌트</h2>
+<div class="tw"><table>
+<thead>
+<tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>의존하지 않는다</td><td>framework는 idcard를 import하지 않음 → TV·TV 공장도 framework 수정 없이 추가</td><td>p.95</td></tr>
+<tr><td>추상 메서드로 기술</td><td>하위가 반드시 구현, 안 하면 컴파일 때 검출(예제 방식)</td><td></td></tr>
+<tr><td>디폴트 구현</td><td><code>return new Product(name);</code> → Product를 추상 클래스로 둘 수 없음</td><td>p.96</td></tr>
+<tr><td>의사소통</td><td>하나의 클래스만 읽어선 이해 어려움 → 패턴 이름·의도를 주석·문서에</td><td></td></tr>
+<tr><td>static Factory Method</td><td>인스턴스 생성용 static 메서드. GoF 패턴과는 다름. create·newInstance·getInstance 등</td><td></td></tr>
+<tr><td>SecureRandom.getInstance</td><td>알고리즘 이름으로 SecureRandom 생성</td><td>p.97</td></tr>
+<tr><td>List.of</td><td>요소로 List 생성. 변경 불가(set·add 모두 예외)</td><td></td></tr>
+<tr><td>Arrays.asList</td><td>배열·요소로 List 생성. set은 되고 add는 예외</td><td></td></tr>
+<tr><td>String.valueOf / Instant.now</td><td>문자열 표현 / 현재 시간</td><td></td></tr>
+<tr><td>문제 4-1</td><td>IDCard 생성자 default → 같은 패키지에서만 new → IDCardFactory를 통해서만 생성</td><td></td></tr>
+<tr><td>문제 4-2</td><td>IDCard에 serial, IDCardFactory에 Map&lt;Integer,String&gt;. 번호는 createProduct, 대응표는 registerProduct</td><td></td></tr>
+<tr><td>문제 4-3</td><td>생성자는 상속·오버라이드 안 됨 → abstract 불가(modifier abstract not allowed here)</td><td></td></tr>
+<tr><td>관련 패턴</td><td>Template Method(전형적 응용) · Singleton(Creator) · Composite(Product) · Iterator(iterator 메서드)</td><td>p.98</td></tr>
+<tr><td>백설공주</td><td>하나의 클래스만 보고 단정 금지, 상호 관계를 볼 것</td><td></td></tr>
+</tbody>
+</table></div>
+
+<h1 id="gc-ch-2">Singleton</h1>
 <h2 id="gc-1">Singleton 핵심</h2>
 <div class="tw"><table>
 <thead>
@@ -46,7 +100,7 @@ WGF.cheat = String.raw`
 </tbody>
 </table></div>
 
-<h1 id="gc-ch-2">Prototype</h1>
+<h1 id="gc-ch-3">Prototype</h1>
 <h2 id="gc-3">Prototype 핵심</h2>
 <div class="tw"><table>
 <thead>
@@ -98,7 +152,56 @@ WGF.cheat = String.raw`
 </tbody>
 </table></div>
 
-<h1 id="gc-ch-3">Observer</h1>
+<h1 id="gc-ch-4">Builder</h1>
+<h2 id="gc-b1">Builder 핵심</h2>
+<div class="tw"><table>
+<thead>
+<tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>정의</td><td>구조를 가진 인스턴스를 <strong>단계를 밟아</strong> 조립해 가는 패턴</td><td>p.128</td></tr>
+<tr><td>이름 뜻</td><td>build = 구조를 갖춘 큰 구조물을 건축·구축하다</td><td></td></tr>
+<tr><td>문서 구조</td><td>타이틀 한 개 · 문자열 몇 개 · 항목 몇 개</td><td></td></tr>
+<tr><td>Builder</td><td><code>makeTitle</code>, <code>makeString</code>, <code>makeItems</code>, <code>close</code> 추상 메서드</td><td>리스트 7-1</td></tr>
+<tr><td>Director</td><td><code>private Builder builder;</code> + 생성자로 받음 + <code>construct()</code></td><td>리스트 7-2</td></tr>
+<tr><td>construct</td><td>Builder에서 선언된 메서드만 사용해 문서 구축(construct = 구축하다)</td><td></td></tr>
+<tr><td>생성자 인수</td><td>Builder형이지만 실제로는 하위 클래스 인스턴스(Builder는 추상)</td><td></td></tr>
+<tr><td>TextBuilder</td><td><code>StringBuilder sb</code>에 ‘=’ 줄, <code>[제목]</code>, <code>■문자열</code>, <code> ·항목</code> → <code>getTextResult()</code>로 String</td><td>리스트 7-3</td></tr>
+<tr><td>HTMLBuilder</td><td>makeTitle에서 <code>filename = title + ".html"</code>, close에서 FileWriter로 저장 → <code>getHTMLResult()</code>로 파일 이름</td><td>리스트 7-4</td></tr>
+<tr><td>Main</td><td><code>java Main text</code> → TextBuilder / <code>java Main html</code> → HTMLBuilder를 Director에 전달</td><td>리스트 7-5</td></tr>
+<tr><td>html 실행 결과</td><td>HTML파일 Greeting.html이 작성되었습니다.</td><td>그림 7-3</td></tr>
+<tr><td>Builder의 메서드</td><td>구축에 필요하고 충분하게. 텍스트·HTML 고유 메서드는 넣지 않음</td><td></td></tr>
+<tr><td>Builder 역</td><td>인스턴스 생성 API 결정, 각 부분을 만드는 메서드 → <code>Builder</code></td><td>p.137</td></tr>
+<tr><td>ConcreteBuilder 역</td><td>Builder API 구현 + 최종 결과를 얻는 메서드 → <code>TextBuilder</code>, <code>HTMLBuilder</code></td><td></td></tr>
+<tr><td>Director 역</td><td>Builder API로 인스턴스 생성. ConcreteBuilder에 의존하지 않고 Builder 메서드만 → <code>Director</code></td><td></td></tr>
+<tr><td>Client 역</td><td>Builder 패턴 이용 → <code>Main</code> (GoF 책에서는 패턴에 포함 안 됨)</td><td></td></tr>
+<tr><td>시퀀스</td><td>Client: new ConcreteBuilder → construct → Director: buildPart1~3 → Client: getResult</td><td>그림 7-7</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="gc-b2">Builder 설계 힌트</h2>
+<div class="tw"><table>
+<thead>
+<tr><th>찾는 것</th><th>내용</th><th>메모</th></tr>
+</thead>
+<tbody>
+<tr><td>누가 무엇을 아는가</td><td>Main은 Builder 메서드를 모름(construct만) · Director는 Builder 하위 클래스를 모름</td><td>p.139</td></tr>
+<tr><td>교체 가능성</td><td>모르기에 교체할 수 있고, 교체되기에 부품 가치가 높다</td><td>⭐</td></tr>
+<tr><td>의존성 주입(DI)</td><td>소스엔 안 쓰여 있지만 이 인스턴스에 의존해 동작하라며 건네는 것 → 결합도↓ 재사용성↑</td><td>p.140</td></tr>
+<tr><td>DI 비유</td><td>‘필기구’(Builder)는 정해져 있고 연필·볼펜(Text·HTMLBuilder)은 건네는 시점에 결정</td><td></td></tr>
+<tr><td>결정할 수 없는 것</td><td>미래의 모든 형식은 예상 불가. 가까운 미래의 변화에 견디게 설계</td><td></td></tr>
+<tr><td>소스 읽는 순서</td><td>Director로 Builder 사용법 이해 → ConcreteBuilder로 기대 동작 파악(@Override 단서)</td><td>p.141</td></tr>
+<tr><td>잘못 고치면</td><td>Director가 TextBuilder 고유 메서드를 호출하면 HTMLBuilder로 교체 시 오동작</td><td></td></tr>
+<tr><td>문제 7-1</td><td>Builder를 interface로, extends → implements, 구현 메서드는 public 유지</td><td></td></tr>
+<tr><td>문제 7-2</td><td>construct만 고쳐 다른 문서. TextBuilder·HTMLBuilder는 수정 불필요</td><td></td></tr>
+<tr><td>문제 7-3</td><td>새 ConcreteBuilder(예: MarkdownBuilder) — 네 메서드 + 결과 메서드</td><td></td></tr>
+<tr><td>문제 7-4</td><td>String은 불변 → 덧붙일 때마다 새 인스턴스. StringBuilder는 같은 인스턴스에 append</td><td></td></tr>
+<tr><td>관련 패턴</td><td>Template Method(Director가 Builder 제어 vs 상위가 하위 제어) · Composite · Abstract Factory · Facade</td><td>p.139</td></tr>
+<tr><td>실무 Builder(교안 밖)</td><td><code>new Pizza.Builder("L").cheese(true).build()</code> — Director 없이 Client가 조립</td><td>Effective Java</td></tr>
+</tbody>
+</table></div>
+
+<h1 id="gc-ch-5">Observer</h1>
 <h2 id="gc-o1">Observer 핵심</h2>
 <div class="tw"><table>
 <thead>
@@ -149,7 +252,7 @@ WGF.cheat = String.raw`
 </tbody>
 </table></div>
 
-<h1 id="gc-ch-4">Memento</h1>
+<h1 id="gc-ch-6">Memento</h1>
 <h2 id="gc-m1">Memento 핵심</h2>
 <div class="tw"><table>
 <thead>
@@ -203,7 +306,7 @@ WGF.cheat = String.raw`
 </tbody>
 </table></div>
 
-<h1 id="gc-ch-5">Flyweight</h1>
+<h1 id="gc-ch-7">Flyweight</h1>
 <h2 id="gc-5">Flyweight 핵심</h2>
 <div class="tw"><table>
 <thead>
@@ -250,7 +353,7 @@ WGF.cheat = String.raw`
 </tbody>
 </table></div>
 
-<h1 id="gc-ch-6">패턴 비교</h1>
+<h1 id="gc-ch-8">패턴 비교</h1>
 <h2 id="gc-7">한 줄 비교</h2>
 <div class="tw"><table>
 <thead>
@@ -280,6 +383,22 @@ WGF.cheat = String.raw`
 <tr><td>주의할 점</td><td>update 호출 순서에 의존 금지, 무한 통지</td><td>Memento 유효기한(파일 저장), 직렬화 보안</td></tr>
 <tr><td>관련 패턴</td><td>Mediator</td><td>Command · Prototype · State</td></tr>
 <tr><td>비유</td><td>유튜브 구독 알림</td><td>게임 세이브 파일</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="gc-9">Factory Method · Builder 비교</h2>
+<div class="tw"><table>
+<thead>
+<tr><th>찾는 것</th><th>Factory Method</th><th>Builder</th></tr>
+</thead>
+<tbody>
+<tr><td>핵심 동작</td><td>상위가 생성 절차, 하위가 구체 클래스를 정함</td><td>Director가 조립 순서, ConcreteBuilder가 각 부분을 만듦</td></tr>
+<tr><td>핵심 코드</td><td><code>create()</code> → <code>createProduct()</code> + <code>registerProduct()</code></td><td><code>construct()</code> → <code>makeTitle()</code> · <code>makeString()</code> · <code>makeItems()</code> · <code>close()</code></td></tr>
+<tr><td>제어 방식</td><td>상속(상위 → 하위, Template Method 응용)</td><td>위임(Director → builder 필드)</td></tr>
+<tr><td>등장인물</td><td>Product · Creator · ConcreteProduct · ConcreteCreator</td><td>Builder · ConcreteBuilder · Director · Client</td></tr>
+<tr><td>결과 얻기</td><td><code>create()</code>의 반환값(Product)</td><td>ConcreteBuilder의 getResult(getTextResult, getHTMLResult)</td></tr>
+<tr><td>모르는 것</td><td>framework는 idcard 패키지를 모름</td><td>Director는 Builder의 하위 클래스를 모름</td></tr>
+<tr><td>비유</td><td>붕어빵 틀</td><td>건축 감독과 시공사</td></tr>
 </tbody>
 </table></div>
 `;
